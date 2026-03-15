@@ -12,7 +12,6 @@ export default function AccountRecommendations() {
   const lazadaAccount = accountRecommendations[0];
 
   // Logic: Rank P&G products by % positive sentiment weighted by review volume
-  // Group by subcategory and surface top 3
   const subcategories = Array.from(new Set(pngProducts.map(p => p.subcategory)));
   
   const subcategoryRecommendations = subcategories.map(sub => {
@@ -20,7 +19,6 @@ export default function AccountRecommendations() {
       .filter(p => p.subcategory === sub)
       .map(p => ({
         ...p,
-        // Weighted Score: % Positive * Number of Reviews
         weightedScore: (p.sentimentDistribution.positive / 100) * p.reviewCount
       }))
       .sort((a, b) => b.weightedScore - a.weightedScore)
@@ -38,7 +36,6 @@ export default function AccountRecommendations() {
         <header className="space-y-2">
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="secondary" className="bg-blue-50 text-[#003da5] font-bold border-none">ACCOUNT: LAZADA PH</Badge>
-            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 font-bold border-none">DATASET: FABRIC CARE</Badge>
           </div>
           <h1 className="text-4xl font-extrabold font-headline tracking-tight text-slate-900">Lazada Product Recommendations</h1>
           <p className="text-slate-500 font-medium text-lg">AI-powered prioritization based on sentiment-weighted demand proxies.</p>

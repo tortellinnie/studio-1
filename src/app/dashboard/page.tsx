@@ -33,14 +33,6 @@ import { cn } from '@/lib/utils';
 export default function Dashboard() {
   const lazadaRec = accountRecommendations[0];
 
-  // Top P&G product per subcategory
-  const subcategories = Array.from(new Set(pngProducts.map(p => p.subcategory)));
-  const topPerSub = subcategories.map(sub => {
-    return pngProducts
-      .filter(p => p.subcategory === sub)
-      .sort((a, b) => b.sentimentScore - a.sentimentScore)[0];
-  });
-
   return (
     <Layout>
       <div className="p-10 space-y-10 max-w-[1600px] mx-auto animate-in fade-in duration-500">
@@ -52,7 +44,6 @@ export default function Dashboard() {
             <p className="text-slate-500 font-medium text-lg">Lazada PH Fabric Category Intelligence</p>
           </div>
           <div className="flex gap-2">
-            <Badge variant="secondary" className="bg-slate-100 text-slate-600 font-bold px-3 py-1">DATASET: FABRIC CARE</Badge>
             <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-bold px-3 py-1">ACCOUNT: LAZADA PH</Badge>
           </div>
         </div>
@@ -87,10 +78,6 @@ export default function Dashboard() {
 
         {/* Actionable Insights Section */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-700 uppercase tracking-widest">Actionable AI Insights</h2>
-            <Badge className="bg-[#003da5] text-[10px] font-bold">LATEST UPDATES</Badge>
-          </div>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="border-border/50 bg-white">
               <CardContent className="pt-6 space-y-3">
@@ -198,7 +185,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* SKU Breakdown Section - Exactly as pictured */}
+        {/* SKU Breakdown Section */}
         <div className="space-y-8">
           <h2 className="text-base font-bold text-slate-800 uppercase tracking-[0.05em]">5 VECTORS OF SUPERIORITY: CORE SKU BREAKDOWN</h2>
           <div className="grid gap-10 md:grid-cols-2">
@@ -280,4 +267,3 @@ export default function Dashboard() {
     </Layout>
   );
 }
-
