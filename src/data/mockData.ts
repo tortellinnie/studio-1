@@ -3,6 +3,8 @@ export const pngProducts = [
   {
     id: 'p1',
     name: 'Downy Fabric Conditioner',
+    brand: 'Downy',
+    category: 'Fabric Care',
     reviewCount: 15420,
     originalRating: 4.9,
     correctedRating: 4.6,
@@ -11,6 +13,8 @@ export const pngProducts = [
   {
     id: 'p2',
     name: 'Ariel Sunrise Fresh',
+    brand: 'Ariel',
+    category: 'Laundry Detergent',
     reviewCount: 12300,
     originalRating: 4.8,
     correctedRating: 4.3,
@@ -19,6 +23,8 @@ export const pngProducts = [
   {
     id: 'p3',
     name: 'Tide Perfect Clean',
+    brand: 'Tide',
+    category: 'Laundry Detergent',
     reviewCount: 9800,
     originalRating: 4.7,
     correctedRating: 4.2,
@@ -27,6 +33,8 @@ export const pngProducts = [
   {
     id: 'p4',
     name: 'Safeguard Pure White',
+    brand: 'Safeguard',
+    category: 'Personal Care',
     reviewCount: 18200,
     originalRating: 4.9,
     correctedRating: 4.1,
@@ -35,10 +43,59 @@ export const pngProducts = [
   {
     id: 'p5',
     name: 'Joy Dishwashing Liquid',
+    brand: 'Joy',
+    category: 'Dishwashing',
     reviewCount: 14500,
     originalRating: 4.8,
     correctedRating: 4.5,
     sentimentDistribution: { positive: 75, neutral: 20, negative: 5 }
+  }
+];
+
+export const sampleReviews = [
+  {
+    id: 'r1',
+    productId: 'p1',
+    account: 'Lazada',
+    date: '2023-10-20',
+    sentiment: 'positive',
+    sentimentScore: 0.92,
+    originalRating: 5,
+    text: 'Sobrang bango ng Downy! Sulit na sulit ang pagbili ko, mabilis din dumating.',
+    vectors: { product: 0.98, packaging: 0.85, value: 0.92, communication: 0.88, retailExecution: 0.95 }
+  },
+  {
+    id: 'r2',
+    productId: 'p4',
+    account: 'Shopee',
+    date: '2023-10-18',
+    sentiment: 'negative',
+    sentimentScore: -0.45,
+    originalRating: 5,
+    text: 'Bakit ganun, parang nakakapula ng balat yung Safeguard ngayon? Di ko na uulitin.',
+    vectors: { product: 0.35, packaging: 0.70, value: 0.50, communication: 0.40, retailExecution: 0.80 }
+  },
+  {
+    id: 'r3',
+    productId: 'p2',
+    account: 'Lazada',
+    date: '2023-10-15',
+    sentiment: 'neutral',
+    sentimentScore: 0.12,
+    originalRating: 5,
+    text: 'Okay naman yung Ariel, natanggal mantsa pero parang ang mahal na masyado.',
+    vectors: { product: 0.85, packaging: 0.80, value: 0.45, communication: 0.70, retailExecution: 0.85 }
+  },
+  {
+    id: 'r4',
+    productId: 'p5',
+    account: 'Shopee',
+    date: '2023-10-12',
+    sentiment: 'positive',
+    sentimentScore: 0.88,
+    originalRating: 5,
+    text: 'Joy is the best! Konti lang gamitin, dami na nahuhugasan. Worth it talaga.',
+    vectors: { product: 0.95, packaging: 0.85, value: 0.98, communication: 0.90, retailExecution: 0.90 }
   }
 ];
 
