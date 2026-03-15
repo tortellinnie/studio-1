@@ -3,17 +3,42 @@
 
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, CheckCircle, AlertCircle, Smile } from 'lucide-react';
+import { TrendingUp, CheckCircle, AlertCircle, Smile, Zap, Lightbulb, ArrowRight } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { pngProducts, sentimentTrends, vectorScores } from '@/data/mockData';
 import { NotificationBanner } from '@/components/NotificationBanner';
+import { Badge } from '@/components/ui/badge';
 
 export default function Dashboard() {
-  const totalReviews = 37520; // Exact number from screenshot
-  const avgCorrectedRating = 4.37; // Exact number from screenshot
-  const avgOriginalRating = 4.80; // Exact number from screenshot
-  const ratingInflation = 9.9; // Exact number from screenshot
+  const totalReviews = 37520;
+  const avgCorrectedRating = 4.37;
+  const avgOriginalRating = 4.80;
+  const ratingInflation = 9.9;
   const positiveSentiment = 68;
+
+  const insights = [
+    {
+      title: "Inventory Optimization",
+      desc: "Downy demand is trending +12% above forecast on Lazada. Increase stock levels for upcoming flash sales.",
+      icon: Zap,
+      color: "text-blue-600",
+      bg: "bg-blue-50"
+    },
+    {
+      title: "Value Perception Alert",
+      desc: "Ariel Sunrise Fresh showing sentiment dip in 'Value' vector. Consider a 10% sachet bundle discount.",
+      icon: Lightbulb,
+      color: "text-orange-600",
+      bg: "bg-orange-50"
+    },
+    {
+      title: "Competitive Win",
+      desc: "P&G Fabric Care maintains a 15pt sentiment lead over Surf in the 'Product Quality' vector this month.",
+      icon: TrendingUp,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50"
+    }
+  ];
 
   return (
     <Layout>
@@ -25,7 +50,7 @@ export default function Dashboard() {
           <p className="text-slate-500 font-medium italic">Lazada PH Fabric Care Intelligence Hub</p>
         </div>
 
-        {/* Key Metrics - Matching Screenshot Style */}
+        {/* Key Metrics */}
         <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
@@ -72,7 +97,37 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Charts Section - Extended Horizontally */}
+        {/* Actionable Insights Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Zap className="h-5 w-5 text-[#003da5]" />
+            <h2 className="text-lg font-bold text-slate-800">Actionable AI Insights</h2>
+            <Badge variant="secondary" className="ml-2 bg-blue-100 text-[#003da5] border-none font-bold text-[10px]">3 NEW</Badge>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {insights.map((insight, i) => (
+              <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group cursor-pointer hover:shadow-md transition-all">
+                <CardContent className="p-0 flex h-full">
+                  <div className={`w-1.5 ${insight.bg.replace('bg-', 'bg-').split('-')[0] === 'bg' ? 'bg-[#003da5]' : 'bg-' + insight.color.split('-')[1] + '-500'}`} style={{ backgroundColor: i === 0 ? '#3b82f6' : i === 1 ? '#f97316' : '#10b981' }} />
+                  <div className="p-5 flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-bold text-sm text-slate-800">{insight.title}</h3>
+                      <insight.icon className={`h-4 w-4 ${insight.color}`} />
+                    </div>
+                    <p className="text-xs text-slate-500 leading-relaxed font-medium mb-4">
+                      {insight.desc}
+                    </p>
+                    <div className="flex items-center text-[10px] font-bold text-[#003da5] uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">
+                      Execute Recommendation <ArrowRight className="ml-1 h-3 w-3" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Charts Section */}
         <div className="space-y-6">
           <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader>
