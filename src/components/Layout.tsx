@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -6,10 +7,7 @@ import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Target, 
-  Users, 
-  Star,
-  Smile,
-  BarChart3,
+  Activity,
   HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -18,12 +16,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Overview', icon: LayoutDashboard, href: '/dashboard' },
-    { name: 'Sentiment Analysis', icon: Smile, href: '/sentiment' },
-    { name: 'Product Rankings', icon: Star, href: '/rankings' },
-    { name: 'Superiority Mapping', icon: BarChart3, href: '/superiority' },
-    { name: 'Competitive Intelligence', icon: Target, href: '/competitive' },
-    { name: 'Account Recommendations', icon: Users, href: '/accounts' },
+    { name: 'Overview', icon: LayoutDashboard, href: '/overview' },
+    { name: 'Competitive Analysis', icon: Target, href: '/competitive' },
+    { name: 'Brand Health', icon: Activity, href: '/brand-health' },
   ];
 
   return (
@@ -64,8 +59,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
         
-        {/* Floating Help Button as seen in screenshot */}
-        <button className="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-[#222] text-white flex items-center justify-center shadow-lg hover:bg-black transition-colors">
+        {/* Floating Help Button */}
+        <button className="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-[#222] text-white flex items-center justify-center shadow-lg hover:bg-black transition-colors z-50">
           <HelpCircle className="h-6 w-6" />
         </button>
       </main>

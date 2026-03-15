@@ -7,12 +7,9 @@ import {
   LayoutDashboard, 
   Settings,
   LogOut,
-  CreditCard,
   Target,
-  Users,
-  Star,
-  Smile,
-  BarChart4
+  BarChart4,
+  Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,33 +28,18 @@ import { Progress } from "@/components/ui/progress";
 const navItems = [
   {
     title: "Overview",
-    url: "/dashboard",
+    url: "/overview",
     icon: LayoutDashboard,
   },
   {
-    title: "Sentiment Analysis",
-    url: "/sentiment",
-    icon: Smile,
-  },
-  {
-    title: "Product Rankings",
-    url: "/rankings",
-    icon: Star,
-  },
-  {
-    title: "Superiority Mapping",
-    url: "/superiority",
-    icon: BarChart4,
-  },
-  {
-    title: "Competitive Intel",
+    title: "Competitive Analysis",
     url: "/competitive",
     icon: Target,
   },
   {
-    title: "Account Recs",
-    url: "/accounts",
-    icon: Users,
+    title: "Brand Health",
+    url: "/brand-health",
+    icon: Activity,
   },
 ];
 
@@ -107,7 +89,6 @@ export function NavMain() {
           <div className="p-5 rounded-xl bg-white/5 border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CreditCard className="h-3 w-3 text-white/60" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-white/80">Project Scope</span>
               </div>
               <span className="text-[9px] font-bold text-white bg-white/10 px-1.5 py-0.5 rounded">Lazada PH</span>
