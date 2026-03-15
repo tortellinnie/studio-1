@@ -72,15 +72,15 @@ export function NavMain() {
                     asChild 
                     isActive={pathname === item.url}
                     className={cn(
-                      "transition-all duration-200",
+                      "transition-all duration-200 h-11",
                       pathname === item.url 
                         ? "bg-white/15 text-white shadow-sm" 
                         : "hover:bg-white/10 text-white/60 hover:text-white"
                     )}
                   >
                     <Link href={item.url}>
-                      <item.icon className={cn("h-4 w-4", pathname === item.url ? "text-white" : "text-white/40")} />
-                      <span className="font-semibold text-sm">{item.title}</span>
+                      <item.icon className={cn("h-5 w-5", pathname === item.url ? "text-white" : "text-white/40")} />
+                      <span className="font-semibold text-base">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -93,7 +93,7 @@ export function NavMain() {
       <SidebarFooter className="border-t border-white/10 p-4 bg-[#003da5]">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="text-white/60 hover:text-white hover:bg-white/5 transition-colors">
+            <SidebarMenuButton asChild className="text-white/60 hover:text-white hover:bg-white/5 transition-colors h-10">
               <Link href="/settings">
                 <Settings className="h-4 w-4" />
                 <span className="text-sm font-medium">System Logs</span>
@@ -101,7 +101,7 @@ export function NavMain() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white/30 hover:text-white hover:bg-white/5 transition-colors">
+            <SidebarMenuButton className="text-white/30 hover:text-white hover:bg-white/5 transition-colors h-10">
               <LogOut className="h-4 w-4" />
               <span className="text-sm font-medium">Sign Out</span>
             </SidebarMenuButton>
