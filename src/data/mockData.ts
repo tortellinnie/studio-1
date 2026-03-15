@@ -3,7 +3,7 @@ export const pngProducts = [
   {
     id: 'p1',
     name: 'Downy Fabric Conditioner',
-    brand: 'Downy',
+    brand: 'Downy (P&G)',
     category: 'Fabric Care',
     subcategory: 'Fabric Conditioner',
     reviewCount: 15420,
@@ -16,7 +16,7 @@ export const pngProducts = [
   {
     id: 'p2',
     name: 'Ariel Sunrise Fresh',
-    brand: 'Ariel',
+    brand: 'Ariel (P&G)',
     category: 'Fabric Care',
     subcategory: 'Liquid Detergent',
     reviewCount: 12300,
@@ -29,7 +29,7 @@ export const pngProducts = [
   {
     id: 'p3',
     name: 'Tide Perfect Clean Powder',
-    brand: 'Tide',
+    brand: 'Tide (P&G)',
     category: 'Fabric Care',
     subcategory: 'Powder Detergent',
     reviewCount: 9800,
@@ -63,6 +63,16 @@ export const brandComparison = [
   { brand: 'Breeze', sentiment: 65 }
 ];
 
+export const competitiveBenchmark = [
+  { brand: 'Downy (P&G)', sentiment: 78, marketShare: 42, growth: 5.2 },
+  { brand: 'Ariel (P&G)', sentiment: 72, marketShare: 35, growth: 3.1 },
+  { brand: 'Tide (P&G)', sentiment: 65, marketShare: 28, growth: -1.2 },
+  { brand: 'Surf', sentiment: 63, marketShare: 45, growth: 2.4 },
+  { brand: 'Breeze', sentiment: 65, marketShare: 32, growth: 1.8 },
+  { brand: 'Champion', sentiment: 58, marketShare: 15, growth: 4.5 },
+  { brand: 'Zonrox', sentiment: 61, marketShare: 22, growth: 0.5 }
+];
+
 export const accountRecommendations = [
   {
     account: 'Lazada Philippines',
@@ -89,5 +99,34 @@ export const sampleReviews = [
     originalRating: 5,
     text: 'Sobrang bango ng Downy! Sulit na sulit ang pagbili ko, mabilis din dumating.',
     vectors: { product: 0.98, packaging: 0.85, value: 0.92, communication: 0.88, retailExecution: 0.95 }
+  },
+  {
+    id: 'r2',
+    productId: 'p2',
+    account: 'Lazada',
+    date: '2023-10-21',
+    sentiment: 'negative',
+    sentimentScore: 0.35,
+    originalRating: 5,
+    text: 'Bakit parang ang mahal na? Okay naman yung labada pero di na kasing sulit dati.',
+    vectors: { product: 0.80, packaging: 0.75, value: 0.40, communication: 0.70, retailExecution: 0.80 }
   }
+];
+
+// For backward compatibility with some components
+export const sentimentTrends = [
+  { month: 'Jan', positive: 62, neutral: 25, negative: 13 },
+  { month: 'Feb', positive: 64, neutral: 24, negative: 12 },
+  { month: 'Mar', positive: 63, neutral: 26, negative: 11 },
+  { month: 'Apr', positive: 66, neutral: 23, negative: 11 },
+  { month: 'May', positive: 67, neutral: 23, negative: 10 },
+  { month: 'Jun', positive: 68, neutral: 22, negative: 10 }
+];
+
+export const vectorScores = [
+  { vector: 'Product', pngAvg: 85, competitorAvg: 72 },
+  { vector: 'Packaging', pngAvg: 68, competitorAvg: 65 },
+  { vector: 'Value', pngAvg: 78, competitorAvg: 70 },
+  { vector: 'Comm', pngAvg: 72, competitorAvg: 68 },
+  { vector: 'Retail', pngAvg: 65, competitorAvg: 63 }
 ];
