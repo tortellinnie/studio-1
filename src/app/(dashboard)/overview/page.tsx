@@ -11,9 +11,6 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell,
   BarChart,
   Bar,
   Legend
@@ -25,7 +22,9 @@ import {
   Smile,
   Meh,
   Frown,
-  Info
+  AlertTriangle,
+  ArrowUpRight,
+  TrendingDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { pngProducts } from "@/data/mockData";
@@ -39,17 +38,44 @@ const trendData = [
   { month: 'Mar 2026', positive: 72, neutral: 18, negative: 10 }
 ];
 
-const distributionData = [
-  { name: 'Positive', value: 68, color: '#22c55e' },
-  { name: 'Neutral', value: 22, color: '#f59e0b' },
-  { name: 'Negative', value: 10, color: '#ef4444' },
-];
-
 const vectorData = [
   { name: 'Product', 'P&G Average': 85, 'Competitor Average': 72 },
   { name: 'Packaging', 'P&G Average': 68, 'Competitor Average': 65 },
   { name: 'Value', 'P&G Average': 78, 'Competitor Average': 70 },
   { name: 'Retail Execution', 'P&G Average': 72, 'Competitor Average': 68 },
+];
+
+const sentimentAlerts = [
+  {
+    id: 1,
+    product: "Safeguard Bar Soap",
+    issue: "Declining sentiment (13% negative)",
+    description: "Surge in skin irritation mentions in Taglish reviews.",
+    status: "critical",
+    icon: AlertTriangle,
+    color: "text-red-600",
+    bg: "bg-red-50"
+  },
+  {
+    id: 2,
+    product: "Tide Perfect Clean",
+    issue: "Price perception issues",
+    description: "45% of neutral reviews mention 'mahal' vs competitors.",
+    status: "warning",
+    icon: AlertCircle,
+    color: "text-orange-600",
+    bg: "bg-orange-50"
+  },
+  {
+    id: 3,
+    product: "Downy Sunrise Fresh",
+    issue: "Positive Momentum",
+    description: "High demand/positive momentum for long-lasting scent.",
+    status: "success",
+    icon: TrendingUp,
+    color: "text-emerald-600",
+    bg: "bg-emerald-50"
+  }
 ];
 
 export default function OverviewPage() {
@@ -62,28 +88,54 @@ export default function OverviewPage() {
   if (!isClient) return null;
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight">Dashboard Overview</h1>
         <p className="text-sm text-muted-foreground">GenAI-powered insights for P&G e-commerce performance</p>
       </div>
 
+      {/* Sentiment Alerts Section */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">Critical Sentiment Alerts</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {sentimentAlerts.map((alert) => (
+            <Card key={alert.id} className={cn("border-l-4 shadow-sm", alert.status === 'critical' ? 'border-l-red-500' : alert.status === 'warning' ? 'border-l-orange-500' : 'border-l-emerald-500')}>
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={cn("p-2 rounded-lg", alert.bg)}>
+                    <alert.icon className={cn("h-5 w-5", alert.color)} />
+                  </div>
+                  <button className="text-[10px] font-bold text-slate-400 hover:text-slate-600 flex items-center gap-1 uppercase tracking-widest">
+                    View <ArrowUpRight className="h-3 w-3" />
+                  </button>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-slate-900">{alert.product}</p>
+                  <p className={cn("text-[11px] font-bold uppercase tracking-tight", alert.color)}>{alert.issue}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed pt-1">{alert.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { title: "Total Reviews Analyzed", value: "14,709", sub: "Across all P&G products", icon: CheckCircle2, iconColor: "text-muted-foreground/50" },
+          { title: "Total Reviews Analyzed", value: "14,709", sub: "Across all P&G products", icon: CheckCircle2, iconColor: "text-slate-400" },
           { title: "Avg Corrected Rating", value: "4.20", sub: "vs 4.82 original", icon: TrendingUp, iconColor: "text-emerald-500" },
           { title: "Rating Inflation", value: "14.8%", sub: "Lazada's 5-star bias", icon: AlertCircle, iconColor: "text-orange-500" },
           { title: "Positive Sentiment", value: "68%", sub: "+3% from last month", icon: Smile, iconColor: "text-emerald-500" },
         ].map((item, i) => (
           <Card key={i} className="shadow-sm border-slate-200">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-semibold">{item.title}</CardTitle>
+              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-slate-500">{item.title}</CardTitle>
               <item.icon className={cn("h-4 w-4", item.iconColor)} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{item.value}</div>
-              <p className="text-[11px] text-muted-foreground mt-1">{item.sub}</p>
+              <div className="text-3xl font-bold text-slate-900">{item.value}</div>
+              <p className="text-[11px] text-muted-foreground font-medium mt-1">{item.sub}</p>
             </CardContent>
           </Card>
         ))}
@@ -146,7 +198,6 @@ export default function OverviewPage() {
                 </div>
                 
                 <div className="grid grid-cols-3 gap-6">
-                  {/* Positive Column */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase">
                       <span className="text-emerald-600">Positive</span>
@@ -157,7 +208,6 @@ export default function OverviewPage() {
                     </div>
                   </div>
 
-                  {/* Neutral Column */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase">
                       <span className="text-orange-500">Neutral</span>
@@ -168,7 +218,6 @@ export default function OverviewPage() {
                     </div>
                   </div>
 
-                  {/* Negative Column */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase">
                       <span className="text-red-500">Negative</span>
