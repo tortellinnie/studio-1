@@ -12,7 +12,11 @@ import {
   Settings,
   LogOut,
   CreditCard,
-  Zap
+  Target,
+  Users,
+  Star,
+  Smile,
+  BarChart4
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -30,29 +34,34 @@ import { Progress } from "@/components/ui/progress";
 
 const navItems = [
   {
-    title: "Dashboard",
-    url: "/overview",
+    title: "Overview",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "AI Playground",
-    url: "/playground",
-    icon: Sparkles,
+    title: "Sentiment Analysis",
+    url: "/sentiment",
+    icon: Smile,
   },
   {
-    title: "Prompt Library",
-    url: "/prompts",
-    icon: Library,
+    title: "Product Rankings",
+    url: "/rankings",
+    icon: Star,
   },
   {
-    title: "History",
-    url: "/history",
-    icon: History,
+    title: "Superiority Mapping",
+    url: "/superiority",
+    icon: BarChart4,
   },
   {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart3,
+    title: "Competitive Intel",
+    url: "/competitive",
+    icon: Target,
+  },
+  {
+    title: "Account Recs",
+    url: "/accounts",
+    icon: Users,
   },
 ];
 
@@ -61,21 +70,21 @@ export function NavMain() {
 
   return (
     <>
-      <SidebarHeader className="border-b border-sidebar-border/50 p-6">
+      <SidebarHeader className="border-b border-white/10 p-6 bg-[#003da5]">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary lavender-glow shadow-xl shadow-primary/20">
-            <Zap className="h-6 w-6 text-primary-foreground" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/20">
+            <BarChart3 className="h-6 w-6 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight text-foreground font-headline leading-none">GenAI Studio</span>
-            <span className="text-[10px] text-primary/70 font-bold uppercase tracking-widest mt-1">Enterprise</span>
+            <span className="text-sm font-bold tracking-tight text-white font-headline leading-none">P&G Hub</span>
+            <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest mt-1">Intelligence</span>
           </div>
         </div>
       </SidebarHeader>
       
-      <SidebarContent>
+      <SidebarContent className="bg-[#003da5]">
         <SidebarGroup>
-          <SidebarGroupLabel className="px-4 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
+          <SidebarGroupLabel className="px-4 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -86,14 +95,14 @@ export function NavMain() {
                     asChild 
                     isActive={pathname === item.url}
                     className={cn(
-                      "transition-all duration-300 h-10 px-4 rounded-lg group",
+                      "transition-all duration-200 h-10 px-4 rounded-md group",
                       pathname === item.url 
-                        ? "bg-primary/10 text-primary border border-primary/20 shadow-sm" 
-                        : "hover:bg-white/5 hover:text-primary text-muted-foreground"
+                        ? "bg-white/15 text-white shadow-sm" 
+                        : "hover:bg-white/5 text-white/70 hover:text-white"
                     )}
                   >
                     <Link href={item.url}>
-                      <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110", pathname === item.url && "text-primary")} />
+                      <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110", pathname === item.url ? "text-white" : "text-white/60")} />
                       <span className="font-semibold text-xs">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -104,38 +113,38 @@ export function NavMain() {
         </SidebarGroup>
 
         <div className="mt-auto px-6 py-8">
-          <div className="p-5 rounded-2xl bg-muted/20 border border-white/5 space-y-4">
+          <div className="p-5 rounded-xl bg-white/5 border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CreditCard className="h-3 w-3 text-primary" />
-                <span className="text-[10px] font-bold uppercase tracking-wider">Plan Usage</span>
+                <CreditCard className="h-3 w-3 text-white/60" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white/80">Project Scope</span>
               </div>
-              <span className="text-[10px] font-bold text-primary">Pro</span>
+              <span className="text-[9px] font-bold text-white bg-white/10 px-1.5 py-0.5 rounded">Lazada PH</span>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between text-[10px] font-medium">
-                <span className="text-muted-foreground">Tokens</span>
-                <span>840k / 1.2M</span>
+              <div className="flex justify-between text-[10px] font-medium text-white/60">
+                <span>Reviews Processed</span>
+                <span className="text-white">37.5k</span>
               </div>
-              <Progress value={70} className="h-1.5 bg-background" />
+              <Progress value={100} className="h-1 bg-white/10" />
             </div>
-            <p className="text-[9px] text-muted-foreground leading-relaxed">Your monthly quota resets in <span className="text-foreground font-bold">4 days</span>.</p>
+            <p className="text-[9px] text-white/40 leading-relaxed italic">Dataset: Fabric Care Category</p>
           </div>
         </div>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/50 p-4 bg-sidebar/30">
+      <SidebarFooter className="border-t border-white/10 p-4 bg-[#003da5]/50">
         <SidebarMenu className="gap-1.5">
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/settings'} className="h-10 px-4">
+            <SidebarMenuButton asChild className="h-10 px-4 text-white/70 hover:text-white hover:bg-white/5">
               <Link href="/settings">
                 <Settings className="h-4 w-4" />
-                <span className="text-xs font-semibold">Settings</span>
+                <span className="text-xs font-semibold">System Logs</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton className="h-10 px-4 text-destructive hover:bg-destructive/10">
+            <SidebarMenuButton className="h-10 px-4 text-white/40 hover:text-white hover:bg-white/5">
               <LogOut className="h-4 w-4" />
               <span className="text-xs font-semibold">Sign Out</span>
             </SidebarMenuButton>

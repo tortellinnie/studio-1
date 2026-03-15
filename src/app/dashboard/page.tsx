@@ -3,11 +3,12 @@
 
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, CheckCircle, AlertCircle, Smile, Zap, Lightbulb, ArrowRight } from 'lucide-react';
+import { TrendingUp, CheckCircle, AlertCircle, Smile, Lightbulb, ArrowRight, Package, DollarSign, Store, Sparkles } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { pngProducts, sentimentTrends, vectorScores } from '@/data/mockData';
 import { NotificationBanner } from '@/components/NotificationBanner';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function Dashboard() {
   const totalReviews = 37520;
@@ -18,25 +19,28 @@ export default function Dashboard() {
 
   const insights = [
     {
+      vector: "Retail Execution",
       title: "Inventory Optimization",
       desc: "Downy demand is trending +12% above forecast on Lazada. Increase stock levels for upcoming flash sales.",
-      icon: Zap,
-      color: "text-blue-600",
-      bg: "bg-blue-50"
+      icon: Store,
+      color: "text-pink-600",
+      bg: "bg-pink-50"
     },
     {
+      vector: "Value",
       title: "Value Perception Alert",
       desc: "Ariel Sunrise Fresh showing sentiment dip in 'Value' vector. Consider a 10% sachet bundle discount.",
-      icon: Lightbulb,
-      color: "text-orange-600",
-      bg: "bg-orange-50"
+      icon: DollarSign,
+      color: "text-purple-600",
+      bg: "bg-purple-50"
     },
     {
-      title: "Competitive Win",
-      desc: "P&G Fabric Care maintains a 15pt sentiment lead over Surf in the 'Product Quality' vector this month.",
-      icon: TrendingUp,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50"
+      vector: "Product",
+      title: "Superiority Win",
+      desc: "P&G Fabric Care maintains a 15pt sentiment lead over Surf in Product Quality vector this month.",
+      icon: Package,
+      color: "text-blue-600",
+      bg: "bg-blue-50"
     }
   ];
 
@@ -97,23 +101,26 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Actionable Insights Section */}
+        {/* Actionable Insights Section - Follows 5 Vectors */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Zap className="h-5 w-5 text-[#003da5]" />
+            <Sparkles className="h-5 w-5 text-[#003da5]" />
             <h2 className="text-lg font-bold text-slate-800">Actionable AI Insights</h2>
-            <Badge variant="secondary" className="ml-2 bg-blue-100 text-[#003da5] border-none font-bold text-[10px]">3 NEW</Badge>
+            <Badge variant="secondary" className="ml-2 bg-blue-100 text-[#003da5] border-none font-bold text-[10px]">VECTOR-ALIGNED</Badge>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {insights.map((insight, i) => (
               <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group cursor-pointer hover:shadow-md transition-all">
                 <CardContent className="p-0 flex h-full">
-                  <div className={`w-1.5 ${insight.bg.replace('bg-', 'bg-').split('-')[0] === 'bg' ? 'bg-[#003da5]' : 'bg-' + insight.color.split('-')[1] + '-500'}`} style={{ backgroundColor: i === 0 ? '#3b82f6' : i === 1 ? '#f97316' : '#10b981' }} />
+                  <div className={cn("w-1.5", insight.color.replace('text', 'bg'))} />
                   <div className="p-5 flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-bold text-sm text-slate-800">{insight.title}</h3>
-                      <insight.icon className={`h-4 w-4 ${insight.color}`} />
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={cn("text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded", insight.bg, insight.color)}>
+                        {insight.vector}
+                      </span>
+                      <insight.icon className={cn("h-4 w-4", insight.color)} />
                     </div>
+                    <h3 className="font-bold text-sm text-slate-800 mb-1">{insight.title}</h3>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium mb-4">
                       {insight.desc}
                     </p>
