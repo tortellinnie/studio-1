@@ -3,7 +3,7 @@
 
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, CheckCircle, AlertCircle, Smile, Lightbulb, ArrowRight, Package, DollarSign, Store, Sparkles } from 'lucide-react';
+import { TrendingUp, ArrowRight, Package, DollarSign, Store } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { pngProducts, sentimentTrends, vectorScores } from '@/data/mockData';
 import { NotificationBanner } from '@/components/NotificationBanner';
@@ -54,12 +54,11 @@ export default function Dashboard() {
           <p className="text-slate-500 font-medium italic">Lazada PH Fabric Care Intelligence Hub</p>
         </div>
 
-        {/* Key Metrics */}
+        {/* Key Metrics - Removed Icons for cleanliness */}
         <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card className="shadow-sm border-slate-200 bg-white">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardHeader className="pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Reviews Analyzed</CardTitle>
-              <CheckCircle className="h-4 w-4 text-slate-300" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-slate-900">{totalReviews.toLocaleString()}</div>
@@ -68,9 +67,8 @@ export default function Dashboard() {
           </Card>
 
           <Card className="shadow-sm border-slate-200 bg-white">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardHeader className="pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Avg Corrected Rating</CardTitle>
-              <TrendingUp className="h-4 w-4 text-emerald-500" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-slate-900">{avgCorrectedRating.toFixed(2)}</div>
@@ -79,9 +77,8 @@ export default function Dashboard() {
           </Card>
 
           <Card className="shadow-sm border-slate-200 bg-white">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardHeader className="pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Rating Inflation</CardTitle>
-              <AlertCircle className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-slate-900">{ratingInflation}%</div>
@@ -90,9 +87,8 @@ export default function Dashboard() {
           </Card>
 
           <Card className="shadow-sm border-slate-200 bg-white">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardHeader className="pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Positive Sentiment</CardTitle>
-              <Smile className="h-4 w-4 text-emerald-500" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-black text-slate-900">{positiveSentiment}%</div>
@@ -101,10 +97,9 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Actionable Insights Section - Follows 5 Vectors */}
+        {/* Actionable Insights Section - Removed Sparkles icon */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="h-5 w-5 text-[#003da5]" />
             <h2 className="text-lg font-bold text-slate-800">Actionable AI Insights</h2>
             <Badge variant="secondary" className="ml-2 bg-blue-100 text-[#003da5] border-none font-bold text-[10px]">VECTOR-ALIGNED</Badge>
           </div>
@@ -118,7 +113,6 @@ export default function Dashboard() {
                       <span className={cn("text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded", insight.bg, insight.color)}>
                         {insight.vector}
                       </span>
-                      <insight.icon className={cn("h-4 w-4", insight.color)} />
                     </div>
                     <h3 className="font-bold text-sm text-slate-800 mb-1">{insight.title}</h3>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium mb-4">

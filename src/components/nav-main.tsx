@@ -5,10 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
-  Sparkles, 
-  History, 
-  Library, 
-  BarChart3, 
   Settings,
   LogOut,
   CreditCard,
@@ -71,14 +67,9 @@ export function NavMain() {
   return (
     <>
       <SidebarHeader className="border-b border-white/10 p-6 bg-[#003da5]">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/20">
-            <BarChart3 className="h-6 w-6 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight text-white font-headline leading-none">P&G Hub</span>
-            <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest mt-1">Intelligence</span>
-          </div>
+        <div className="flex flex-col">
+          <span className="text-sm font-bold tracking-tight text-white font-headline leading-none">P&G Hub</span>
+          <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest mt-1">Intelligence</span>
         </div>
       </SidebarHeader>
       
