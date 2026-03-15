@@ -12,7 +12,8 @@ import {
   ChevronRight,
   Trash2,
   ExternalLink,
-  Copy
+  Copy,
+  RefreshCw
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ import {
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const mockHistory = [
   { id: 1, type: "Code", title: "Authentication Middleware", prompt: "Write an Express middleware to verify JWT tokens.", date: "Oct 24, 2023", tokens: "840", status: "Completed" },
@@ -138,8 +140,4 @@ export default function HistoryPage() {
       </div>
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
 }
