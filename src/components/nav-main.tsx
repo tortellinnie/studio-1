@@ -8,7 +8,6 @@ import {
   Settings,
   LogOut,
   Target,
-  BarChart4,
   Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
