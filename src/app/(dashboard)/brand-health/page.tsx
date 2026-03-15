@@ -13,7 +13,6 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { 
-  CheckCircle2, 
   ShoppingCart,
   TrendingUp,
   Info,
@@ -79,38 +78,38 @@ export default function BrandHealthPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Brand Health & Strategy</h1>
-        <p className="text-sm text-muted-foreground">Strategic SKU performance and retail execution vectors</p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Brand Health & Strategy</h1>
+        <p className="text-base text-muted-foreground">Strategic SKU performance and retail execution vectors</p>
       </div>
 
       {/* Strategic Recommendation */}
       <Card className="border-l-4 border-l-[#003da5] shadow-sm">
-        <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-4">
+        <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <ShoppingCart className="h-5 w-5 text-[#003da5]" />
+              <ShoppingCart className="h-6 w-6 text-[#003da5]" />
               <CardTitle className="text-lg font-bold">{lazadaAccount.account} Strategic Hub</CardTitle>
             </div>
-            <Badge className="bg-[#003da5] text-white">Priority: {lazadaAccount.priorityScore}</Badge>
+            <Badge className="bg-[#003da5] text-white px-4 py-1 text-xs">Priority: {lazadaAccount.priorityScore}</Badge>
           </div>
         </CardHeader>
         <CardContent className="pt-8">
           <div className="grid lg:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                <Info className="h-3 w-3" /> AI Rationale
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <Info className="h-4 w-4" /> AI Rationale
               </h4>
-              <p className="text-xl text-slate-700 font-medium italic border-l-4 border-slate-200 pl-6 py-2">
+              <p className="text-xl text-slate-700 font-medium italic border-l-4 border-slate-100 pl-6 py-2">
                 "{lazadaAccount.rationale}"
               </p>
             </div>
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                <TrendingUp className="h-3 w-3" /> Priority Actions
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" /> Priority Actions
               </h4>
               <ul className="grid grid-cols-1 gap-3">
                 {lazadaAccount.recommendedActions.map((action, i) => (
-                  <li key={i} className="flex items-center gap-4 text-sm font-semibold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <li key={i} className="flex items-center gap-4 text-sm font-bold text-slate-600 bg-slate-50/50 p-4 rounded-xl border border-slate-100">
                     <div className="h-2 w-2 rounded-full bg-[#003da5] shrink-0" />
                     {action}
                   </li>
@@ -121,70 +120,20 @@ export default function BrandHealthPage() {
         </CardContent>
       </Card>
 
-      {/* Rankings Table */}
-      <Card className="shadow-sm border-slate-200">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-600">Corrected SKU Rankings</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-slate-100 bg-slate-50 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                <th className="p-4">Rank</th>
-                <th className="p-4">Product SKU</th>
-                <th className="p-4">Corrected Rating</th>
-                <th className="p-4 text-right">Sentiment Health</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rankedProducts.map((product, index) => (
-                <tr key={product.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                  <td className="p-4">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-[#003da5] font-bold text-xs">
-                      {index + 1}
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="space-y-0.5">
-                      <p className="font-bold text-slate-900 text-sm">{product.name}</p>
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{product.subcategory}</p>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-1 font-bold text-[#003da5] text-lg">
-                      <Star className="h-4 w-4 fill-[#003da5]" />
-                      {product.correctedRating.toFixed(1)}
-                    </div>
-                  </td>
-                  <td className="p-4 text-right">
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="text-[10px] font-bold uppercase text-emerald-600">{product.sentimentDistribution.positive}% Positive</span>
-                      <div className="h-1.5 w-40 rounded-full bg-slate-100 overflow-hidden">
-                        <div className="h-full bg-emerald-500" style={{ width: `${product.sentimentDistribution.positive}%` }} />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
-
-      {/* NEW: Detailed Vector Analysis Component */}
+      {/* Vector Analysis Tabs */}
       <Card className="shadow-sm border-slate-200 overflow-hidden">
-        <CardHeader className="pb-4 border-b border-slate-50">
-          <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-600">Detailed Vector Analysis</CardTitle>
+        <CardHeader className="pb-4 border-b border-slate-50 bg-slate-50/30">
+          <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-400">Detailed Vector Analysis</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Tabs defaultValue="product" className="w-full">
-            <div className="bg-slate-50 p-2">
-              <TabsList className="w-full grid grid-cols-5 h-auto bg-slate-200/50 p-1 rounded-xl">
+            <div className="bg-slate-50/50 p-3">
+              <TabsList className="w-full grid grid-cols-5 h-12 bg-slate-200/50 p-1.5 rounded-xl">
                 {vectorAnalysisData.map((v) => (
                   <TabsTrigger 
                     key={v.id} 
                     value={v.id}
-                    className="text-xs font-bold uppercase tracking-widest py-3 data-[state=active]:bg-white data-[state=active]:text-[#003da5] data-[state=active]:shadow-sm rounded-lg"
+                    className="text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-[#003da5] data-[state=active]:shadow-sm rounded-lg"
                   >
                     {v.title}
                   </TabsTrigger>
@@ -193,30 +142,34 @@ export default function BrandHealthPage() {
             </div>
             
             {vectorAnalysisData.map((v) => (
-              <TabsContent key={v.id} value={v.id} className="p-8 space-y-8 animate-in fade-in duration-300">
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">What We Measure</h4>
-                  <p className="text-sm font-medium text-slate-600 leading-relaxed max-w-3xl">
-                    {v.description}
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Keywords (Taglish)</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {v.keywords.map((kw) => (
-                      <Badge key={kw} variant="outline" className="px-3 py-1.5 text-[11px] font-bold text-slate-500 border-slate-200 bg-white">
-                        {kw}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-4 border-t border-slate-50">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Top Performing Product</h4>
-                  <p className="text-sm font-bold text-slate-900">
-                    {v.topProduct} <span className="text-slate-400 font-medium ml-2">— {v.score}/100 {v.id} vector score</span>
-                  </p>
+              <TabsContent key={v.id} value={v.id} className="p-10 space-y-8 animate-in fade-in duration-300">
+                <div className="grid md:grid-cols-2 gap-12">
+                   <div className="space-y-6">
+                      <div className="space-y-2">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">What We Measure</h4>
+                        <p className="text-base font-semibold text-slate-600 leading-relaxed">
+                          {v.description}
+                        </p>
+                      </div>
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Example Keywords</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {v.keywords.map((kw) => (
+                            <Badge key={kw} variant="outline" className="px-3 py-1.5 text-[11px] font-bold text-slate-500 border-slate-200 bg-white">
+                              {kw}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                   </div>
+                   <div className="bg-[#ebf2ff]/30 p-8 rounded-2xl border border-[#003da5]/5 flex flex-col justify-center">
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Top Performing Product</h4>
+                      <p className="text-2xl font-extrabold text-slate-900 mb-2">{v.topProduct}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-[#003da5] text-white font-bold">{v.score}</Badge>
+                        <span className="text-sm font-bold text-slate-400 uppercase tracking-tight">Vector Health Score</span>
+                      </div>
+                   </div>
                 </div>
               </TabsContent>
             ))}
@@ -224,17 +177,17 @@ export default function BrandHealthPage() {
         </CardContent>
       </Card>
 
-      {/* Radar Vectors Section */}
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* Radar Comparison Table Row */}
+      <div className="grid gap-8 md:grid-cols-2">
         {pngProducts.slice(0, 2).map((product) => (
           <Card key={product.id} className="shadow-sm border-slate-200">
-            <CardHeader className="pb-2 border-b border-slate-50 bg-slate-50/30">
+            <CardHeader className="pb-2 border-b border-slate-50">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{product.name}</CardTitle>
-                <Activity className="h-4 w-4 text-[#003da5] opacity-20" />
+                <CardTitle className="text-base font-bold text-slate-900">{product.name}</CardTitle>
+                <Activity className="h-5 w-5 text-[#003da5] opacity-20" />
               </div>
             </CardHeader>
-            <CardContent className="h-[300px] pt-4">
+            <CardContent className="h-[350px] pt-6">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={[
                   { vector: 'Product', value: product.vectors.product },

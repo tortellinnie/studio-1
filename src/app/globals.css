@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +11,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 33.3%; /* P&G Blue */
+    --primary: 221.2 83.2% 33.3%; /* P&G Blue #003da5 */
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -37,8 +38,13 @@
   }
 }
 
+/* High Fidelity Adjustments */
+.shadow-sm {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+}
+
 .font-headline {
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 /* Custom Scrollbar */
@@ -52,6 +58,11 @@
   @apply bg-muted-foreground/20 rounded-full;
 }
 
-.sidebar-active {
-  background-color: rgba(255, 255, 255, 0.15);
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #f0f0f0;
+}
+
+.recharts-default-tooltip {
+  @apply !rounded-xl !border-slate-100 !shadow-xl !p-3;
 }
