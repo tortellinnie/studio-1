@@ -1,4 +1,3 @@
-
 "use client";
 
 import { 
@@ -17,7 +16,10 @@ import {
   Code, 
   Image as ImageIcon,
   TrendingUp,
-  History as HistoryIcon
+  History as HistoryIcon,
+  Sparkles,
+  ArrowUpRight,
+  Plus
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,9 +28,9 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const stats = [
-  { name: "Total Generations", value: "1,284", icon: Zap, change: "+12.5%", color: "text-primary" },
-  { name: "Avg. Response Time", value: "1.2s", icon: Clock, change: "-0.4s", color: "text-secondary" },
-  { name: "Token Usage", value: "428k", icon: TrendingUp, change: "+5.2%", color: "text-primary" },
+  { name: "Total Requests", value: "24,812", icon: Zap, change: "+18%", color: "text-primary", bg: "bg-primary/10" },
+  { name: "Avg. Latency", value: "1.24s", icon: Clock, change: "-120ms", color: "text-secondary", bg: "bg-secondary/10" },
+  { name: "Token Economy", value: "2.4M", icon: TrendingUp, change: "+5.2%", color: "text-primary", bg: "bg-primary/10" },
 ];
 
 const usageData = [
@@ -41,46 +43,65 @@ const usageData = [
   { name: 'Sun', text: 349, code: 430, image: 250 },
 ];
 
-const recentActivity = [
-  { id: 1, type: "Code", title: "React Login Component", time: "2 minutes ago", tokens: "1.2k" },
-  { id: 2, type: "Text", title: "Product Description: Smart Watch", time: "15 minutes ago", tokens: "450" },
-  { id: 3, type: "Image", title: "Cyberpunk Street 4K", time: "1 hour ago", tokens: "2.1k" },
+const topModels = [
+  { name: "Gemini 1.5 Pro", usage: "64%", status: "Active" },
+  { name: "Imagen 4 Fast", usage: "22%", status: "Active" },
+  { name: "Gemini 1.5 Flash", usage: "14%", status: "Idle" },
 ];
 
 export default function OverviewPage() {
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Welcome back, Alex</h1>
-        <p className="text-muted-foreground">Your AI generation summary for the last 7 days.</p>
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-extrabold tracking-tight font-headline">Intelligence Command</h1>
+          <p className="text-muted-foreground text-lg">Real-time metrics and orchestration for your AI fleet.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="border-white/10">Export Report</Button>
+          <Button className="lavender-glow gap-2" asChild>
+            <Link href="/playground">
+              <Plus className="h-4 w-4" />
+              New Generation
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-3">
         {stats.map((stat) => (
-          <Card key={stat.name} className="lavender-glow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{stat.name}</CardTitle>
-              <stat.icon className={cn("h-4 w-4", stat.color)} />
+          <Card key={stat.name} className="lavender-glow border-white/5 bg-card/50 backdrop-blur-sm group hover:border-primary/50 transition-all duration-500">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+              <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{stat.name}</CardTitle>
+              <div className={cn("p-2 rounded-lg transition-colors group-hover:bg-primary/20", stat.bg)}>
+                <stat.icon className={cn("h-4 w-4", stat.color)} />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                <span className={stat.change.startsWith('+') ? "text-primary" : "text-secondary"}>
+              <div className="text-3xl font-bold tracking-tighter">{stat.value}</div>
+              <div className="flex items-center gap-1.5 mt-2">
+                <Badge variant="secondary" className="text-[10px] font-bold bg-white/5 hover:bg-white/10">
                   {stat.change}
-                </span> from last month
-              </p>
+                </Badge>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">vs last week</span>
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-7">
-        <Card className="md:col-span-4">
-          <CardHeader>
-            <CardTitle className="font-headline">Usage Analytics</CardTitle>
-            <CardDescription>Generations breakdown by content type.</CardDescription>
+      <div className="grid gap-6 lg:grid-cols-12">
+        <Card className="lg:col-span-8 border-white/5 bg-card/50">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="font-headline text-xl">Operational Velocity</CardTitle>
+              <CardDescription>Multi-model request throughput per content type.</CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Badge variant="outline" className="text-[10px] uppercase border-primary/20 text-primary">Live Data</Badge>
+            </div>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={usageData}>
                 <defs>
@@ -88,72 +109,65 @@ export default function OverviewPage() {
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
                     <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
                   </linearGradient>
+                  <linearGradient id="colorSecondary" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--secondary))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--secondary))" stopOpacity={0}/>
+                  </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted))" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} dy={10} />
+                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  contentStyle={{ backgroundColor: 'rgba(23, 19, 39, 0.95)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)' }}
                   itemStyle={{ color: 'hsl(var(--primary))' }}
                 />
-                <Area type="monotone" dataKey="text" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorText)" strokeWidth={2} />
-                <Area type="monotone" dataKey="code" stroke="hsl(var(--secondary))" fill="transparent" strokeWidth={2} />
+                <Area type="monotone" dataKey="text" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorText)" strokeWidth={3} />
+                <Area type="monotone" dataKey="code" stroke="hsl(var(--secondary))" fillOpacity={1} fill="url(#colorSecondary)" strokeWidth={3} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-3">
-          <CardHeader>
-            <CardTitle className="font-headline">Recent Activity</CardTitle>
-            <CardDescription>Latest generated snippets.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-center gap-4">
-                  <div className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-full bg-muted/50",
-                    activity.type === "Code" ? "text-secondary" : activity.type === "Image" ? "text-primary" : "text-foreground"
-                  )}>
-                    {activity.type === "Code" ? <Code className="h-5 w-5" /> : activity.type === "Image" ? <ImageIcon className="h-5 w-5" /> : <Type className="h-5 w-5" />}
+        <div className="lg:col-span-4 space-y-6">
+          <Card className="border-white/5 bg-card/50">
+            <CardHeader>
+              <CardTitle className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Active Model Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {topModels.map((model) => (
+                <div key={model.name} className="flex items-center justify-between group cursor-default">
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold group-hover:text-primary transition-colors">{model.name}</p>
+                    <div className="flex items-center gap-2">
+                      <div className={cn("h-1.5 w-1.5 rounded-full", model.status === 'Active' ? "bg-primary animate-pulse" : "bg-muted")} />
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{model.status}</span>
+                    </div>
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">{activity.title}</p>
-                    <p className="text-xs text-muted-foreground">{activity.time}</p>
+                  <div className="text-right">
+                    <p className="text-sm font-bold font-mono">{model.usage}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Load share</p>
                   </div>
-                  <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-5">{activity.tokens} tokens</Badge>
                 </div>
               ))}
-              <Button asChild variant="ghost" className="w-full text-xs" size="sm">
-                <Link href="/history">
-                  <HistoryIcon className="mr-2 h-3 w-3" />
-                  View Full History
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="lavender-glow border-primary/20">
-          <CardHeader className="flex flex-row items-center gap-4">
-            <div className="bg-primary/20 p-2 rounded-lg">
-              <Zap className="h-6 w-6 text-primary" />
+          <Card className="border-primary/20 bg-primary/5 lavender-glow overflow-hidden relative">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Sparkles className="h-24 w-24 text-primary" />
             </div>
-            <div>
-              <CardTitle className="text-lg">Quick Generate</CardTitle>
-              <CardDescription>Start a new project now</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">Leverage our latest LLM models to generate high-quality text or code instantly.</p>
-            <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/playground">Open Playground</Link>
-            </Button>
-          </CardContent>
-        </Card>
+            <CardHeader>
+              <CardTitle className="text-lg">AI Assistant Online</CardTitle>
+              <CardDescription className="text-primary/70">Alex, I've noticed your token usage for code generation has spiked. Need a cost audit?</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button size="sm" className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90">
+                Review Audit
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
