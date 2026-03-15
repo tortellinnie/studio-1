@@ -7,6 +7,7 @@ import {
   LayoutDashboard, 
   Target,
   Activity,
+  ShoppingBag,
   LogOut,
   Settings
 } from "lucide-react";
@@ -38,6 +39,11 @@ const navItems = [
     title: "Brand Health",
     url: "/brand-health",
     icon: Activity,
+  },
+  {
+    title: "Account Recommendations",
+    url: "/account-recommendations",
+    icon: ShoppingBag,
   },
 ];
 
