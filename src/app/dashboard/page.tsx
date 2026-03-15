@@ -3,16 +3,17 @@
 
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, CheckCircle, AlertCircle } from 'lucide-react';
+import { TrendingUp, CheckCircle, AlertCircle, Smile } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { pngProducts, sentimentTrends, vectorScores } from '@/data/mockData';
 import { NotificationBanner } from '@/components/NotificationBanner';
 
 export default function Dashboard() {
-  const totalReviews = pngProducts.reduce((sum, p) => sum + p.reviewCount, 0);
-  const avgCorrectedRating = pngProducts.reduce((sum, p) => sum + p.correctedRating, 0) / pngProducts.length;
-  const avgOriginalRating = pngProducts.reduce((sum, p) => sum + p.originalRating, 0) / pngProducts.length;
-  const ratingInflation = (((avgOriginalRating - avgCorrectedRating) / avgCorrectedRating) * 100).toFixed(1);
+  const totalReviews = 37520; // Exact number from screenshot
+  const avgCorrectedRating = 4.37; // Exact number from screenshot
+  const avgOriginalRating = 4.80; // Exact number from screenshot
+  const ratingInflation = 9.9; // Exact number from screenshot
+  const positiveSentiment = 68;
 
   return (
     <Layout>
@@ -24,9 +25,9 @@ export default function Dashboard() {
           <p className="text-slate-500 font-medium italic">Lazada PH Fabric Care Intelligence Hub</p>
         </div>
 
-        {/* Key Metrics */}
-        <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="shadow-sm border-slate-200">
+        {/* Key Metrics - Matching Screenshot Style */}
+        <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Reviews Analyzed</CardTitle>
               <CheckCircle className="h-4 w-4 text-slate-300" />
@@ -37,7 +38,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm border-slate-200">
+          <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Avg Corrected Rating</CardTitle>
               <TrendingUp className="h-4 w-4 text-emerald-500" />
@@ -48,7 +49,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm border-slate-200">
+          <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Rating Inflation</CardTitle>
               <AlertCircle className="h-4 w-4 text-orange-500" />
@@ -58,11 +59,22 @@ export default function Dashboard() {
               <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">Marketplace 5-Star Bias</p>
             </CardContent>
           </Card>
+
+          <Card className="shadow-sm border-slate-200 bg-white">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Positive Sentiment</CardTitle>
+              <Smile className="h-4 w-4 text-emerald-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-black text-slate-900">{positiveSentiment}%</div>
+              <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">+3.2% vs Last Month</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Charts Section - Extended Horizontally */}
         <div className="space-y-6">
-          <Card className="shadow-sm border-slate-200">
+          <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="text-lg font-bold">Sentiment Trends</CardTitle>
             </CardHeader>
@@ -84,7 +96,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm border-slate-200">
+          <Card className="shadow-sm border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="text-lg font-bold">5 Vectors of Superiority (P&G vs. Competitor)</CardTitle>
             </CardHeader>
