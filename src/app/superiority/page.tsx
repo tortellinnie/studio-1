@@ -1,4 +1,3 @@
-
 "use client";
 
 import Layout from '@/components/Layout';
@@ -21,42 +20,40 @@ import {
   Tooltip,
 } from 'recharts';
 import { pngProducts, sampleReviews } from '@/data/mockData';
-import { Package, Box, DollarSign, MessageSquare, Store, Info } from 'lucide-react';
+import { Package, Box, DollarSign, MessageSquare, Store } from 'lucide-react';
 
-export default function SuperiorityMappingPage() {
+export default function SuperiorityMapping() {
   const vectors = [
-    { name: 'Product', icon: Package, color: 'bg-blue-500' },
-    { name: 'Packaging', icon: Box, color: 'bg-green-500' },
-    { name: 'Value', icon: DollarSign, color: 'bg-purple-500' },
-    { name: 'Communication', icon: MessageSquare, color: 'bg-orange-500' },
-    { name: 'Retail Execution', icon: Store, color: 'bg-pink-500' },
+    { name: 'Product', icon: Package, color: 'bg-[#3b82f6]' },
+    { name: 'Packaging', icon: Box, color: 'bg-[#22c55e]' },
+    { name: 'Value', icon: DollarSign, color: 'bg-[#a855f7]' },
+    { name: 'Communication', icon: MessageSquare, color: 'bg-[#f97316]' },
+    { name: 'Retail Execution', icon: Store, color: 'bg-[#ec4899]' },
   ];
 
   const radarData = [
-    { vector: 'Product', 'P&G Avg': 85, 'Competitor Avg': 72 },
-    { vector: 'Packaging', 'P&G Avg': 68, 'Competitor Avg': 65 },
-    { vector: 'Value', 'P&G Avg': 78, 'Competitor Avg': 70 },
-    { vector: 'Communication', 'P&G Avg': 72, 'Competitor Avg': 68 },
-    { vector: 'Retail Exec', 'P&G Avg': 65, 'Competitor Avg': 63 },
+    { vector: 'Product', 'P&G Average': 85, 'Competitor Average': 72 },
+    { vector: 'Packaging', 'P&G Average': 68, 'Competitor Average': 65 },
+    { vector: 'Value', 'P&G Average': 78, 'Competitor Average': 70 },
+    { vector: 'Communication', 'P&G Average': 72, 'Competitor Average': 68 },
+    { vector: 'Retail Exec', 'P&G Average': 65, 'Competitor Average': 63 },
   ];
 
   const productVectorBreakdown = pngProducts.map((p) => ({
     name: p.name.split(' ')[0],
-    Product: 85 + Math.random() * 10,
+    Product: 85 + Math.random() * 15,
     Packaging: 60 + Math.random() * 20,
-    Value: 70 + Math.random() * 15,
-    Communication: 65 + Math.random() * 15,
-    'Retail Exec': 60 + Math.random() * 10,
+    Value: 70 + Math.random() * 30,
+    Communication: 65 + Math.random() * 20,
+    'Retail Exec': 60 + Math.random() * 15,
   }));
 
   return (
     <Layout>
-      <div className="p-8 space-y-8 animate-in fade-in duration-500">
+      <div className="p-8 space-y-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-extrabold font-headline mb-2">5 Vectors of Superiority</h1>
-          <p className="text-muted-foreground font-medium">
-            Auto-tagging reviews across Product, Packaging, Value, Communication, and Retail Execution
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">5 Vectors of Superiority Mapping</h1>
+          <p className="text-sm text-gray-500">Auto-tagging reviews across Product, Packaging, Value, Communication, and Retail Execution</p>
         </div>
 
         {/* Vector Overview Cards */}
@@ -65,16 +62,14 @@ export default function SuperiorityMappingPage() {
             const scores = [85, 68, 78, 72, 65];
             const Icon = vector.icon;
             return (
-              <Card key={vector.name} className="bg-card/40 border-border/50">
+              <Card key={vector.name} className="shadow-sm border-gray-200">
                 <CardContent className="pt-6">
                   <div className="mb-4 flex items-center justify-between">
-                    <div className="p-2 rounded-lg bg-muted/50">
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                    <span className="text-2xl font-bold font-mono">{scores[index]}</span>
+                    <Icon className="h-4 w-4 text-gray-400" />
+                    <span className="text-xl font-bold text-gray-900">{scores[index]}</span>
                   </div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{vector.name}</p>
-                  <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted/30">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">{vector.name}</p>
+                  <div className="mt-3 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                     <div className={`h-full ${vector.color}`} style={{ width: `${scores[index]}%` }} />
                   </div>
                 </CardContent>
@@ -83,107 +78,121 @@ export default function SuperiorityMappingPage() {
           })}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Radar Chart */}
-          <Card className="border-border/50 bg-card/40">
-            <CardHeader>
-              <CardTitle className="text-lg font-bold">P&G vs. Competitor Benchmark</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                  <PolarGrid stroke="rgba(255,255,255,0.05)" />
-                  <PolarAngleAxis dataKey="vector" stroke="rgba(255,255,255,0.3)" fontSize={10} />
-                  <PolarRadiusAxis angle={90} domain={[0, 100]} stroke="rgba(255,255,255,0.1)" />
-                  <Radar
-                    name="P&G Average"
-                    dataKey="P&G Avg"
-                    stroke="hsl(var(--primary))"
-                    fill="hsl(var(--primary))"
-                    fillOpacity={0.3}
-                  />
-                  <Radar
-                    name="Competitor Average"
-                    dataKey="Competitor Avg"
-                    stroke="rgba(255,255,255,0.2)"
-                    fill="rgba(255,255,255,0.1)"
-                    fillOpacity={0.1}
-                  />
-                  <Legend />
-                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+        {/* Radar Chart */}
+        <Card className="shadow-sm border-gray-200">
+          <CardHeader className="pb-0">
+            <CardTitle className="text-sm font-semibold text-gray-700">P&G vs. Competitor Average Across All Vectors</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                <PolarGrid stroke="#e5e7eb" />
+                <PolarAngleAxis dataKey="vector" fontSize={10} tick={{ fill: '#6b7280' }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} fontSize={10} tick={{ fill: '#9ca3af' }} />
+                <Radar
+                  name="P&G Average"
+                  dataKey="P&G Average"
+                  stroke="#003da5"
+                  fill="#003da5"
+                  fillOpacity={0.4}
+                />
+                <Radar
+                  name="Competitor Average"
+                  dataKey="Competitor Average"
+                  stroke="#94a3b8"
+                  fill="#94a3b8"
+                  fillOpacity={0.2}
+                />
+                <Legend iconType="rect" wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-          {/* Bar Chart Breakdown */}
-          <Card className="border-border/50 bg-card/40">
-            <CardHeader>
-              <CardTitle className="text-lg font-bold">Vector Scores by Product</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={productVectorBreakdown}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={10} />
-                  <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} />
-                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }} />
-                  <Legend />
-                  <Bar dataKey="Product" fill="#3b82f6" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Packaging" fill="#22c55e" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Value" fill="#a855f7" radius={[2, 2, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Bar Chart Breakdown */}
+        <Card className="shadow-sm border-gray-200">
+          <CardHeader className="pb-0">
+            <CardTitle className="text-sm font-semibold text-gray-700">Vector Scores by Product</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={productVectorBreakdown} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                <XAxis dataKey="name" fontSize={10} axisLine={false} tickLine={false} dy={10} />
+                <YAxis fontSize={10} axisLine={false} tickLine={false} domain={[0, 100]} />
+                <Tooltip cursor={{ fill: '#f9fafb' }} />
+                <Legend verticalAlign="bottom" align="center" iconType="rect" wrapperStyle={{ fontSize: '10px', paddingTop: '30px' }} />
+                <Bar dataKey="Product" fill="#3b82f6" barSize={30} />
+                <Bar dataKey="Packaging" fill="#22c55e" barSize={30} />
+                <Bar dataKey="Value" fill="#a855f7" barSize={30} />
+                <Bar dataKey="Communication" fill="#f97316" barSize={30} />
+                <Bar dataKey="Retail Exec" fill="#ec4899" barSize={30} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
         {/* Detailed Vector Analysis */}
-        <Card className="border-border/50 bg-card/40">
-          <CardHeader>
-            <CardTitle className="text-lg font-bold">Vector Definitions & AI Logic</CardTitle>
+        <Card className="shadow-sm border-gray-200 overflow-hidden">
+          <CardHeader className="bg-gray-50 py-3">
+            <CardTitle className="text-sm font-semibold text-gray-700">Detailed Vector Analysis</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="product">
-              <TabsList className="grid w-full grid-cols-5 bg-muted/20 h-11 p-1">
-                <TabsTrigger value="product" className="text-[10px] uppercase font-bold tracking-widest">Product</TabsTrigger>
-                <TabsTrigger value="packaging" className="text-[10px] uppercase font-bold tracking-widest">Packaging</TabsTrigger>
-                <TabsTrigger value="value" className="text-[10px] uppercase font-bold tracking-widest">Value</TabsTrigger>
-                <TabsTrigger value="communication" className="text-[10px] uppercase font-bold tracking-widest">Comm</TabsTrigger>
-                <TabsTrigger value="retail" className="text-[10px] uppercase font-bold tracking-widest">Retail</TabsTrigger>
+          <CardContent className="p-0">
+            <Tabs defaultValue="product" className="w-full">
+              <TabsList className="flex w-full bg-gray-50 border-b rounded-none h-10 p-0">
+                <TabsTrigger value="product" className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 text-[10px] font-bold uppercase">Product</TabsTrigger>
+                <TabsTrigger value="packaging" className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 text-[10px] font-bold uppercase">Packaging</TabsTrigger>
+                <TabsTrigger value="value" className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 text-[10px] font-bold uppercase">Value</TabsTrigger>
+                <TabsTrigger value="communication" className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 text-[10px] font-bold uppercase">Communication</TabsTrigger>
+                <TabsTrigger value="retail" className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 text-[10px] font-bold uppercase text-nowrap">Retail Exec</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="product" className="mt-8 space-y-6">
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-bold text-primary flex items-center gap-2 uppercase tracking-widest">
-                      <div className="h-2 w-2 rounded-full bg-primary" />
-                      What We Measure
-                    </h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Core performance, effectiveness, quality, and functional reliability mentioned in reviews. Our model distinguishes between "mabango" (scent) and "linis" (performance).
-                    </p>
+              <div className="p-6">
+                <TabsContent value="product" className="mt-0 space-y-4">
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-900 mb-1">What We Measure</h4>
+                    <p className="text-xs text-gray-500 leading-relaxed">Product performance, effectiveness, quality, features, and core functionality mentioned in reviews.</p>
                   </div>
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-bold text-primary flex items-center gap-2 uppercase tracking-widest">
-                      <div className="h-2 w-2 rounded-full bg-primary" />
-                      Keywords
-                    </h4>
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-900 mb-2">Example Keywords (Taglish)</h4>
                     <div className="flex flex-wrap gap-2">
-                      {['effective', 'gumana', 'quality', 'natanggal ang mantsa', 'mabango'].map(k => (
-                        <Badge key={k} variant="secondary" className="text-[9px] font-mono px-2 py-0">{k}</Badge>
+                      {['effective', 'gumana', 'quality', 'natanggal ang mantsa', 'mabango', 'maayos'].map(k => (
+                        <Badge key={k} variant="secondary" className="text-[9px] bg-gray-100 text-gray-600 border-none font-mono py-0">{k}</Badge>
                       ))}
                     </div>
                   </div>
-                </div>
-              </TabsContent>
-              <TabsContent value="packaging" className="mt-8">
-                <div className="p-4 rounded-xl bg-muted/20 border border-white/5 flex gap-4">
-                    <Info className="h-5 w-5 text-primary shrink-0" />
-                    <p className="text-sm text-muted-foreground">Packaging analysis identifies leak issues and container usability problems using visual pattern recognition and NLP extraction.</p>
-                </div>
-              </TabsContent>
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-900 mb-1">Top Performing Product</h4>
+                    <p className="text-xs text-gray-600 font-medium">Downy Fabric Conditioner - 98/100 product vector score</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="packaging" className="mt-0">
+                  <p className="text-xs text-gray-500">Packaging analysis includes durability, aesthetics, and ease of use as reported by customers.</p>
+                </TabsContent>
+              </div>
             </Tabs>
+          </CardContent>
+        </Card>
+
+        {/* Auto-Tagging Methodology */}
+        <Card className="shadow-sm border-gray-200">
+          <CardHeader className="bg-gray-50 py-3">
+            <CardTitle className="text-sm font-semibold text-gray-700">Auto-Tagging Methodology</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid md:grid-cols-4 gap-6 text-center">
+              {[
+                { step: "1", title: "Text Preprocessing", desc: "Reviews are tokenized with Taglish-aware processing" },
+                { step: "2", title: "Vector Classification", desc: "Sentences are mapped to vectors using semantic models" },
+                { step: "3", title: "Score Calculation", desc: "Sentiment intensity is measured for each vector" },
+                { step: "4", title: "Aggregation", desc: "Metrics are weighted by review volume and confidence" }
+              ].map(item => (
+                <div key={item.step} className="space-y-2">
+                  <div className="text-xs font-bold text-blue-600 uppercase tracking-widest">{item.title}</div>
+                  <p className="text-[10px] text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
