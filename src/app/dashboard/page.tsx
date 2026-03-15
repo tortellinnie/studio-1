@@ -4,7 +4,7 @@
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, CheckCircle, AlertCircle } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { pngProducts, sentimentTrends, vectorScores } from '@/data/mockData';
 import { NotificationBanner } from '@/components/NotificationBanner';
 
@@ -13,12 +13,6 @@ export default function Dashboard() {
   const avgCorrectedRating = pngProducts.reduce((sum, p) => sum + p.correctedRating, 0) / pngProducts.length;
   const avgOriginalRating = pngProducts.reduce((sum, p) => sum + p.originalRating, 0) / pngProducts.length;
   const ratingInflation = (((avgOriginalRating - avgCorrectedRating) / avgCorrectedRating) * 100).toFixed(1);
-
-  const sentimentData = [
-    { name: 'Positive', value: 68, color: '#22c55e' },
-    { name: 'Neutral', value: 22, color: '#f59e0b' },
-    { name: 'Negative', value: 10, color: '#ef4444' }
-  ];
 
   return (
     <Layout>
@@ -66,44 +60,48 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Charts Section */}
-        <div className="mb-8 grid gap-6 lg:grid-cols-2">
+        {/* Charts Section - Extended Horizontally */}
+        <div className="space-y-6">
           <Card className="shadow-sm border-slate-200">
             <CardHeader>
               <CardTitle className="text-lg font-bold">Sentiment Trends</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={sentimentTrends}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                  <Tooltip />
-                  <Legend iconType="circle" />
-                  <Line type="monotone" dataKey="positive" stroke="#22c55e" strokeWidth={3} dot={{ r: 4 }} />
-                  <Line type="monotone" dataKey="neutral" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4 }} />
-                  <Line type="monotone" dataKey="negative" stroke="#ef4444" strokeWidth={3} dot={{ r: 4 }} />
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={sentimentTrends}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                    <Legend iconType="circle" />
+                    <Line type="monotone" dataKey="positive" stroke="#22c55e" strokeWidth={3} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="neutral" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="negative" stroke="#ef4444" strokeWidth={3} dot={{ r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
 
           <Card className="shadow-sm border-slate-200">
             <CardHeader>
-              <CardTitle className="text-lg font-bold">5 Vectors of Superiority</CardTitle>
+              <CardTitle className="text-lg font-bold">5 Vectors of Superiority (P&G vs. Competitor)</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={vectorScores}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="vector" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                  <Tooltip cursor={{ fill: '#f8fafc' }} />
-                  <Legend iconType="rect" />
-                  <Bar dataKey="pngAvg" fill="#003da5" name="P&G Average" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="competitorAvg" fill="#e2e8f0" name="Competitor Average" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={vectorScores} barGap={8}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="vector" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={[0, 100]} />
+                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                    <Legend iconType="rect" />
+                    <Bar dataKey="pngAvg" fill="#003da5" name="P&G Average" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="competitorAvg" fill="#e2e8f0" name="Competitor Average" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </div>
