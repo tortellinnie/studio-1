@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -22,10 +21,13 @@ import {
   TrendingUp, 
   CheckCircle2, 
   AlertCircle, 
-  Info
+  Info,
+  Activity,
+  Smile
 } from "lucide-react";
 import { pngProducts, multiBrandTrends } from "@/data/mockData";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 const sentimentDist = [
   { name: 'Positive', value: 68, color: '#10b981' },
@@ -37,8 +39,8 @@ const vectorAvg = [
   { name: 'Product', 'P&G Average': 85, 'Competitor Average': 72 },
   { name: 'Packaging', 'P&G Average': 68, 'Competitor Average': 65 },
   { name: 'Value', 'P&G Average': 78, 'Competitor Average': 70 },
-  { name: 'Communication', 'P&G Average': 72, 'Competitor Average': 68 },
-  { name: 'Retail Execution', 'P&G Average': 65, 'Competitor Average': 63 },
+  { name: 'Comm', 'P&G Average': 72, 'Competitor Average': 68 },
+  { name: 'Retail Exec', 'P&G Average': 65, 'Competitor Average': 63 },
 ];
 
 export default function OverviewPage() {
@@ -51,72 +53,70 @@ export default function OverviewPage() {
   if (!isClient) return null;
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-[1600px] mx-auto pb-16">
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold font-headline text-slate-900">Mission Control</h1>
-        <p className="text-xl font-medium text-slate-500">Real-time P&G e-commerce performance analytics</p>
+    <div className="space-y-16 animate-in fade-in duration-500 max-w-[1800px] mx-auto pb-32">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="space-y-4">
+          <h1 className="text-6xl font-black font-headline text-slate-900 tracking-tighter">Mission Control</h1>
+          <p className="text-3xl font-bold text-slate-500 uppercase tracking-widest">Fabric Care: Lazada PH intelligence</p>
+        </div>
+        <Badge className="bg-[#003da5] text-white px-8 py-3 text-sm font-black tracking-widest uppercase">Live Data: Oct 2023</Badge>
       </div>
 
-      {/* Top Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Primary KPI Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         {[
-          { title: "Total Reviews", value: "14,709", sub: "Lazada PH Catalog", color: "text-blue-600" },
-          { title: "Avg Corrected Rating", value: "4.20", sub: "NLP Adjusted Score", color: "text-emerald-600" },
-          { title: "Rating Inflation", value: "14.8%", sub: "Platform Bias Offset", color: "text-orange-600" },
-          { title: "Positive Sentiment", value: "68%", sub: "+3% vs Last Month", color: "text-emerald-600" },
+          { title: "Total Reviews", value: "37.5k", sub: "Lazada PH Catalog", color: "text-[#003da5]", icon: Activity },
+          { title: "Avg Rating", value: "4.42", sub: "Sentiment Corrected", color: "text-emerald-600", icon: CheckCircle2 },
+          { title: "Inflation", value: "96.8%", sub: "Platform Bias", color: "text-rose-600", icon: AlertCircle },
+          { title: "Sentiment", value: "72%", sub: "Positive Index", color: "text-emerald-600", icon: Smile },
         ].map((item, i) => (
-          <Card key={i} className="border-border/50 shadow-md bg-white">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-black text-slate-400 uppercase tracking-[0.2em]">{item.title}</CardTitle>
+          <Card key={i} className="border-border/50 shadow-2xl bg-white p-6 rounded-[2.5rem]">
+            <CardHeader className="pb-8 flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">{item.title}</CardTitle>
+              <item.icon className={cn("h-8 w-8", item.color)} />
             </CardHeader>
             <CardContent>
-              <div className={cn("text-5xl font-black", item.color)}>{item.value}</div>
-              <p className="text-base text-slate-500 font-bold mt-4 uppercase tracking-tight">{item.sub}</p>
+              <div className={cn("text-7xl font-black tracking-tighter", item.color)}>{item.value}</div>
+              <p className="text-xl text-slate-500 font-bold mt-8 flex items-center gap-3">
+                <span className="h-3 w-3 rounded-full bg-slate-200" />
+                {item.sub}
+              </p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Analytics Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="lg:col-span-2 border-border/50 shadow-md bg-white">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-slate-800">Historical Sentiment Trends</CardTitle>
-            <CardDescription className="text-lg">Monthly performance tracking vs key competitors</CardDescription>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <Card className="lg:col-span-2 border-border/50 shadow-2xl bg-white rounded-[3rem]">
+          <CardHeader className="p-16">
+            <CardTitle className="text-5xl font-black text-slate-900 tracking-tight">Sentiment Trends</CardTitle>
+            <CardDescription className="text-2xl font-bold mt-4 text-slate-400">Monthly Performance Benchmark</CardDescription>
           </CardHeader>
-          <CardContent className="h-[500px]">
+          <CardContent className="h-[650px] p-16 pt-0">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={multiBrandTrends}>
+              <LineChart data={multiBrandTrends} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="month" stroke="#94a3b8" fontSize={16} tickLine={false} axisLine={false} dy={10} />
-                <YAxis stroke="#94a3b8" fontSize={16} tickLine={false} axisLine={false} domain={[50, 80]} />
-                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 16px rgba(0,0,0,0.1)', fontSize: '16px' }} />
-                <Legend iconType="circle" wrapperStyle={{ paddingTop: '30px', fontSize: '18px', fontWeight: 600 }} />
-                <Line type="monotone" dataKey="P&G" stroke="#003da5" strokeWidth={5} dot={{ r: 6, fill: '#003da5' }} activeDot={{ r: 9 }} />
-                <Line type="monotone" dataKey="Surf" stroke="#94a3b8" strokeWidth={3} strokeDasharray="6 6" />
-                <Line type="monotone" dataKey="Breeze" stroke="#cbd5e1" strokeWidth={3} strokeDasharray="6 6" />
+                <XAxis dataKey="month" stroke="#94a3b8" fontSize={24} tickLine={false} axisLine={false} dy={20} fontWeight={900} />
+                <YAxis stroke="#94a3b8" fontSize={24} tickLine={false} axisLine={false} domain={[50, 80]} fontWeight={900} />
+                <Tooltip contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 30px 40px -10px rgba(0,0,0,0.1)', fontSize: '24px', fontWeight: 900 }} />
+                <Legend iconType="circle" wrapperStyle={{ paddingTop: '60px', fontSize: '24px', fontWeight: 900 }} />
+                <Line type="monotone" dataKey="P&G" stroke="#003da5" strokeWidth={10} dot={{ r: 12, fill: '#003da5' }} activeDot={{ r: 16 }} />
+                <Line type="monotone" dataKey="Surf" stroke="#94a3b8" strokeWidth={6} strokeDasharray="12 12" />
+                <Line type="monotone" dataKey="Breeze" stroke="#cbd5e1" strokeWidth={6} strokeDasharray="12 12" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card className="border-border/50 shadow-md bg-white">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-slate-800">Sentiment Distribution</CardTitle>
-            <CardDescription className="text-lg">Overall portfolio health</CardDescription>
+        <Card className="border-border/50 shadow-2xl bg-white rounded-[3rem]">
+          <CardHeader className="p-16">
+            <CardTitle className="text-5xl font-black text-slate-900 tracking-tight">Portfolio Health</CardTitle>
           </CardHeader>
-          <CardContent className="h-[500px] flex flex-col items-center justify-center">
-            <ResponsiveContainer width="100%" height="350">
+          <CardContent className="h-[650px] flex flex-col items-center justify-center p-16">
+            <ResponsiveContainer width="100%" height="450">
               <PieChart>
-                <Pie
-                  data={sentimentDist}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={100}
-                  outerRadius={140}
-                  paddingAngle={8}
-                  dataKey="value"
-                >
+                <Pie data={sentimentDist} cx="50%" cy="50%" innerRadius={130} outerRadius={190} paddingAngle={12} dataKey="value">
                   {sentimentDist.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -124,11 +124,11 @@ export default function OverviewPage() {
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
-            <div className="w-full mt-10 grid grid-cols-3 gap-6">
+            <div className="w-full mt-16 grid grid-cols-3 gap-12">
               {sentimentDist.map((item) => (
                 <div key={item.name} className="flex flex-col items-center">
-                  <span className="text-xs font-black text-slate-400 uppercase mb-2 tracking-widest">{item.name}</span>
-                  <span className="text-3xl font-black" style={{ color: item.color }}>{item.value}%</span>
+                  <span className="text-xs font-black text-slate-400 uppercase mb-4 tracking-[0.4em]">{item.name}</span>
+                  <span className="text-5xl font-black tracking-tighter" style={{ color: item.color }}>{item.value}%</span>
                 </div>
               ))}
             </div>
@@ -136,82 +136,24 @@ export default function OverviewPage() {
         </Card>
       </div>
 
-      {/* Vector & Top Product Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="border-border/50 shadow-md bg-white">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-slate-800">5 Vectors of Superiority</CardTitle>
-            <CardDescription className="text-lg">Benchmarking vs competitor average</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[500px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={vectorAvg} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={16} tickLine={false} axisLine={false} dy={10} />
-                <YAxis stroke="#94a3b8" fontSize={16} tickLine={false} axisLine={false} domain={[0, 100]} />
-                <Tooltip cursor={{ fill: '#f8fafc' }} />
-                <Legend iconType="rect" wrapperStyle={{ paddingTop: '30px', fontSize: '18px', fontWeight: 600 }} />
-                <Bar dataKey="P&G Average" fill="#003da5" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="Competitor Average" fill="#cbd5e1" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border/50 shadow-md bg-white">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-slate-800">Top Performing SKUs</CardTitle>
-            <CardDescription className="text-lg">Ranked by corrected rating</CardDescription>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y divide-border/50">
-              {pngProducts.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex items-center justify-between p-8 hover:bg-slate-50 transition-colors">
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-slate-900">{product.name}</p>
-                    <p className="text-sm font-black text-slate-400 uppercase tracking-widest">{product.reviewCount.toLocaleString()} verified reviews</p>
-                  </div>
-                  <div className="flex items-center gap-12">
-                    <div className="text-right">
-                      <p className="text-xs font-black text-slate-300 uppercase tracking-widest">Original</p>
-                      <p className="text-xl font-bold text-slate-400 font-mono">{product.originalRating}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Corrected</p>
-                      <p className="text-3xl font-black text-emerald-600 font-mono">{product.correctedRating}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Key Insights Section */}
-      <Card className="border-border/50 shadow-lg bg-slate-50/50">
-        <CardHeader className="pb-8">
-          <CardTitle className="text-sm font-black text-slate-400 uppercase tracking-[0.4em]">Strategic Intelligence Recap</CardTitle>
+      {/* Vector Row */}
+      <Card className="border-border/50 shadow-2xl bg-white rounded-[3rem]">
+        <CardHeader className="p-16">
+          <CardTitle className="text-5xl font-black text-slate-900 tracking-tight">5 Vectors of Superiority</CardTitle>
+          <CardDescription className="text-2xl font-bold mt-4 text-slate-400">P&G Average vs Category Competitors</CardDescription>
         </CardHeader>
-        <CardContent className="grid md:grid-cols-2 gap-10">
-          {[
-            { text: "Downy leads sentiment: 78% positive reviews with highest product vector score (0.98)", icon: CheckCircle2, color: "text-emerald-500" },
-            { text: "Safeguard needs attention: Only 62% positive sentiment, packaging concerns detected in Taglish reviews", icon: AlertCircle, color: "text-orange-500" },
-            { text: "Value proposition strong: P&G products score 78/100 on value vector, outperforming competitors by 8 points", icon: TrendingUp, color: "text-blue-500" },
-            { text: "Correction reveals: Ariel's true performance is 4.3/5.0, filtering out ~14% rating inflation on Lazada", icon: Info, color: "text-slate-500" },
-          ].map((insight, i) => (
-            <div key={i} className="flex items-start gap-8 p-10 bg-white rounded-3xl shadow-sm border border-slate-100">
-              <insight.icon className={cn("h-10 w-10 shrink-0 mt-1", insight.color)} />
-              <div className="space-y-3">
-                <p className="text-2xl font-black text-slate-900 leading-tight">
-                   {insight.text.split(':')[0]}:
-                </p>
-                <p className="text-lg font-medium text-slate-600 leading-relaxed">
-                  {insight.text.split(':')[1]}
-                </p>
-              </div>
-            </div>
-          ))}
+        <CardContent className="h-[650px] p-16">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={vectorAvg} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={20} tickLine={false} axisLine={false} dy={25} fontWeight={900} />
+              <YAxis stroke="#94a3b8" fontSize={24} tickLine={false} axisLine={false} domain={[0, 100]} fontWeight={900} />
+              <Tooltip cursor={{ fill: '#f8fafc' }} />
+              <Legend iconType="rect" wrapperStyle={{ paddingTop: '70px', fontSize: '24px', fontWeight: 900 }} />
+              <Bar dataKey="P&G Average" fill="#003da5" radius={[12, 12, 0, 0]} />
+              <Bar dataKey="Competitor Average" fill="#cbd5e1" radius={[12, 12, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
     </div>
