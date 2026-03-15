@@ -1,0 +1,23 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "gen-1",
+      "description": "Abstract AI visualization",
+      "imageUrl": "https://picsum.photos/seed/ai1/800/600",
+      "imageHint": "abstract ai"
+    },
+    {
+      "id": "gen-2",
+      "description": "Cyberpunk city architecture",
+      "imageUrl": "https://picsum.photos/seed/ai2/800/600",
+      "imageHint": "cyberpunk architecture"
+    },
+    {
+      "id": "gen-3",
+      "description": "Futuristic interface concept",
+      "imageUrl": "https://picsum.photos/seed/ai3/800/600",
+      "imageHint": "futuristic interface"
+    }
+  ]
+}
