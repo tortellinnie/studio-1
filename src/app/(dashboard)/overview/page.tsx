@@ -22,9 +22,13 @@ import {
   CheckCircle2, 
   TrendingUp, 
   AlertCircle, 
-  Smile
+  Smile,
+  Meh,
+  Frown,
+  Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { pngProducts } from "@/data/mockData";
 
 const trendData = [
   { month: 'Sep 2025', positive: 62, neutral: 25, negative: 13 },
@@ -48,14 +52,6 @@ const vectorData = [
   { name: 'Retail Execution', 'P&G Average': 72, 'Competitor Average': 68 },
 ];
 
-const topProducts = [
-  { name: 'Downy Fabric Conditioner', reviews: '4521 reviews', original: '4.9', corrected: '4.5' },
-  { name: 'Ariel Liquid Detergent', reviews: '3124 reviews', original: '4.8', corrected: '4.3' },
-  { name: 'Tide Powder Detergent', reviews: '2847 reviews', original: '4.9', corrected: '4.2' },
-  { name: 'Joy Dishwashing Liquid', reviews: '2341 reviews', original: '4.8', corrected: '4.1' },
-  { name: 'Safeguard Bar Soap', reviews: '1876 reviews', original: '4.7', corrected: '3.9' },
-];
-
 export default function OverviewPage() {
   const [isClient, setIsClient] = useState(false);
 
@@ -66,7 +62,7 @@ export default function OverviewPage() {
   if (!isClient) return null;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight">Dashboard Overview</h1>
         <p className="text-sm text-muted-foreground">GenAI-powered insights for P&G e-commerce performance</p>
@@ -80,24 +76,120 @@ export default function OverviewPage() {
           { title: "Rating Inflation", value: "14.8%", sub: "Lazada's 5-star bias", icon: AlertCircle, iconColor: "text-orange-500" },
           { title: "Positive Sentiment", value: "68%", sub: "+3% from last month", icon: Smile, iconColor: "text-emerald-500" },
         ].map((item, i) => (
-          <Card key={i} className="shadow-sm">
+          <Card key={i} className="shadow-sm border-slate-200">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-semibold">{item.title}</CardTitle>
               <item.icon className={cn("h-4 w-4", item.iconColor)} />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{item.value}</div>
+              <div className="text-2xl font-bold">{item.value}</div>
               <p className="text-[11px] text-muted-foreground mt-1">{item.sub}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card className="shadow-sm">
+      {/* Taglish-Aware AI Sentiment Analysis Section */}
+      <div className="space-y-6">
+        <div className="space-y-1">
+          <h2 className="text-xl font-bold tracking-tight">Taglish-Aware AI Sentiment Analysis</h2>
+          <p className="text-sm text-muted-foreground">Advanced NLP model trained on Filipino-English code-switching patterns</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="shadow-sm border-l-4 border-l-emerald-500 border-slate-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Smile className="h-4 w-4 text-emerald-500" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Positive Sentiment</span>
+              </div>
+              <div className="text-3xl font-bold">68%</div>
+              <div className="text-xs text-muted-foreground mt-1">9,876 reviews</div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm border-l-4 border-l-orange-500 border-slate-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Meh className="h-4 w-4 text-orange-500" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Neutral Sentiment</span>
+              </div>
+              <div className="text-3xl font-bold">22%</div>
+              <div className="text-xs text-muted-foreground mt-1">3,198 reviews</div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm border-l-4 border-l-red-500 border-slate-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Frown className="h-4 w-4 text-red-500" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Negative Sentiment</span>
+              </div>
+              <div className="text-3xl font-bold">10%</div>
+              <div className="text-xs text-muted-foreground mt-1">1,453 reviews</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="shadow-sm border-slate-200">
           <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-semibold">Sentiment Trends (6 Months)</CardTitle>
+            <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-600">Product-Level Sentiment Distribution</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-8">
+            {pngProducts.map((product) => (
+              <div key={product.id} className="space-y-3">
+                <div className="flex items-baseline justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-bold text-slate-900">{product.name}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">{product.reviewCount.toLocaleString()} reviews analyzed</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-6">
+                  {/* Positive Column */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-bold uppercase">
+                      <span className="text-emerald-600">Positive</span>
+                      <span className="text-slate-900">{product.sentimentDistribution.positive}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-500" style={{ width: `${product.sentimentDistribution.positive}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Neutral Column */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-bold uppercase">
+                      <span className="text-orange-500">Neutral</span>
+                      <span className="text-slate-900">{product.sentimentDistribution.neutral}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-orange-500" style={{ width: `${product.sentimentDistribution.neutral}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Negative Column */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-bold uppercase">
+                      <span className="text-red-500">Negative</span>
+                      <span className="text-slate-900">{product.sentimentDistribution.negative}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-500" style={{ width: `${product.sentimentDistribution.negative}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Analytics Visualization Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="shadow-sm border-slate-200">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-600">Sentiment Trends (6 Months)</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -115,37 +207,9 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm">
+        <Card className="shadow-sm border-slate-200">
           <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-semibold">Overall Sentiment Distribution</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px] relative flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={distributionData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value">
-                  {distributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <div className="flex flex-col space-y-2 text-[11px] font-bold">
-                <span className="text-emerald-600">Positive: 68%</span>
-                <span className="text-orange-500">Neutral: 22%</span>
-                <span className="text-red-500">Negative: 10%</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Charts Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card className="shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-semibold">5 Vectors of Superiority</CardTitle>
+            <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-600">5 Vectors of Superiority</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -159,31 +223,6 @@ export default function OverviewPage() {
                 <Bar dataKey="Competitor Average" fill="#94a3b8" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-semibold">Top Performing Products</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {topProducts.map((product, i) => (
-                <div key={i} className="flex items-center justify-between border-b border-slate-50 pb-2 last:border-0 last:pb-0">
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-bold text-slate-900">{product.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{product.reviews}</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-[11px] text-muted-foreground">{product.original}</span>
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-bold text-emerald-600">{product.corrected}</span>
-                      <TrendingUp className="h-3 w-3 text-emerald-500" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
       </div>
