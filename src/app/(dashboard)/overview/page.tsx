@@ -37,9 +37,9 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const stats = [
-  { name: "Token Usage", value: "842,012", icon: Zap, change: "+12.5%", sub: "Monthly Quota" },
-  { name: "Avg. Latency", value: "0.84s", icon: Clock, change: "-14%", sub: "Global Average" },
-  { name: "Active Models", value: "8", icon: LayoutGrid, change: "+2", sub: "Currently Enabled" },
+  { name: "Token Usage", value: "842,012", change: "+12.5%", sub: "Monthly Quota" },
+  { name: "Avg. Latency", value: "0.84s", change: "-14%", sub: "Global Average" },
+  { name: "Active Models", value: "8", change: "+2", sub: "Currently Enabled" },
 ];
 
 const recentGenerations = [
@@ -65,16 +65,16 @@ export default function OverviewPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
           <h1 className="text-3xl font-extrabold tracking-tight font-headline">Welcome back, Alex</h1>
-          <p className="text-muted-foreground text-sm font-medium">Here's what's happening with your AI fleet today.</p>
+          <p className="text-muted-foreground text-sm font-medium">Monitoring your P&G Intelligence assets.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" className="border-border/50 h-9 px-4 text-xs font-semibold">
             View Reports
           </Button>
-          <Button className="lavender-glow h-9 px-4 text-xs font-bold gap-2" asChild>
+          <Button className="h-9 px-4 text-xs font-bold gap-2 bg-primary text-white hover:bg-primary/90" asChild>
             <Link href="/playground">
               <Plus className="h-3.5 w-3.5" />
-              Create Generation
+              New Analysis
             </Link>
           </Button>
         </div>
@@ -82,13 +82,10 @@ export default function OverviewPage() {
 
       <div className="grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
-          <Card key={stat.name} className="border-border/50 bg-card/40 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
+          <Card key={stat.name} className="border-border/50 bg-card/40 backdrop-blur-sm transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 rounded-xl bg-primary/10">
-                  <stat.icon className="h-5 w-5 text-primary" />
-                </div>
-                <Badge variant="secondary" className="text-[10px] font-bold bg-green-500/10 text-green-500 border-green-500/20">
+                <Badge variant="secondary" className="text-[10px] font-bold bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
                   {stat.change}
                 </Badge>
               </div>
@@ -108,11 +105,10 @@ export default function OverviewPage() {
         <Card className="lg:col-span-8 border-border/50 bg-card/40">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
             <div>
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <LineChart className="h-4 w-4 text-primary" />
+              <CardTitle className="text-lg font-bold flex items-center gap-2 text-slate-900">
                 Operational Velocity
               </CardTitle>
-              <CardDescription>Daily token consumption across all active models.</CardDescription>
+              <CardDescription>Daily consumption across all active P&G models.</CardDescription>
             </div>
             <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
               Last 7 Days <ChevronRight className="ml-1 h-3 w-3" />
@@ -123,24 +119,24 @@ export default function OverviewPage() {
               <AreaChart data={usageData}>
                 <defs>
                   <linearGradient id="colorUsage" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
                     <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={10} tickLine={false} axisLine={false} dy={10} />
-                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => `${val/1000}k`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                <XAxis dataKey="name" stroke="rgba(0,0,0,0.3)" fontSize={10} tickLine={false} axisLine={false} dy={10} />
+                <YAxis stroke="rgba(0,0,0,0.3)" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => `${val/1000}k`} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                 />
-                <Area type="monotone" dataKey="usage" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorUsage)" strokeWidth={3} />
+                <Area type="monotone" dataKey="usage" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorUsage)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <div className="lg:col-span-4 space-y-6">
-          <Card className="border-border/50 bg-card/40">
+        <div className="lg:col-span-4">
+          <Card className="border-border/50 bg-card/40 h-full">
             <CardHeader className="pb-4">
               <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground/70 flex items-center justify-between">
                 Billing Overview
@@ -153,7 +149,7 @@ export default function OverviewPage() {
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Current Plan</p>
                   <p className="text-sm font-bold">Pro Enterprise</p>
                 </div>
-                <Badge className="bg-primary/20 text-primary border-primary/20 text-[10px] font-bold">ACTIVE</Badge>
+                <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-[10px] font-bold">ACTIVE</Badge>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -161,27 +157,12 @@ export default function OverviewPage() {
                   <span>70%</span>
                 </div>
                 <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary lavender-glow w-[70%]" />
+                  <div className="h-full bg-primary w-[70%]" />
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full text-[10px] h-8 font-bold uppercase tracking-widest">
-                Manage Billing <ArrowRight className="ml-2 h-3 w-3" />
+              <Button variant="outline" size="sm" className="w-full text-[10px] h-8 font-bold uppercase tracking-widest mt-4">
+                Manage Account <ArrowRight className="ml-2 h-3 w-3" />
               </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-primary/20 bg-primary/5 lavender-glow">
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                  <TrendingUp className="h-4 w-4 text-primary-foreground" />
-                </div>
-                <p className="text-xs font-bold uppercase tracking-widest">Optimization Tip</p>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                You could save <span className="text-primary font-bold">~15%</span> on token costs by switching simple translation tasks to Gemini 1.5 Flash.
-              </p>
-              <Button size="sm" className="w-full h-8 text-[10px] font-bold uppercase tracking-widest">Apply Suggestion</Button>
             </CardContent>
           </Card>
         </div>
@@ -191,7 +172,7 @@ export default function OverviewPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className="text-lg font-bold">Recent Activity</CardTitle>
-            <CardDescription>Your latest generations across all platforms.</CardDescription>
+            <CardDescription>Your latest generations and data analysis.</CardDescription>
           </div>
           <Button variant="outline" size="sm" className="h-8 text-[10px] font-bold uppercase">View History</Button>
         </CardHeader>
@@ -199,9 +180,9 @@ export default function OverviewPage() {
           <Table>
             <TableHeader>
               <TableRow className="border-border/50 hover:bg-transparent">
-                <TableHead className="text-[10px] uppercase font-bold">Generation Name</TableHead>
+                <TableHead className="text-[10px] uppercase font-bold">Analysis Name</TableHead>
                 <TableHead className="text-[10px] uppercase font-bold">Type</TableHead>
-                <TableHead className="text-[10px] uppercase font-bold">AI Model</TableHead>
+                <TableHead className="text-[10px] uppercase font-bold">Model</TableHead>
                 <TableHead className="text-[10px] uppercase font-bold">Status</TableHead>
                 <TableHead className="text-right text-[10px] uppercase font-bold">Created</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
@@ -217,7 +198,7 @@ export default function OverviewPage() {
                   <TableCell className="text-xs text-muted-foreground">{gen.model}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className={cn("h-1.5 w-1.5 rounded-full", gen.status === 'Success' ? "bg-green-500" : "bg-destructive")} />
+                      <div className={cn("h-1.5 w-1.5 rounded-full", gen.status === 'Success' ? "bg-emerald-500" : "bg-destructive")} />
                       <span className="text-xs font-medium">{gen.status}</span>
                     </div>
                   </TableCell>

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { 
   Sparkles, 
   Code, 
@@ -69,7 +70,6 @@ export default function PlaygroundPage() {
     setIsLoading(true);
     setGeneratedImageUrl(null);
     try {
-      // Combine prompts if system prompt is enabled
       const finalPrompt = showSystemPrompt ? `System: ${systemPrompt}\n\nUser: ${userPrompt}` : userPrompt;
       const result = await generateTextFromPrompt({ prompt: finalPrompt });
       setOutput(result.generatedText);
@@ -151,7 +151,6 @@ export default function PlaygroundPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1 overflow-hidden">
-        {/* Left: Input Panel */}
         <div className="lg:col-span-8 flex flex-col space-y-4">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-5 bg-muted/20 p-1 h-11 mb-6">
@@ -204,7 +203,7 @@ export default function PlaygroundPage() {
               <CardFooter className="p-4 border-t border-border/50 bg-muted/5">
                 <div className="flex w-full gap-4">
                    {activeTab === "text" && (
-                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest lavender-glow" onClick={handleGenerateText} disabled={isLoading || !userPrompt}>
+                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest bg-primary hover:bg-primary/90 text-white" onClick={handleGenerateText} disabled={isLoading || !userPrompt}>
                       {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                       Generate Analysis
                     </Button>
@@ -216,7 +215,7 @@ export default function PlaygroundPage() {
                     </Button>
                   )}
                   {activeTab === "image" && (
-                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest bg-primary lavender-glow" onClick={handleGenerateImage} disabled={isLoading || !userPrompt}>
+                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest bg-primary hover:bg-primary/90 text-white" onClick={handleGenerateImage} disabled={isLoading || !userPrompt}>
                       {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
                       Synthesize Image
                     </Button>
@@ -233,7 +232,6 @@ export default function PlaygroundPage() {
           </Tabs>
         </div>
 
-        {/* Right: Parameters & History */}
         <div className="lg:col-span-4 space-y-6">
           <Card className="border-border/50 bg-card/30">
             <CardHeader className="py-4 border-b border-border/50 flex flex-row items-center justify-between space-y-0">

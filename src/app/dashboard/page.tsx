@@ -36,37 +36,23 @@ export default function Dashboard() {
             <h1 className="text-4xl font-bold text-slate-900 mb-2 font-headline tracking-tight">Executive Overview</h1>
             <p className="text-slate-500 font-medium text-lg">Lazada PH Fabric Category Intelligence</p>
           </div>
-          <div className="flex gap-2">
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700 font-bold px-3 py-1">ACCOUNT: LAZADA PH</Badge>
-          </div>
         </div>
 
         {/* Metric Summaries */}
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-slate-200 shadow-sm">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Reviews</CardDescription>
-              <CardTitle className="text-2xl font-black text-slate-900">37,520</CardTitle>
-            </CardHeader>
-          </Card>
-          <Card className="border-slate-200 shadow-sm">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Avg Corrected Rating</CardDescription>
-              <CardTitle className="text-2xl font-black text-slate-900">4.42 <span className="text-xs text-emerald-500 ml-1">★</span></CardTitle>
-            </CardHeader>
-          </Card>
-          <Card className="border-slate-200 shadow-sm">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Sentiment Score</CardDescription>
-              <CardTitle className="text-2xl font-black text-slate-900">72%</CardTitle>
-            </CardHeader>
-          </Card>
-          <Card className="border-slate-200 shadow-sm">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Rating Inflation</CardDescription>
-              <CardTitle className="text-2xl font-black text-rose-500">96.8%</CardTitle>
-            </CardHeader>
-          </Card>
+          {[
+            { label: "Total Reviews", value: "37,520" },
+            { label: "Avg Corrected Rating", value: "4.42 ★", color: "text-emerald-600" },
+            { label: "Sentiment Score", value: "72%" },
+            { label: "Rating Inflation", value: "96.8%", color: "text-rose-500" },
+          ].map((metric) => (
+            <Card key={metric.label} className="border-slate-200 shadow-sm">
+              <CardHeader className="pb-2">
+                <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{metric.label}</CardDescription>
+                <CardTitle className={`text-2xl font-black ${metric.color || "text-slate-900"}`}>{metric.value}</CardTitle>
+              </CardHeader>
+            </Card>
+          ))}
         </div>
 
         {/* SKU Breakdown Section */}
