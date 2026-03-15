@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -8,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { 
   Sparkles, 
   Code, 
@@ -22,7 +24,12 @@ import {
   Languages,
   Image as ImageIcon,
   Settings2,
-  Share2
+  Share2,
+  Cpu,
+  History,
+  Save,
+  Trash2,
+  Maximize2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateTextFromPrompt } from "@/ai/flows/generate-text-from-prompt";
@@ -32,9 +39,11 @@ import { summarizeExistingText } from "@/ai/flows/summarize-existing-text";
 import { translateText } from "@/ai/flows/translate-text";
 import { generateImage } from "@/ai/flows/generate-image";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export default function PlaygroundPage() {
-  const [prompt, setPrompt] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState("You are a professional assistant designed to help with creative and technical tasks. Keep responses concise and factual.");
+  const [userPrompt, setUserPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +51,10 @@ export default function PlaygroundPage() {
   const [codeLanguage, setCodeLanguage] = useState("typescript");
   const [targetLang, setTargetLang] = useState("Spanish");
   const [temperature, setTemperature] = useState([0.7]);
+  const [maxTokens, setMaxTokens] = useState([2048]);
+  const [topP, setTopP] = useState([1.0]);
+  const [showSystemPrompt, setShowSystemPrompt] = useState(true);
+  
   const { toast } = useToast();
 
   const handleCopy = () => {
@@ -52,11 +65,13 @@ export default function PlaygroundPage() {
   };
 
   const handleGenerateText = async () => {
-    if (!prompt) return;
+    if (!userPrompt) return;
     setIsLoading(true);
     setGeneratedImageUrl(null);
     try {
-      const result = await generateTextFromPrompt({ prompt });
+      // Combine prompts if system prompt is enabled
+      const finalPrompt = showSystemPrompt ? `System: ${systemPrompt}\n\nUser: ${userPrompt}` : userPrompt;
+      const result = await generateTextFromPrompt({ prompt: finalPrompt });
       setOutput(result.generatedText);
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Failed to generate text." });
@@ -66,11 +81,11 @@ export default function PlaygroundPage() {
   };
 
   const handleGenerateCode = async () => {
-    if (!prompt) return;
+    if (!userPrompt) return;
     setIsLoading(true);
     setGeneratedImageUrl(null);
     try {
-      const result = await generateCodeFromPrompt({ prompt, language: codeLanguage });
+      const result = await generateCodeFromPrompt({ prompt: userPrompt, language: codeLanguage });
       setOutput(result.code);
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Failed to generate code." });
@@ -80,11 +95,11 @@ export default function PlaygroundPage() {
   };
 
   const handleTranslate = async () => {
-    if (!prompt) return;
+    if (!userPrompt) return;
     setIsLoading(true);
     setGeneratedImageUrl(null);
     try {
-      const result = await translateText({ text: prompt, targetLanguage: targetLang });
+      const result = await translateText({ text: userPrompt, targetLanguage: targetLang });
       setOutput(result.translatedText);
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Failed to translate text." });
@@ -94,11 +109,11 @@ export default function PlaygroundPage() {
   };
 
   const handleGenerateImage = async () => {
-    if (!prompt) return;
+    if (!userPrompt) return;
     setIsLoading(true);
     setOutput("");
     try {
-      const result = await generateImage({ prompt });
+      const result = await generateImage({ prompt: userPrompt });
       setGeneratedImageUrl(result.imageUrl);
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Failed to generate image." });
@@ -107,208 +122,235 @@ export default function PlaygroundPage() {
     }
   };
 
-  const handleRefine = async (action: 'summarize' | 'rephrase') => {
-    if (!prompt) return;
-    setIsLoading(true);
-    setGeneratedImageUrl(null);
-    try {
-      if (action === 'summarize') {
-        const result = await summarizeExistingText({ text: prompt });
-        setOutput(result.summary);
-      } else {
-        const result = await rephraseExistingText({ text: prompt, styleTone: "professional and modern" });
-        setOutput(result.rephrasedText);
-      }
-    } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: `Failed to ${action} text.` });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const clear = () => {
-    setPrompt("");
+    setUserPrompt("");
     setOutput("");
     setGeneratedImageUrl(null);
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="h-full flex flex-col space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold font-headline">AI Hub Playground</h1>
-          <p className="text-muted-foreground">The ultimate creative suite powered by Gemini 1.5 & Imagen 4.</p>
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Sparkles className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold font-headline leading-tight">AI Playground</h1>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.2em]">Environment: Production v2.4</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={clear}>
-            <Eraser className="mr-2 h-4 w-4" />
-            Clear
+          <Button variant="outline" size="sm" className="h-9 px-4 text-xs font-bold gap-2" onClick={() => toast({ title: "Draft Saved" })}>
+            <Save className="h-3.5 w-3.5" /> Save Draft
           </Button>
-          <Button variant="outline" size="sm">
-            <Share2 className="mr-2 h-4 w-4" />
-            Share
+          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={clear}>
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Configuration & Prompt (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1 overflow-hidden">
+        {/* Left: Input Panel */}
+        <div className="lg:col-span-8 flex flex-col space-y-4">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-muted/30 p-1 h-12">
-              <TabsTrigger value="text" className="gap-2"><Type className="h-4 w-4" /> Text</TabsTrigger>
-              <TabsTrigger value="code" className="gap-2"><Code className="h-4 w-4" /> Code</TabsTrigger>
-              <TabsTrigger value="image" className="gap-2"><ImageIcon className="h-4 w-4" /> Image</TabsTrigger>
-              <TabsTrigger value="translate" className="gap-2"><Languages className="h-4 w-4" /> Translate</TabsTrigger>
-              <TabsTrigger value="refine" className="gap-2"><RefreshCw className="h-4 w-4" /> Refine</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-5 bg-muted/20 p-1 h-11 mb-6">
+              <TabsTrigger value="text" className="gap-2 text-[10px] uppercase font-bold tracking-widest"><Type className="h-3 w-3" /> Text</TabsTrigger>
+              <TabsTrigger value="code" className="gap-2 text-[10px] uppercase font-bold tracking-widest"><Code className="h-3 w-3" /> Code</TabsTrigger>
+              <TabsTrigger value="image" className="gap-2 text-[10px] uppercase font-bold tracking-widest"><ImageIcon className="h-3 w-3" /> Image</TabsTrigger>
+              <TabsTrigger value="translate" className="gap-2 text-[10px] uppercase font-bold tracking-widest"><Languages className="h-3 w-3" /> Translate</TabsTrigger>
+              <TabsTrigger value="refine" className="gap-2 text-[10px] uppercase font-bold tracking-widest"><RefreshCw className="h-3 w-3" /> Refine</TabsTrigger>
             </TabsList>
 
-            <div className="mt-6 space-y-6">
-              {/* Contextual Controls */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {activeTab === "code" && (
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold uppercase text-muted-foreground">Target Language</Label>
-                    <Select value={codeLanguage} onValueChange={setCodeLanguage}>
-                      <SelectTrigger className="lavender-glow"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="typescript">TypeScript</SelectItem>
-                        <SelectItem value="python">Python</SelectItem>
-                        <SelectItem value="rust">Rust</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-                {activeTab === "translate" && (
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold uppercase text-muted-foreground">Translate To</Label>
-                    <Select value={targetLang} onValueChange={setTargetLang}>
-                      <SelectTrigger className="lavender-glow"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Spanish">Spanish</SelectItem>
-                        <SelectItem value="French">French</SelectItem>
-                        <SelectItem value="Japanese">Japanese</SelectItem>
-                        <SelectItem value="German">German</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <Label className="text-xs font-semibold uppercase text-muted-foreground">Creativity (Temp)</Label>
-                    <span className="text-xs font-mono">{temperature[0]}</span>
-                  </div>
-                  <Slider value={temperature} onValueChange={setTemperature} max={1} step={0.1} className="py-2" />
+            <Card className="border-border/50 bg-card/30 flex-1 flex flex-col overflow-hidden">
+              <CardHeader className="py-4 px-6 border-b border-border/50 bg-muted/5 flex flex-row items-center justify-between space-y-0">
+                <div className="flex items-center gap-2">
+                  <Cpu className="h-4 w-4 text-primary" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Configuration & Prompt</span>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="prompt" className="text-xs font-semibold uppercase text-muted-foreground">Your Instructions</Label>
-                <Textarea 
-                  id="prompt"
-                  placeholder={
-                    activeTab === "text" ? "Write a blog post about..." :
-                    activeTab === "code" ? "Create a function to..." :
-                    activeTab === "image" ? "A futuristic neon city with..." :
-                    activeTab === "translate" ? "Enter text to translate..." :
-                    "Paste content to refine..."
-                  }
-                  className="min-h-[300px] resize-none lavender-glow text-lg font-light leading-relaxed"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                />
-              </div>
-
-              <div className="flex gap-4">
-                {activeTab === "text" && (
-                  <Button className="flex-1 h-12 text-lg lavender-glow" onClick={handleGenerateText} disabled={isLoading || !prompt}>
-                    {isLoading ? <RefreshCw className="mr-2 h-5 w-5 animate-spin" /> : <Sparkles className="mr-2 h-5 w-5" />}
-                    Generate Text
-                  </Button>
-                )}
-                {activeTab === "code" && (
-                  <Button className="flex-1 h-12 text-lg blue-glow bg-secondary" onClick={handleGenerateCode} disabled={isLoading || !prompt}>
-                    {isLoading ? <RefreshCw className="mr-2 h-5 w-5 animate-spin" /> : <Terminal className="mr-2 h-5 w-5" />}
-                    Write Code
-                  </Button>
-                )}
-                {activeTab === "image" && (
-                  <Button className="flex-1 h-12 text-lg lavender-glow" onClick={handleGenerateImage} disabled={isLoading || !prompt}>
-                    {isLoading ? <RefreshCw className="mr-2 h-5 w-5 animate-spin" /> : <ImageIcon className="mr-2 h-5 w-5" />}
-                    Generate Image
-                  </Button>
-                )}
-                {activeTab === "translate" && (
-                  <Button className="flex-1 h-12 text-lg lavender-glow" onClick={handleTranslate} disabled={isLoading || !prompt}>
-                    {isLoading ? <RefreshCw className="mr-2 h-5 w-5 animate-spin" /> : <Languages className="mr-2 h-5 w-5" />}
-                    Translate
-                  </Button>
-                )}
-                {activeTab === "refine" && (
-                  <div className="flex-1 flex gap-2">
-                    <Button variant="outline" className="flex-1 h-12" onClick={() => handleRefine('summarize')} disabled={isLoading || !prompt}>
-                      <FileText className="mr-2 h-5 w-5" /> Summarize
-                    </Button>
-                    <Button variant="outline" className="flex-1 h-12" onClick={() => handleRefine('rephrase')} disabled={isLoading || !prompt}>
-                      <Wand2 className="mr-2 h-5 w-5" /> Rephrase
-                    </Button>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">System Mode</span>
+                  <Switch checked={showSystemPrompt} onCheckedChange={setShowSystemPrompt} className="scale-75" />
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6 overflow-y-auto">
+                {showSystemPrompt && (
+                  <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-primary">System Instructions</Label>
+                    <Textarea 
+                      placeholder="Define the behavior of the model..."
+                      className="min-h-[80px] bg-muted/20 border-border/50 resize-none text-sm font-medium leading-relaxed"
+                      value={systemPrompt}
+                      onChange={(e) => setSystemPrompt(e.target.value)}
+                    />
                   </div>
                 )}
-              </div>
-            </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">User Instructions</Label>
+                  <Textarea 
+                    placeholder={
+                      activeTab === "text" ? "Write a detailed product description for..." :
+                      activeTab === "code" ? "Generate a React component for a..." :
+                      activeTab === "image" ? "A futuristic neon cityscape at sunset..." :
+                      "Paste your content here..."
+                    }
+                    className="min-h-[350px] bg-background border-none focus-visible:ring-0 text-lg font-light leading-relaxed p-0 resize-none"
+                    value={userPrompt}
+                    onChange={(e) => setUserPrompt(e.target.value)}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter className="p-4 border-t border-border/50 bg-muted/5">
+                <div className="flex w-full gap-4">
+                   {activeTab === "text" && (
+                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest lavender-glow" onClick={handleGenerateText} disabled={isLoading || !userPrompt}>
+                      {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                      Generate Analysis
+                    </Button>
+                  )}
+                  {activeTab === "code" && (
+                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest bg-secondary hover:bg-secondary/90 shadow-xl shadow-secondary/20" onClick={handleGenerateCode} disabled={isLoading || !userPrompt}>
+                      {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Terminal className="mr-2 h-4 w-4" />}
+                      Execute Production Code
+                    </Button>
+                  )}
+                  {activeTab === "image" && (
+                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest bg-primary lavender-glow" onClick={handleGenerateImage} disabled={isLoading || !userPrompt}>
+                      {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
+                      Synthesize Image
+                    </Button>
+                  )}
+                  {(activeTab === "translate" || activeTab === "refine") && (
+                    <Button className="flex-1 h-12 text-sm font-bold uppercase tracking-widest bg-muted/30 border-border/50 hover:bg-muted/50" onClick={activeTab === "translate" ? handleTranslate : handleGenerateText} disabled={isLoading || !userPrompt}>
+                      {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                      Process Content
+                    </Button>
+                  )}
+                </div>
+              </CardFooter>
+            </Card>
           </Tabs>
         </div>
 
-        {/* Right: Output (5 cols) */}
-        <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-8">
-          <Card className="min-h-[600px] flex flex-col border-white/5 bg-card/40 backdrop-blur-xl overflow-hidden shadow-2xl">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-white/5 py-4 px-6">
-              <div className="flex items-center gap-3">
-                <Settings2 className="h-4 w-4 text-primary" />
-                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Output Preview</span>
+        {/* Right: Parameters & History */}
+        <div className="lg:col-span-4 space-y-6">
+          <Card className="border-border/50 bg-card/30">
+            <CardHeader className="py-4 border-b border-border/50 flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <Settings2 className="h-3.5 w-3.5" />
+                Hyperparameters
+              </CardTitle>
+              <Badge variant="outline" className="text-[9px] font-bold border-primary/30 text-primary">ADVANCED</Badge>
+            </CardHeader>
+            <CardContent className="p-6 space-y-8">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">AI Model</Label>
+                  <span className="text-[9px] font-mono text-primary font-bold">GEMINI 1.5 PRO</span>
+                </div>
+                <Select defaultValue="gemini-pro">
+                  <SelectTrigger className="bg-muted/30 border-border/50 h-9 text-xs font-semibold">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="gemini-pro">Gemini 1.5 Pro</SelectItem>
+                    <SelectItem value="gemini-flash">Gemini 1.5 Flash</SelectItem>
+                    <SelectItem value="imagen-4">Imagen 4 Fast</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+
+              {activeTab === "code" && (
+                <div className="space-y-4">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Language Output</Label>
+                  <Select value={codeLanguage} onValueChange={setCodeLanguage}>
+                    <SelectTrigger className="bg-muted/30 border-border/50 h-9 text-xs font-semibold">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="typescript">TypeScript</SelectItem>
+                      <SelectItem value="python">Python</SelectItem>
+                      <SelectItem value="rust">Rust</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-[10px] font-bold uppercase">
+                    <span className="text-muted-foreground">Temperature</span>
+                    <span className="text-primary font-mono">{temperature[0]}</span>
+                  </div>
+                  <Slider value={temperature} onValueChange={setTemperature} max={1} step={0.1} />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-[10px] font-bold uppercase">
+                    <span className="text-muted-foreground">Max Tokens</span>
+                    <span className="text-primary font-mono">{maxTokens[0]}</span>
+                  </div>
+                  <Slider value={maxTokens} onValueChange={setMaxTokens} min={1} max={4096} step={1} />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-[10px] font-bold uppercase">
+                    <span className="text-muted-foreground">Top P</span>
+                    <span className="text-primary font-mono">{topP[0]}</span>
+                  </div>
+                  <Slider value={topP} onValueChange={setTopP} max={1} step={0.01} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50 bg-card/30 flex-1 flex flex-col min-h-[400px]">
+            <CardHeader className="py-4 border-b border-border/50 flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <History className="h-3.5 w-3.5" />
+                Inference Preview
+              </CardTitle>
               <div className="flex gap-1">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleCopy} disabled={!output}>
-                  <Copy className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={handleCopy} disabled={!output}>
+                  <Copy className="h-3.5 w-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8" disabled={!output && !generatedImageUrl}>
-                  <Download className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" disabled={!output && !generatedImageUrl}>
+                  <Download className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                  <Maximize2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="flex-1 p-8 overflow-auto">
+            <CardContent className="p-6 overflow-y-auto flex-1 bg-background/20 font-sans text-sm leading-relaxed">
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center h-full space-y-4">
-                  <div className="h-16 w-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-                  <p className="text-sm font-medium animate-pulse text-primary">Synthesizing Request...</p>
+                  <div className="h-10 w-10 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary animate-pulse">Computing Inference...</p>
                 </div>
               ) : generatedImageUrl ? (
-                <div className="relative aspect-square w-full rounded-xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-500">
-                  <Image src={generatedImageUrl} fill alt="Generated content" className="object-cover" />
+                <div className="relative aspect-square w-full rounded-lg overflow-hidden border border-border/50 shadow-2xl animate-in zoom-in-95 duration-500">
+                  <Image src={generatedImageUrl} fill alt="Inference output" className="object-cover" />
                 </div>
               ) : output ? (
-                <div className="whitespace-pre-wrap font-sans text-lg leading-relaxed text-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="whitespace-pre-wrap text-foreground/90 animate-in fade-in slide-in-from-bottom-2 duration-500">
                   {output}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-muted-foreground/30 space-y-6 text-center">
-                  <div className="p-6 rounded-full bg-white/5 border border-white/5">
-                    <Sparkles className="h-16 w-16" />
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-xl font-bold text-foreground/40">Ready for Action</p>
-                    <p className="text-sm max-w-[240px]">Select a task and click generate to witness the magic.</p>
-                  </div>
+                <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-30">
+                  <Sparkles className="h-10 w-10" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest">Awaiting Command</p>
                 </div>
               )}
             </CardContent>
             {(output || generatedImageUrl) && (
-              <CardFooter className="border-t border-white/5 bg-white/5 py-4 px-8 flex justify-between items-center">
-                <div className="flex gap-4 text-[10px] text-muted-foreground/60 uppercase font-bold tracking-tighter">
-                  {output && <span>{output.split(/\s+/).length} Words</span>}
-                  <span>LATENCY: 1.4s</span>
+              <CardFooter className="p-3 border-t border-border/50 bg-muted/5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-[9px] font-bold text-muted-foreground uppercase">Tokens: {output?.length || 0}</span>
+                  <span className="text-[9px] font-bold text-muted-foreground uppercase">Latency: 1.2s</span>
                 </div>
-                <Badge variant="outline" className="text-[10px] bg-primary/10 border-primary/20 text-primary font-bold">GEMINI 1.5 PRO</Badge>
+                <Badge variant="secondary" className="text-[8px] h-4 font-bold uppercase tracking-tighter">Gemini 1.5 Pro</Badge>
               </CardFooter>
             )}
           </Card>

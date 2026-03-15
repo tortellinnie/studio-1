@@ -1,3 +1,4 @@
+
 "use client";
 
 import { 
@@ -12,78 +13,91 @@ import {
 import { 
   Zap, 
   Clock, 
-  Type, 
-  Code, 
-  Image as ImageIcon,
   TrendingUp,
-  History as HistoryIcon,
-  Sparkles,
-  ArrowUpRight,
-  Plus
+  Plus,
+  ArrowRight,
+  ChevronRight,
+  MoreHorizontal,
+  LayoutGrid,
+  CreditCard,
+  LineChart
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const stats = [
-  { name: "Total Requests", value: "24,812", icon: Zap, change: "+18%", color: "text-primary", bg: "bg-primary/10" },
-  { name: "Avg. Latency", value: "1.24s", icon: Clock, change: "-120ms", color: "text-secondary", bg: "bg-secondary/10" },
-  { name: "Token Economy", value: "2.4M", icon: TrendingUp, change: "+5.2%", color: "text-primary", bg: "bg-primary/10" },
+  { name: "Token Usage", value: "842,012", icon: Zap, change: "+12.5%", sub: "Monthly Quota" },
+  { name: "Avg. Latency", value: "0.84s", icon: Clock, change: "-14%", sub: "Global Average" },
+  { name: "Active Models", value: "8", icon: LayoutGrid, change: "+2", sub: "Currently Enabled" },
+];
+
+const recentGenerations = [
+  { id: "1", name: "User Auth Hook", type: "Code", model: "Gemini 1.5 Pro", status: "Success", time: "2m ago" },
+  { id: "2", name: "Product Vision", type: "Text", model: "Gemini 1.5 Pro", status: "Success", time: "15m ago" },
+  { id: "3", name: "City Concept", type: "Image", model: "Imagen 4", status: "Failed", time: "1h ago" },
+  { id: "4", name: "Market Analysis", type: "Text", model: "Gemini 1.5 Flash", status: "Success", time: "3h ago" },
 ];
 
 const usageData = [
-  { name: 'Mon', text: 400, code: 240, image: 100 },
-  { name: 'Tue', text: 300, code: 139, image: 200 },
-  { name: 'Wed', text: 200, code: 980, image: 150 },
-  { name: 'Thu', text: 278, code: 390, image: 120 },
-  { name: 'Fri', text: 189, code: 480, image: 170 },
-  { name: 'Sat', text: 239, code: 380, image: 300 },
-  { name: 'Sun', text: 349, code: 430, image: 250 },
-];
-
-const topModels = [
-  { name: "Gemini 1.5 Pro", usage: "64%", status: "Active" },
-  { name: "Imagen 4 Fast", usage: "22%", status: "Active" },
-  { name: "Gemini 1.5 Flash", usage: "14%", status: "Idle" },
+  { name: 'Mon', usage: 45000 },
+  { name: 'Tue', usage: 52000 },
+  { name: 'Wed', usage: 48000 },
+  { name: 'Thu', usage: 61000 },
+  { name: 'Fri', usage: 55000 },
+  { name: 'Sat', usage: 32000 },
+  { name: 'Sun', usage: 38000 },
 ];
 
 export default function OverviewPage() {
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold tracking-tight font-headline">Intelligence Command</h1>
-          <p className="text-muted-foreground text-lg">Real-time metrics and orchestration for your AI fleet.</p>
+          <h1 className="text-3xl font-extrabold tracking-tight font-headline">Welcome back, Alex</h1>
+          <p className="text-muted-foreground text-sm font-medium">Here's what's happening with your AI fleet today.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-white/10">Export Report</Button>
-          <Button className="lavender-glow gap-2" asChild>
+          <Button variant="outline" className="border-border/50 h-9 px-4 text-xs font-semibold">
+            View Reports
+          </Button>
+          <Button className="lavender-glow h-9 px-4 text-xs font-bold gap-2" asChild>
             <Link href="/playground">
-              <Plus className="h-4 w-4" />
-              New Generation
+              <Plus className="h-3.5 w-3.5" />
+              Create Generation
             </Link>
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
-          <Card key={stat.name} className="lavender-glow border-white/5 bg-card/50 backdrop-blur-sm group hover:border-primary/50 transition-all duration-500">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{stat.name}</CardTitle>
-              <div className={cn("p-2 rounded-lg transition-colors group-hover:bg-primary/20", stat.bg)}>
-                <stat.icon className={cn("h-4 w-4", stat.color)} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold tracking-tighter">{stat.value}</div>
-              <div className="flex items-center gap-1.5 mt-2">
-                <Badge variant="secondary" className="text-[10px] font-bold bg-white/5 hover:bg-white/10">
+          <Card key={stat.name} className="border-border/50 bg-card/40 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 rounded-xl bg-primary/10">
+                  <stat.icon className="h-5 w-5 text-primary" />
+                </div>
+                <Badge variant="secondary" className="text-[10px] font-bold bg-green-500/10 text-green-500 border-green-500/20">
                   {stat.change}
                 </Badge>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">vs last week</span>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl font-bold tracking-tight">{stat.value}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{stat.name}</p>
+                  <p className="text-[10px] text-muted-foreground">{stat.sub}</p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -91,84 +105,134 @@ export default function OverviewPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">
-        <Card className="lg:col-span-8 border-white/5 bg-card/50">
-          <CardHeader className="flex flex-row items-center justify-between">
+        <Card className="lg:col-span-8 border-border/50 bg-card/40">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
             <div>
-              <CardTitle className="font-headline text-xl">Operational Velocity</CardTitle>
-              <CardDescription>Multi-model request throughput per content type.</CardDescription>
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <LineChart className="h-4 w-4 text-primary" />
+                Operational Velocity
+              </CardTitle>
+              <CardDescription>Daily token consumption across all active models.</CardDescription>
             </div>
-            <div className="flex gap-2">
-              <Badge variant="outline" className="text-[10px] uppercase border-primary/20 text-primary">Live Data</Badge>
-            </div>
+            <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
+              Last 7 Days <ChevronRight className="ml-1 h-3 w-3" />
+            </Button>
           </CardHeader>
-          <CardContent className="h-[400px]">
+          <CardContent className="h-[300px] pl-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={usageData}>
                 <defs>
-                  <linearGradient id="colorText" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                  <linearGradient id="colorUsage" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
                     <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorSecondary" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--secondary))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--secondary))" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} dy={10} />
-                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
+                <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={10} tickLine={false} axisLine={false} dy={10} />
+                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => `${val/1000}k`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'rgba(23, 19, 39, 0.95)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)' }}
-                  itemStyle={{ color: 'hsl(var(--primary))' }}
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                 />
-                <Area type="monotone" dataKey="text" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorText)" strokeWidth={3} />
-                <Area type="monotone" dataKey="code" stroke="hsl(var(--secondary))" fillOpacity={1} fill="url(#colorSecondary)" strokeWidth={3} />
+                <Area type="monotone" dataKey="usage" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorUsage)" strokeWidth={3} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <div className="lg:col-span-4 space-y-6">
-          <Card className="border-white/5 bg-card/50">
-            <CardHeader>
-              <CardTitle className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Active Model Status</CardTitle>
+          <Card className="border-border/50 bg-card/40">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground/70 flex items-center justify-between">
+                Billing Overview
+                <CreditCard className="h-4 w-4" />
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {topModels.map((model) => (
-                <div key={model.name} className="flex items-center justify-between group cursor-default">
-                  <div className="space-y-1">
-                    <p className="text-sm font-bold group-hover:text-primary transition-colors">{model.name}</p>
-                    <div className="flex items-center gap-2">
-                      <div className={cn("h-1.5 w-1.5 rounded-full", model.status === 'Active' ? "bg-primary animate-pulse" : "bg-muted")} />
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{model.status}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold font-mono">{model.usage}</p>
-                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Load share</p>
-                  </div>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Current Plan</p>
+                  <p className="text-sm font-bold">Pro Enterprise</p>
                 </div>
-              ))}
+                <Badge className="bg-primary/20 text-primary border-primary/20 text-[10px] font-bold">ACTIVE</Badge>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  <span>Usage Limit</span>
+                  <span>70%</span>
+                </div>
+                <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden">
+                  <div className="h-full bg-primary lavender-glow w-[70%]" />
+                </div>
+              </div>
+              <Button variant="outline" size="sm" className="w-full text-[10px] h-8 font-bold uppercase tracking-widest">
+                Manage Billing <ArrowRight className="ml-2 h-3 w-3" />
+              </Button>
             </CardContent>
           </Card>
 
-          <Card className="border-primary/20 bg-primary/5 lavender-glow overflow-hidden relative">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Sparkles className="h-24 w-24 text-primary" />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-lg">AI Assistant Online</CardTitle>
-              <CardDescription className="text-primary/70">Alex, I've noticed your token usage for code generation has spiked. Need a cost audit?</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button size="sm" className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90">
-                Review Audit
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Button>
+          <Card className="border-primary/20 bg-primary/5 lavender-glow">
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-primary-foreground" />
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest">Optimization Tip</p>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                You could save <span className="text-primary font-bold">~15%</span> on token costs by switching simple translation tasks to Gemini 1.5 Flash.
+              </p>
+              <Button size="sm" className="w-full h-8 text-[10px] font-bold uppercase tracking-widest">Apply Suggestion</Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <Card className="border-border/50 bg-card/40">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-lg font-bold">Recent Activity</CardTitle>
+            <CardDescription>Your latest generations across all platforms.</CardDescription>
+          </div>
+          <Button variant="outline" size="sm" className="h-8 text-[10px] font-bold uppercase">View History</Button>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow className="border-border/50 hover:bg-transparent">
+                <TableHead className="text-[10px] uppercase font-bold">Generation Name</TableHead>
+                <TableHead className="text-[10px] uppercase font-bold">Type</TableHead>
+                <TableHead className="text-[10px] uppercase font-bold">AI Model</TableHead>
+                <TableHead className="text-[10px] uppercase font-bold">Status</TableHead>
+                <TableHead className="text-right text-[10px] uppercase font-bold">Created</TableHead>
+                <TableHead className="w-[50px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentGenerations.map((gen) => (
+                <TableRow key={gen.id} className="border-border/50 group">
+                  <TableCell className="font-semibold text-sm">{gen.name}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px] font-bold h-5">{gen.type}</Badge>
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{gen.model}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className={cn("h-1.5 w-1.5 rounded-full", gen.status === 'Success' ? "bg-green-500" : "bg-destructive")} />
+                      <span className="text-xs font-medium">{gen.status}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-xs text-muted-foreground font-mono">{gen.time}</TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
