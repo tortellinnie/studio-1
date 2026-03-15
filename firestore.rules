@@ -1,0 +1,107 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * GEN-AI DASHBOARD SECURITY RULES
+     *
+     * CORE PHILOSOPHY:
+     * This ruleset enforces a strict user-ownership model. The application architecture is 
+     * designed around a "User Tree" where all data belongs to a specific UID.
+     *
+     * DATA STRUCTURE:
+     * All data is nested hierarchically under the path /users/{userId}. 
+     * - /users/{userId}: Core profile.
+     * - /users/{userId}/settings: Personalized app preferences.
+     * - /users/{userId}/prompts: User-created prompt templates.
+     * - /users/{userId}/generations: History of AI content generation events.
+     *
+     * KEY SECURITY DECISIONS:
+     * 1. Authorization Independence: Every document in a subcollection (settings, prompts, 
+     *    generations) contains a denormalized 'userId' field. This allows rules to verify 
+     *    ownership without performing expensive parent-document lookups (get() calls).
+     * 2. Strict Ownership: Users are only permitted to read, list, or modify data 
+     *    within their own /users/{userId} path. There is no public or shared data.
+     * 3. Relational Integrity: On creation, the document's internal 'userId' or 'id' must 
+     *    match the path variable. On update, these relational links are immutable.
+     * 4. Prototyping Flexibility: While access is strictly authorized, the internal 
+     *    schema of documents (excluding ownership IDs) is not enforced to allow rapid 
+     *    iteration of features.
+     */
+
+    // --- Helper Functions ---
+
+    /** @description Checks if the request is from a signed-in user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the authenticated user's UID matches the provided userId. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** @description Verifies ownership and ensures the document exists for state-changing operations. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for the root User profile document.
+     * @path /users/{userId}
+     * @allow Authenticated user 'abc' (get) /users/abc
+     * @deny Authenticated user 'abc' (create) /users/xyz
+     * @principle Enforces path-based ownership and validates ID consistency on creation.
+     */
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Rules for user-specific application settings.
+       * @path /users/{userId}/settings/{settingsId}
+       * @allow Authenticated user 'abc' (update) /users/abc/settings/main
+       * @deny Authenticated user 'abc' (list) /users/xyz/settings
+       * @principle Uses denormalized userId for authorization and enforces field immutability.
+       */
+      match /settings/{settingsId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+
+      /**
+       * @description Rules for saved AI prompts and templates.
+       * @path /users/{userId}/prompts/{promptId}
+       * @allow Authenticated user 'abc' (create) a prompt under their own path.
+       * @deny Authenticated user 'abc' (get) a prompt belonging to user 'xyz'.
+       * @principle Restricts prompt management to the document creator.
+       */
+      match /prompts/{promptId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+
+      /**
+       * @description Rules for AI content generation history.
+       * @path /users/{userId}/generations/{generationId}
+       * @allow Authenticated user 'abc' (list) their own generation history.
+       * @deny Authenticated user 'abc' (delete) a generation record belonging to user 'xyz'.
+       * @principle Ensures generation logs remain private to the user who initiated them.
+       */
+      match /generations/{generationId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+  }
+}

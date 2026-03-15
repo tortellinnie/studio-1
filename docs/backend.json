@@ -1,0 +1,307 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user account in the GenAI Dashboard application, storing core profile information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address. Used for identification but not for authentication purposes.",
+          "format": "email"
+        },
+        "username": {
+          "type": "string",
+          "description": "A user-friendly name chosen by the user for display within the application."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "username",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserSettings": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserSettings",
+      "type": "object",
+      "description": "Stores personalized settings and preferences for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserSettings entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User this setting belongs to. (Relationship: User 1:1 UserSettings)"
+        },
+        "themePreference": {
+          "type": "string",
+          "description": "The user's preferred application theme (e.g., 'dark', 'light')."
+        },
+        "preferredLanguage": {
+          "type": "string",
+          "description": "The user's preferred language for the application interface (e.g., 'en', 'es')."
+        },
+        "defaultGenerationType": {
+          "type": "string",
+          "description": "The user's default content generation type (e.g., 'text', 'code', 'image')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user settings were created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user settings were last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "themePreference",
+        "preferredLanguage",
+        "defaultGenerationType",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Prompt": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Prompt",
+      "type": "object",
+      "description": "Represents a saved and organized prompt or template for content generation.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Prompt entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this prompt. (Relationship: User 1:N Prompt)"
+        },
+        "name": {
+          "type": "string",
+          "description": "A user-defined name for the saved prompt."
+        },
+        "template": {
+          "type": "string",
+          "description": "The actual text or template of the prompt used for content generation."
+        },
+        "type": {
+          "type": "string",
+          "description": "The category or type of content generation this prompt is intended for (e.g., 'text-generation', 'code-generation', 'image-generation')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the prompt's purpose or usage."
+        },
+        "isFavorite": {
+          "type": "boolean",
+          "description": "Boolean indicating if the prompt is marked as a favorite by the user for quick access."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the prompt was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the prompt was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "template",
+        "type",
+        "description",
+        "isFavorite",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ContentGeneration": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContentGeneration",
+      "type": "object",
+      "description": "Records details of each content generation event, including original and refined content.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ContentGeneration entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who initiated this content generation. (Relationship: User 1:N ContentGeneration)"
+        },
+        "promptId": {
+          "type": "string",
+          "description": "Optional reference to a saved Prompt that was used for this generation. (Relationship: Prompt 1:N ContentGeneration)"
+        },
+        "originalPromptText": {
+          "type": "string",
+          "description": "The exact prompt text submitted by the user for this generation."
+        },
+        "generatedContentType": {
+          "type": "string",
+          "description": "The type of content generated (e.g., 'text', 'code', 'image-uri')."
+        },
+        "generatedContent": {
+          "type": "string",
+          "description": "The actual generated output, which can be text, code, or a URI pointing to a generated image."
+        },
+        "modelUsed": {
+          "type": "string",
+          "description": "The AI model or engine used for this generation (e.g., 'GPT-4', 'DALL-E 3')."
+        },
+        "parametersUsed": {
+          "type": "string",
+          "description": "A JSON string containing the specific parameters and settings used for the AI model during this generation (e.g., temperature, max_tokens, image_size)."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the generation process (e.g., 'success', 'failed', 'pending')."
+        },
+        "sourceGenerationId": {
+          "type": "string",
+          "description": "Optional reference to another ContentGeneration entity if this content is a refinement (rephrase, summarize, expand) of a previous generation. (Relationship: ContentGeneration 1:N ContentGeneration for refinements)"
+        },
+        "refinementType": {
+          "type": "string",
+          "description": "Describes the type of refinement applied if `sourceGenerationId` is present (e.g., 'summarize', 'rephrase', 'expand')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the content was generated.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the content generation record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "originalPromptText",
+        "generatedContentType",
+        "generatedContent",
+        "modelUsed",
+        "parametersUsed",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores core profile information for each user. Documents are identified by the user's authentication UID, enabling direct `request.auth.uid` matching for ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user, matching `request.auth.uid`."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/settings/{settingsId}",
+        "definition": {
+          "entityName": "UserSettings",
+          "schema": {
+            "$ref": "#/backend/entities/UserSettings"
+          },
+          "description": "Stores personalized settings and preferences for a specific user. The 'userId' field within the document is denormalized from the parent path for authorization independence. For a 1:1 relationship, 'settingsId' can be a fixed value like 'main'.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns these settings."
+            },
+            {
+              "name": "settingsId",
+              "description": "The unique ID for the user's settings document (e.g., 'main')."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/prompts/{promptId}",
+        "definition": {
+          "entityName": "Prompt",
+          "schema": {
+            "$ref": "#/backend/entities/Prompt"
+          },
+          "description": "Stores saved and organized prompts/templates for content generation, owned by a specific user. Includes denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who created and owns this prompt."
+            },
+            {
+              "name": "promptId",
+              "description": "The unique ID of the prompt."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/generations/{generationId}",
+        "definition": {
+          "entityName": "ContentGeneration",
+          "schema": {
+            "$ref": "#/backend/entities/ContentGeneration"
+          },
+          "description": "Records details of each content generation event, including original prompt and generated content, for a specific user. Includes denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who initiated this content generation."
+            },
+            {
+              "name": "generationId",
+              "description": "The unique ID for this content generation record."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure prioritizes secure, scalable, and debuggable access control by strictly adhering to a user-centric, hierarchical design. All user-specific data is nested directly under a top-level `/users/{userId}` collection, making ownership explicit and simplifying security rules significantly. This approach directly implements Authorization Independence (CRITICAL) by denormalizing the `userId` into every document within its respective subcollection (e.g., `UserSettings`, `Prompt`, `ContentGeneration` documents will all contain a `userId` field matching the `{userId}` wildcard in their path). This eliminates the need for `get()` calls in security rules to ascertain parent ownership, allowing for atomic write operations and robust, easy-to-understand authorization. For example, a rule for `/users/{userId}/prompts/{promptId}` can simply check `request.auth.uid == userId && resource.data.userId == userId`, ensuring both path and document ownership. This design also inherently supports Query-As-Permissions (QAPs) because `list` operations against `/users/{request.auth.uid}/prompts` will only ever return documents belonging to the authenticated user, thus ensuring that security rules are not used as filters after data retrieval. Structural segregation is maintained as each collection (e.g., `/users/{userId}/prompts`) contains documents of a single entity type, all sharing the same security posture (owned by the `userId`). This radical consistency and explicit path-based ownership ensure clarity of intent and significantly reduce the potential for security vulnerabilities."
+  }
+}
