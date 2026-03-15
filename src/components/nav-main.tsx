@@ -47,35 +47,35 @@ export function NavMain() {
 
   return (
     <>
-      <SidebarHeader className="border-b border-white/10 p-6 bg-[#003da5]">
+      <SidebarHeader className="border-b border-white/10 p-8 bg-[#003da5]">
         <div className="flex flex-col">
-          <span className="text-sm font-bold tracking-tight text-white font-headline leading-none">P&G Hub</span>
-          <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest mt-1">Intelligence</span>
+          <span className="text-lg font-black tracking-tight text-white font-headline leading-none">P&G Hub</span>
+          <span className="text-[10px] text-white/50 font-black uppercase tracking-[0.3em] mt-2">Intelligence</span>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="bg-[#003da5]">
         <SidebarGroup>
-          <SidebarGroupLabel className="px-4 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+          <SidebarGroupLabel className="px-6 py-10 text-[10px] font-black uppercase tracking-[0.4em] text-white/30">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="px-3 gap-1.5">
+            <SidebarMenu className="px-4 gap-3">
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={pathname === item.url}
                     className={cn(
-                      "transition-all duration-200 h-10 px-4 rounded-md group",
+                      "transition-all duration-300 h-12 px-6 rounded-xl group",
                       pathname === item.url 
-                        ? "bg-white/15 text-white shadow-sm" 
-                        : "hover:bg-white/5 text-white/70 hover:text-white"
+                        ? "bg-white/15 text-white shadow-lg scale-[1.02]" 
+                        : "hover:bg-white/10 text-white/60 hover:text-white"
                     )}
                   >
                     <Link href={item.url}>
-                      <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110", pathname === item.url ? "text-white" : "text-white/60")} />
-                      <span className="font-semibold text-xs">{item.title}</span>
+                      <item.icon className={cn("h-5 w-5 transition-transform group-hover:scale-110", pathname === item.url ? "text-white" : "text-white/40")} />
+                      <span className="font-bold text-sm tracking-tight">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -84,40 +84,38 @@ export function NavMain() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <div className="mt-auto px-6 py-8">
-          <div className="p-5 rounded-xl bg-white/5 border border-white/10 space-y-4">
+        <div className="mt-auto px-8 py-10">
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-white/80">Project Scope</span>
-              </div>
-              <span className="text-[9px] font-bold text-white bg-white/10 px-1.5 py-0.5 rounded">Lazada PH</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">Project Scope</span>
+              <span className="text-[9px] font-black text-white bg-white/10 px-2 py-1 rounded-md">Lazada PH</span>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-[10px] font-medium text-white/60">
+            <div className="space-y-3">
+              <div className="flex justify-between text-[11px] font-bold text-white/50">
                 <span>Reviews Processed</span>
                 <span className="text-white">37.5k</span>
               </div>
-              <Progress value={100} className="h-1 bg-white/10" />
+              <Progress value={100} className="h-1.5 bg-white/10" />
             </div>
-            <p className="text-[9px] text-white/40 leading-relaxed italic">Dataset: Fabric Care Category</p>
+            <p className="text-[10px] text-white/30 leading-relaxed italic font-medium">Dataset: Fabric Care Category</p>
           </div>
         </div>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-white/10 p-4 bg-[#003da5]/50">
-        <SidebarMenu className="gap-1.5">
+      <SidebarFooter className="border-t border-white/10 p-6 bg-[#003da5]/50">
+        <SidebarMenu className="gap-3">
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="h-10 px-4 text-white/70 hover:text-white hover:bg-white/5">
+            <SidebarMenuButton asChild className="h-12 px-6 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-all">
               <Link href="/settings">
-                <Settings className="h-4 w-4" />
-                <span className="text-xs font-semibold">System Logs</span>
+                <Settings className="h-5 w-5" />
+                <span className="text-sm font-bold tracking-tight">System Logs</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton className="h-10 px-4 text-white/40 hover:text-white hover:bg-white/5">
-              <LogOut className="h-4 w-4" />
-              <span className="text-xs font-semibold">Sign Out</span>
+            <SidebarMenuButton className="h-12 px-6 text-white/30 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+              <LogOut className="h-5 w-5" />
+              <span className="text-sm font-bold tracking-tight">Sign Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
