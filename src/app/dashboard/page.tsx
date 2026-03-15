@@ -24,19 +24,12 @@ import {
   pngProducts, 
   multiBrandTrends, 
   brandComparison, 
-  accountRecommendations 
 } from '@/data/mockData';
-import { NotificationBanner } from '@/components/NotificationBanner';
-import { ShoppingCart, TrendingUp, MessageSquare, CheckCircle2, AlertCircle, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export default function Dashboard() {
-  const lazadaRec = accountRecommendations[0];
-
   return (
     <Layout>
       <div className="p-10 space-y-10 max-w-[1600px] mx-auto animate-in fade-in duration-500">
-        <NotificationBanner />
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
@@ -65,7 +58,7 @@ export default function Dashboard() {
           <Card className="border-slate-200 shadow-sm">
             <CardHeader className="pb-2">
               <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Sentiment Score</CardDescription>
-              <CardTitle className="text-2xl font-black text-slate-900">72% <span className="text-xs text-emerald-500 ml-1">↑ 3%</span></CardTitle>
+              <CardTitle className="text-2xl font-black text-slate-900">72%</CardTitle>
             </CardHeader>
           </Card>
           <Card className="border-slate-200 shadow-sm">
@@ -75,115 +68,6 @@ export default function Dashboard() {
             </CardHeader>
           </Card>
         </div>
-
-        {/* Actionable Insights Section */}
-        <div className="space-y-6">
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card className="border-border/50 bg-white">
-              <CardContent className="pt-6 space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="text-[9px] font-bold text-emerald-600 border-emerald-600/20 bg-emerald-50">PRODUCT</Badge>
-                  <TrendingUp className="h-4 w-4 text-emerald-500" />
-                </div>
-                <p className="text-xs font-bold text-slate-800 leading-relaxed">
-                  Downy Garden Bloom leads with 78% positive reviews. 
-                  Scent longevity is the primary driver for high product vector score (0.88).
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-white">
-              <CardContent className="pt-6 space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="text-[9px] font-bold text-blue-600 border-blue-600/20 bg-blue-50">VALUE</Badge>
-                  <AlertCircle className="h-4 w-4 text-orange-500" />
-                </div>
-                <p className="text-xs font-bold text-slate-800 leading-relaxed">
-                  Ariel Sunrise Fresh sentiment is under pressure due to "Value" vector decline. 
-                  Price per wash mentions are rising in recent Taglish feedback.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-white">
-              <CardContent className="pt-6 space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="text-[9px] font-bold text-purple-600 border-purple-600/20 bg-purple-50">RETAIL EXEC</Badge>
-                  <Zap className="h-4 w-4 text-purple-500" />
-                </div>
-                <p className="text-xs font-bold text-slate-800 leading-relaxed">
-                  Retail execution is highest for Ariel Liquid on Lazada (0.85), 
-                  driven by consistent bundling and flash sale participation.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Lazada Recommendation - Extended Horizontally */}
-        <Card className="border-l-[6px] border-l-[#003da5] shadow-md bg-white overflow-hidden">
-          <CardContent className="p-0">
-            <div className="flex flex-col lg:flex-row min-h-[300px]">
-              {/* Left Segment: Summary */}
-              <div className="lg:w-1/4 p-8 border-b lg:border-b-0 lg:border-r border-slate-100 flex flex-col justify-center">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="p-2.5 bg-blue-50 rounded-lg shrink-0">
-                    <ShoppingCart className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] leading-none mb-1.5 block">Priority Channel</span>
-                    <h3 className="text-xl font-bold text-slate-900 tracking-tight">Lazada Philippines</h3>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
-                    <Badge className="bg-emerald-50 text-emerald-700 border-none font-bold text-[9px] uppercase px-2 py-0.5 tracking-tighter">
-                      IMPROVING
-                    </Badge>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[9px] font-bold text-slate-400 tracking-widest uppercase block">Score</span>
-                    <span className="text-xl font-black text-slate-900 leading-none">88</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right Segment: Detail */}
-              <div className="flex-1 p-8 bg-slate-50/20">
-                <div className="grid md:grid-cols-2 gap-10">
-                  <div className="space-y-6">
-                    <div className="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm relative overflow-hidden group hover:border-blue-200 transition-colors">
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Focus SKU</p>
-                      <p className="text-2xl font-black text-slate-900 tracking-tight">{lazadaRec.topProduct}</p>
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                        <MessageSquare className="h-3.5 w-3.5" />
-                        AI Rationale
-                      </h4>
-                      <p className="text-sm text-slate-700 leading-relaxed font-medium italic pr-4">
-                        "{lazadaRec.rationale}"
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-col">
-                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Strategic Actions</h4>
-                    <ul className="space-y-4">
-                      {lazadaRec.recommendedActions.map((action, i) => (
-                        <li key={i} className="flex items-start gap-4 group">
-                          <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#003da5] shrink-0" />
-                          <span className="text-xs text-slate-800 font-bold leading-tight">{action}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* SKU Breakdown Section */}
         <div className="space-y-8">
