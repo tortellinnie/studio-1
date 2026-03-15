@@ -23,7 +23,6 @@ import {
   Star, 
   AlertTriangle, 
   ArrowDown, 
-  CheckCircle2, 
   AlertCircle 
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
@@ -55,9 +54,37 @@ export default function CompetitiveAnalysisPage() {
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
+      {/* High-Fidelity Header */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Competitive Intelligence</h1>
-        <p className="text-sm text-muted-foreground">P&G market positioning vs key category competitors</p>
+        <h1 className="text-2xl font-bold tracking-tight">Competitive Intelligence Engine</h1>
+        <p className="text-sm text-muted-foreground">Benchmarking P&G brands vs. Surf, Breeze, Champion, and Zonrox</p>
+      </div>
+
+      {/* Intelligence Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="shadow-sm border-l-4 border-l-[#003da5] border-slate-200">
+          <CardContent className="pt-6">
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">P&G Market Position</h4>
+            <div className="text-3xl font-bold text-slate-900">#1</div>
+            <p className="text-[11px] text-muted-foreground mt-1">Overall sentiment leader in laundry & fabric care</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="shadow-sm border-l-4 border-l-emerald-500 border-slate-200">
+          <CardContent className="pt-6">
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Sentiment Advantage</h4>
+            <div className="text-3xl font-bold text-slate-900">+15pts</div>
+            <p className="text-[11px] text-muted-foreground mt-1">Average sentiment gap vs. top competitor (Surf)</p>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-l-4 border-l-violet-500 border-slate-200">
+          <CardContent className="pt-6">
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Growth Rate</h4>
+            <div className="text-3xl font-bold text-slate-900">+5.2%</div>
+            <p className="text-[11px] text-muted-foreground mt-1">Year-over-year sentiment improvement</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Scatter Chart */}
@@ -130,7 +157,7 @@ export default function CompetitiveAnalysisPage() {
                   <th className="p-4">Original Rating</th>
                   <th className="p-4">Corrected Rating</th>
                   <th className="p-4">Difference</th>
-                  <th className="p-4 text-right">Sentiment</th>
+                  <th className="p-4 text-right">Sentiment Health</th>
                 </tr>
               </thead>
               <tbody>
