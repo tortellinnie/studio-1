@@ -2,7 +2,7 @@
 export const pngProducts = [
   {
     id: 'p1',
-    name: 'Downy Fabric Conditioner',
+    name: 'Downy Garden Bloom',
     brand: 'Downy (P&G)',
     category: 'Fabric Care',
     subcategory: 'Fabric Conditioner',
@@ -14,8 +14,34 @@ export const pngProducts = [
     vectors: { product: 88, packaging: 82, value: 78, communication: 72, retailExec: 65 }
   },
   {
+    id: 'p1-2',
+    name: 'Downy Sunrise Fresh',
+    brand: 'Downy (P&G)',
+    category: 'Fabric Care',
+    subcategory: 'Fabric Conditioner',
+    reviewCount: 12100,
+    originalRating: 4.8,
+    correctedRating: 4.5,
+    sentimentScore: 75,
+    sentimentDistribution: { positive: 75, neutral: 18, negative: 7 },
+    vectors: { product: 86, packaging: 80, value: 75, communication: 70, retailExec: 60 }
+  },
+  {
+    id: 'p1-3',
+    name: 'Down: Antibac',
+    brand: 'Downy (P&G)',
+    category: 'Fabric Care',
+    subcategory: 'Fabric Conditioner',
+    reviewCount: 8900,
+    originalRating: 4.7,
+    correctedRating: 4.4,
+    sentimentScore: 72,
+    sentimentDistribution: { positive: 72, neutral: 20, negative: 8 },
+    vectors: { product: 84, packaging: 78, value: 70, communication: 75, retailExec: 65 }
+  },
+  {
     id: 'p2',
-    name: 'Ariel Sunrise Fresh',
+    name: 'Ariel Sunrise Fresh Liquid',
     brand: 'Ariel (P&G)',
     category: 'Fabric Care',
     subcategory: 'Liquid Detergent',
@@ -25,6 +51,19 @@ export const pngProducts = [
     sentimentScore: 72,
     sentimentDistribution: { positive: 72, neutral: 18, negative: 10 },
     vectors: { product: 85, packaging: 80, value: 45, communication: 70, retailExec: 85 }
+  },
+  {
+    id: 'p2-2',
+    name: 'Ariel Detox Liquid',
+    brand: 'Ariel (P&G)',
+    category: 'Fabric Care',
+    subcategory: 'Liquid Detergent',
+    reviewCount: 9500,
+    originalRating: 4.7,
+    correctedRating: 4.2,
+    sentimentScore: 68,
+    sentimentDistribution: { positive: 68, neutral: 22, negative: 10 },
+    vectors: { product: 82, packaging: 75, value: 50, communication: 68, retailExec: 80 }
   },
   {
     id: 'p3',
@@ -78,7 +117,7 @@ export const accountRecommendations = [
     account: 'Lazada Philippines',
     sentimentTrend: 'improving',
     priorityScore: 88,
-    topProduct: 'Downy Fabric Conditioner',
+    topProduct: 'Downy Garden Bloom',
     rationale: 'Sentiment is 15pts above category average. High demand signals in Taglish reviews for "long-lasting scent" justify 30% inventory increase for upcoming 11.11 sale.',
     recommendedActions: [
       'Increase ad spend on Downy bundle deals',
@@ -113,7 +152,6 @@ export const sampleReviews = [
   }
 ];
 
-// For backward compatibility with some components
 export const sentimentTrends = [
   { month: 'Jan', positive: 62, neutral: 25, negative: 13 },
   { month: 'Feb', positive: 64, neutral: 24, negative: 12 },
