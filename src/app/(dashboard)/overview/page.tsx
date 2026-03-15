@@ -22,12 +22,13 @@ import {
   CheckCircle2, 
   TrendingUp, 
   AlertCircle, 
-  ArrowUpRight,
-  TrendingDown,
-  Zap
+  Smile, 
+  Meh, 
+  Frown,
+  Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { pngProducts } from "@/data/mockData";
+import { Progress } from "@/components/ui/progress";
 
 const trendData = [
   { month: 'Sep 2025', positive: 62, neutral: 25, negative: 13 },
@@ -49,6 +50,14 @@ const vectorData = [
   { name: 'Packaging', 'P&G Average': 68, 'Competitor Average': 65 },
   { name: 'Value', 'P&G Average': 78, 'Competitor Average': 70 },
   { name: 'Retail Execution', 'P&G Average': 72, 'Competitor Average': 68 },
+];
+
+const productSentiment = [
+  { name: "Downy Fabric Conditioner", reviews: "4521 reviews analyzed", pos: 78, neu: 15, neg: 7 },
+  { name: "Ariel Liquid Detergent", reviews: "3124 reviews analyzed", pos: 72, neu: 18, neg: 10 },
+  { name: "Tide Powder Detergent", reviews: "2847 reviews analyzed", pos: 68, neu: 22, neg: 10 },
+  { name: "Joy Dishwashing Liquid", reviews: "2341 reviews analyzed", pos: 65, neu: 24, neg: 11 },
+  { name: "Safeguard Bar Soap", reviews: "1876 reviews analyzed", pos: 62, neu: 25, neg: 13 },
 ];
 
 export default function OverviewPage() {
@@ -86,6 +95,88 @@ export default function OverviewPage() {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Taglish-Aware AI Sentiment Analysis */}
+      <div className="space-y-6">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Taglish-Aware AI Sentiment Analysis</h2>
+          <p className="text-sm text-muted-foreground">Advanced NLP model trained on Filipino-English code-switching patterns</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="border-l-4 border-l-[#22c55e] shadow-sm">
+            <CardContent className="pt-8 space-y-2">
+              <div className="flex items-center gap-2 text-[#22c55e]">
+                <Smile className="h-4 w-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">Positive Sentiment</span>
+              </div>
+              <div className="text-4xl font-extrabold text-slate-900">68%</div>
+              <p className="text-xs text-slate-400 font-medium">9,876 reviews</p>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-[#f59e0b] shadow-sm">
+            <CardContent className="pt-8 space-y-2">
+              <div className="flex items-center gap-2 text-[#f59e0b]">
+                <Meh className="h-4 w-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">Neutral Sentiment</span>
+              </div>
+              <div className="text-4xl font-extrabold text-slate-900">22%</div>
+              <p className="text-xs text-slate-400 font-medium">3,198 reviews</p>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-[#ef4444] shadow-sm">
+            <CardContent className="pt-8 space-y-2">
+              <div className="flex items-center gap-2 text-[#ef4444]">
+                <Frown className="h-4 w-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">Negative Sentiment</span>
+              </div>
+              <div className="text-4xl font-extrabold text-slate-900">10%</div>
+              <p className="text-xs text-slate-400 font-medium">1,453 reviews</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="shadow-sm border-slate-200">
+          <CardHeader className="border-b border-slate-50 py-6">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-slate-500">Product-Level Sentiment Distribution</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="divide-y divide-slate-50">
+              {productSentiment.map((item, i) => (
+                <div key={i} className="p-8 space-y-4 hover:bg-slate-50/50 transition-colors">
+                  <div className="space-y-1">
+                    <h4 className="text-base font-bold text-slate-900">{item.name}</h4>
+                    <p className="text-xs text-slate-400 font-medium">{item.reviews}</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-[10px] font-bold uppercase">
+                        <span className="text-[#22c55e]">Positive</span>
+                        <span className="text-slate-900">{item.pos}%</span>
+                      </div>
+                      <Progress value={item.pos} className="h-1.5 bg-slate-100" indicatorClassName="bg-[#22c55e]" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-[10px] font-bold uppercase">
+                        <span className="text-[#f59e0b]">Neutral</span>
+                        <span className="text-slate-900">{item.neu}%</span>
+                      </div>
+                      <Progress value={item.neu} className="h-1.5 bg-slate-100" indicatorClassName="bg-[#f59e0b]" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-[10px] font-bold uppercase">
+                        <span className="text-[#ef4444]">Negative</span>
+                        <span className="text-slate-900">{item.neg}%</span>
+                      </div>
+                      <Progress value={item.neg} className="h-1.5 bg-slate-100" indicatorClassName="bg-[#ef4444]" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Charts Row 1 */}
