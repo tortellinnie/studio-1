@@ -52,7 +52,7 @@ export default function CompetitiveAnalysisPage() {
         <CardHeader className="p-8 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold text-slate-900 tracking-normal uppercase">Competitive superiority matrix</CardTitle>
-            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal font-sans">Superiority margin per SKU: (P&G Score - Market Baseline %)</CardDescription>
+            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal font-sans">Superiority margin per SKU: (Brand Score - Market Baseline %)</CardDescription>
           </div>
           <ShieldCheck className="h-6 w-6 text-[#003da5]" />
         </CardHeader>
@@ -72,7 +72,10 @@ export default function CompetitiveAnalysisPage() {
                   <tr key={row.brand} className="border-b border-slate-50 hover:bg-slate-50/30 transition-colors last:border-0">
                     <td className="p-6">
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-bold text-slate-900 tracking-normal">{row.brand}</span>
+                        <span className={cn(
+                          "text-sm font-bold tracking-normal",
+                          row.isPNG ? "text-slate-900" : "text-slate-600"
+                        )}>{row.brand}</span>
                         <span className="text-[9px] font-bold text-slate-400 uppercase">{row.producer}</span>
                       </div>
                     </td>

@@ -116,15 +116,21 @@ export const dynamicVectorScores = vectorLabels.map(label => {
   };
 });
 
-// COMPETITIVE INDEX DELTA LOGIC (Expanded to full SKU list)
-export const strategicSkus = [
-  { name: 'Tide Original', brand: 'P&G' },
-  { name: 'Tide Pods', brand: 'P&G' },
-  { name: 'Ariel Sunrise Fresh', brand: 'P&G' },
-  { name: 'Ariel Power Gel', brand: 'P&G' },
-  { name: 'Downy Garden Bloom', brand: 'P&G' },
-  { name: 'Downy Mystique', brand: 'P&G' },
-  { name: 'Downy Antibac', brand: 'P&G' }
+// COMPETITIVE INDEX DELTA LOGIC
+export const industrySkus = [
+  // P&G Portfolio
+  { name: 'Tide Original', brand: 'P&G', isPNG: true },
+  { name: 'Tide Pods', brand: 'P&G', isPNG: true },
+  { name: 'Ariel Sunrise Fresh', brand: 'P&G', isPNG: true },
+  { name: 'Ariel Power Gel', brand: 'P&G', isPNG: true },
+  { name: 'Downy Garden Bloom', brand: 'P&G', isPNG: true },
+  { name: 'Downy Mystique', brand: 'P&G', isPNG: true },
+  { name: 'Downy Antibac', brand: 'P&G', isPNG: true },
+  // Competitors (Deriving from Market Baseline)
+  { name: 'Surf Cherry Blossom', brand: 'Unilever', isPNG: false },
+  { name: 'Breeze Power Clean', brand: 'Unilever', isPNG: false },
+  { name: 'Champion High Foam', brand: 'Local', isPNG: false },
+  { name: 'Pride Powder', brand: 'Local', isPNG: false }
 ];
 
 export function getSuperiorityMatrix() {
@@ -142,9 +148,10 @@ export function getSuperiorityMatrix() {
     return acc;
   }, {} as any);
 
-  return strategicSkus.map((sku, idx) => {
-    // Distribute P&G entries across SKUs for simulation
-    const skuEntries = cacheEntries.filter((e, i) => e.isPNG && (i % strategicSkus.length === idx));
+  return industrySkus.map((sku, idx) => {
+    // Distribute entries across SKUs for simulation based on origin
+    const pool = cacheEntries.filter(e => e.isPNG === sku.isPNG);
+    const skuEntries = pool.filter((e, i) => i % (sku.isPNG ? 7 : 4) === (idx % (sku.isPNG ? 7 : 4)));
     
     const deltas = vectorLabels.map(vector => {
       const skuScore = getAvgScore(skuEntries, vector);
@@ -155,7 +162,7 @@ export function getSuperiorityMatrix() {
       };
     });
 
-    return { brand: sku.name, producer: sku.brand, deltas };
+    return { brand: sku.name, producer: sku.brand, deltas, isPNG: sku.isPNG };
   });
 }
 
@@ -166,6 +173,7 @@ export const allIndustryProducts = [
   { id: 'pg-1', name: 'Downy Garden Bloom', brand: 'P&G', originalRating: 4.8, correctedRating: 4.2, sentimentScore: 82, isPNG: true },
   { id: 'pg-2', name: 'Ariel Sunrise Fresh', brand: 'P&G', originalRating: 4.9, correctedRating: 4.1, sentimentScore: 78, isPNG: true },
   { id: 'uni-1', name: 'Surf Cherry Blossom', brand: 'Unilever', originalRating: 4.7, correctedRating: 3.5, sentimentScore: 62, isPNG: false },
+  { id: 'uni-2', name: 'Breeze Power Clean', brand: 'Unilever', originalRating: 4.6, correctedRating: 3.4, sentimentScore: 58, isPNG: false },
   { id: 'loc-1', name: 'Champion High Foam', brand: 'Local', originalRating: 4.6, correctedRating: 3.2, sentimentScore: 55, isPNG: false },
 ];
 
