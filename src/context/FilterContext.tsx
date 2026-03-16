@@ -20,6 +20,8 @@ interface FilterContextType {
   setViewMode: (v: string) => void;
   sector: string;
   setSector: (v: string) => void;
+  period: number;
+  setPeriod: (v: number) => void;
 }
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   const [timeline, setTimeline] = useState('qtr');
   const [viewMode, setViewMode] = useState('brand');
   const [sector, setSector] = useState('oral-care');
+  const [period, setPeriod] = useState(90);
 
   return (
     <FilterContext.Provider value={{
@@ -39,7 +42,8 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       incentivized, setIncentivized,
       timeline, setTimeline,
       viewMode, setViewMode,
-      sector, setSector
+      sector, setSector,
+      period, setPeriod
     }}>
       {children}
     </FilterContext.Provider>

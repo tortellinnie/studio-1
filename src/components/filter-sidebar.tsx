@@ -4,7 +4,6 @@ import * as React from "react";
 import { 
   Filter, 
   HelpCircle, 
-  Calendar as CalendarIcon,
   HelpCircle as InfoIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,7 +16,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { useFilters } from "@/context/FilterContext";
 
 export function FilterSidebar() {
@@ -27,7 +25,8 @@ export function FilterSidebar() {
     incentivized, setIncentivized, 
     timeline, setTimeline, 
     viewMode, setViewMode,
-    sector, setSector
+    sector, setSector,
+    period, setPeriod
   } = useFilters();
 
   const activeClass = "bg-[#003da5] text-white hover:bg-[#003da5]/90";
@@ -37,7 +36,7 @@ export function FilterSidebar() {
     <aside className="w-72 shrink-0 border-r border-slate-200 bg-white flex flex-col overflow-y-auto p-6 space-y-6">
       {/* 1. High-level Measure */}
       <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Select high-level Measure:</Label>
+        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Select high-level Measure:</Label>
         <div className="flex flex-col gap-2">
           <Button 
             variant="ghost" 
@@ -68,7 +67,7 @@ export function FilterSidebar() {
 
       {/* 3. Sub-Sector */}
       <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Sub-Sector:</Label>
+        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Sub-Sector:</Label>
         <Select value={sector} onValueChange={setSector}>
           <SelectTrigger className="h-9 rounded-lg border-slate-200 bg-slate-50 text-xs font-semibold">
             <SelectValue placeholder="Select sector" />
@@ -83,7 +82,7 @@ export function FilterSidebar() {
 
       {/* 4. Brand Division */}
       <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Brand Division:</Label>
+        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Brand Division:</Label>
         <Button 
           variant="ghost" 
           size="sm" 
@@ -96,7 +95,7 @@ export function FilterSidebar() {
 
       {/* 5. Brand */}
       <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Brand:</Label>
+        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Brand:</Label>
         <Select defaultValue="multiple">
           <SelectTrigger className="h-9 rounded-lg border-slate-200 bg-slate-50 text-xs font-semibold">
             <SelectValue placeholder="Multiple selections" />
@@ -109,42 +108,37 @@ export function FilterSidebar() {
         </Select>
       </div>
 
-      {/* 6. Time Period */}
+      {/* 6. Time Period (Transferred function) */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Time Period:</Label>
+          <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Time Period:</Label>
           <InfoIcon className="h-3.5 w-3.5 text-slate-300" />
         </div>
-        <Select defaultValue="custom">
-          <SelectTrigger className="h-9 rounded-lg border-slate-200 bg-slate-50 text-xs font-semibold">
-            <SelectValue placeholder="Custom" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="custom">Custom</SelectItem>
-            <SelectItem value="mtd">MTD</SelectItem>
-            <SelectItem value="ytd">YTD</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* 7. Custom Range */}
-      <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight text-primary">Select Custom Range</Label>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="relative">
-            <Input defaultValue="7/1/2025" className="h-9 px-2 text-[10px] font-bold bg-slate-50 border-slate-200 rounded-lg pr-7" />
-            <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-          </div>
-          <div className="relative">
-            <Input defaultValue="12/31/2025" className="h-9 px-2 text-[10px] font-bold bg-slate-50 border-slate-200 rounded-lg pr-7" />
-            <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-          </div>
+        <div className="flex flex-col p-1.5 bg-slate-100/50 rounded-xl border border-slate-200">
+          {[
+            { id: 7, label: 'Past 7 days' },
+            { id: 30, label: 'Past 30 days' },
+            { id: 90, label: 'Past 3 months' }
+          ].map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setPeriod(p.id)}
+              className={cn(
+                "w-full py-2.5 text-xs font-bold transition-all rounded-lg text-left px-4",
+                period === p.id 
+                  ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
+                  : "text-slate-500 hover:text-slate-700"
+              )}
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* 8. Include Incentivized */}
       <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Include Incentivized:</Label>
+        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Include Incentivized:</Label>
         <div className="grid grid-cols-2 gap-2">
           <Button 
             variant="ghost" 
@@ -165,17 +159,17 @@ export function FilterSidebar() {
         </div>
       </div>
 
-      {/* 9. Timeline */}
+      {/* 9. Timeline (Refined: No Year) */}
       <div className="space-y-2">
-        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Timeline:</Label>
-        <div className="grid grid-cols-4 gap-1.5">
-          {["Year", "Qtr", "Mon", "Day"].map((t) => (
+        <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">Timeline:</Label>
+        <div className="grid grid-cols-3 gap-1.5">
+          {["Qtr", "Mon", "Day"].map((t) => (
             <Button 
               key={t}
               variant="ghost" 
               size="sm" 
               className={cn(
-                "h-8 px-0 text-[10px] rounded-lg font-black transition-all", 
+                "h-8 px-0 text-[10px] rounded-lg font-bold transition-all", 
                 timeline === t.toLowerCase() ? activeClass : inactiveClass
               )}
               onClick={() => setTimeline(t.toLowerCase())}
@@ -189,14 +183,14 @@ export function FilterSidebar() {
       {/* 10. View Mode */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">View Mode:</Label>
+          <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-normal">View Mode:</Label>
           <InfoIcon className="h-3.5 w-3.5 text-slate-300" />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <Button 
             variant="ghost" 
             size="sm" 
-            className={cn("h-9 rounded-xl font-bold transition-all text-[10px] uppercase tracking-wider", viewMode === "brand" ? activeClass : inactiveClass)}
+            className={cn("h-9 rounded-xl font-bold transition-all text-[10px] uppercase tracking-normal", viewMode === "brand" ? activeClass : inactiveClass)}
             onClick={() => setViewMode("brand")}
           >
             Brand
@@ -204,7 +198,7 @@ export function FilterSidebar() {
           <Button 
             variant="ghost" 
             size="sm" 
-            className={cn("h-9 rounded-xl font-bold transition-all text-[10px] uppercase tracking-wider", viewMode === "more" ? activeClass : inactiveClass)}
+            className={cn("h-9 rounded-xl font-bold transition-all text-[10px] uppercase tracking-normal", viewMode === "more" ? activeClass : inactiveClass)}
             onClick={() => setViewMode("more")}
           >
             More views
