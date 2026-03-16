@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { 
   BarChart, 
   Bar, 
@@ -55,22 +54,22 @@ export default function OverviewPage() {
       {/* 1. KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { title: "Market positive", value: `${stats.posPct}%`, sub: "Overall sentiment health", trend: "+2.4%", trendColor: "text-emerald-600", icon: TrendingUp },
-          { title: "Corrected rating", value: stats.correctedRating.toFixed(2), sub: "NLP Adjusted vs 4.82", trend: "-0.12", trendColor: "text-red-600", icon: TrendingDown },
-          { title: "Rating inflation", value: `${stats.ratingInflation}%`, sub: "Platform bias detected", trend: "+1.1%", trendColor: "text-amber-600", icon: Info },
-          { title: "Negative friction", value: `${stats.negPct}%`, sub: "Unmet consumer needs", trend: "-0.8%", trendColor: "text-red-600", icon: TrendingDown },
+          { title: "Market positive", value: `${stats.posPct}%`, trend: "+2.4%", trendColor: "text-emerald-600", icon: TrendingUp },
+          { title: "Corrected rating", value: stats.correctedRating.toFixed(2), trend: "-0.12", trendColor: "text-red-600", icon: TrendingDown },
+          { title: "Rating inflation", value: `${stats.ratingInflation}%`, trend: "+1.1%", trendColor: "text-amber-600", icon: Info },
+          { title: "Negative friction", value: `${stats.negPct}%`, trend: "-0.8%", trendColor: "text-red-600", icon: TrendingDown },
         ].map((item, i) => (
           <Card key={i} className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
                 <p className="text-sm font-bold text-slate-500">{item.title}</p>
                 <item.icon className={cn("h-4 w-4", item.trendColor)} />
               </div>
-              <div className="space-y-2">
-                <h3 className="text-4xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
-                <div className="flex items-center gap-2 pt-1">
-                  <span className={cn("text-xs font-bold px-2 py-0.5 rounded bg-slate-50", item.trendColor)}>{item.trend}</span>
-                  <p className="text-xs text-slate-400 font-semibold">{item.sub}</p>
+              <div className="space-y-1">
+                <h3 className="text-3xl font-extrabold text-slate-900 tabular-nums">{item.value}</h3>
+                <div className="flex items-center gap-2">
+                  <span className={cn("text-xs font-bold", item.trendColor)}>{item.trend}</span>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-normal">vs Previous</p>
                 </div>
               </div>
             </CardContent>
@@ -80,16 +79,17 @@ export default function OverviewPage() {
 
       {/* 2. Primary Strategic Visual (Radar + Sidebar) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-8">5 Vectors of superiority analysis</h3>
+        {/* Main Vector Card */}
+        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col min-h-[650px]">
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-4">5 Vectors of superiority analysis</h3>
           
-          <div className="flex-1 flex items-center justify-center min-h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="flex-1 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height={400}>
               <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
                 <PolarGrid stroke="#e2e8f0" />
                 <PolarAngleAxis 
                   dataKey="vector" 
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} 
+                  tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
                 />
                 <Radar
                   name="Health Score"
@@ -103,22 +103,23 @@ export default function OverviewPage() {
             </ResponsiveContainer>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 w-full gap-6 border-t border-slate-100 pt-10 mt-6">
+          <div className="grid grid-cols-5 w-full gap-4 pt-10 mt-6 border-t border-slate-100">
             {dynamicVectorScores.map((v) => (
-              <div key={v.vector} className="flex flex-col border-l-[6px] border-l-[#003da5] pl-5 py-1">
-                <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-2 tracking-normal">{v.healthScore}%</span>
-                <div className="space-y-1">
+              <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-4 py-1">
+                <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{v.healthScore}%</span>
+                <div className="space-y-0.5">
                   <p className="text-xs font-bold text-slate-500">{v.vector}</p>
-                  <p className="text-[10px] font-bold text-slate-300 tracking-normal">N={v.count}</p>
+                  <p className="text-[10px] font-bold text-slate-300">N={v.count.toLocaleString()}</p>
                 </div>
               </div>
             ))}
           </div>
         </Card>
 
-        {/* Sidebar Controls & Volume */}
-        <div className="lg:col-span-3 flex flex-col gap-6">
-          <div className="flex flex-col p-1 bg-slate-100 rounded-lg border border-slate-200">
+        {/* Clinical Sidebar */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Period Selectors */}
+          <div className="flex flex-col p-1.5 bg-slate-100/50 rounded-xl border border-slate-200">
             {[
               { id: 7, label: 'Past 7 days' },
               { id: 30, label: 'Past 30 days' },
@@ -128,7 +129,7 @@ export default function OverviewPage() {
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 className={cn(
-                  "w-full py-2.5 text-sm font-bold transition-all rounded-md text-left px-4",
+                  "w-full py-3 text-sm font-bold transition-all rounded-lg text-left px-4",
                   period === p.id 
                     ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
                     : "text-slate-500 hover:text-slate-700"
@@ -139,22 +140,23 @@ export default function OverviewPage() {
             ))}
           </div>
           
+          {/* Volume Cards */}
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex items-baseline gap-3">
+            <div className="flex items-center gap-3">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
                 {stats.total.toLocaleString()}
               </p>
-              <p className="text-lg font-bold text-emerald-600 leading-none">+43.6%</p>
+              <p className="text-sm font-bold text-emerald-600">+43.6%</p>
             </div>
             <p className="text-sm font-semibold text-slate-400 italic mt-4">Total data samples</p>
           </Card>
 
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex items-baseline gap-3">
+            <div className="flex items-center gap-3">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
                 {stats.totalUsers.toLocaleString()}
               </p>
-              <p className="text-lg font-bold text-emerald-600 leading-none">+36.8%</p>
+              <p className="text-sm font-bold text-emerald-600">+36.8%</p>
             </div>
             <p className="text-sm font-semibold text-slate-400 italic mt-4">Unique consumers</p>
           </Card>
@@ -163,14 +165,17 @@ export default function OverviewPage() {
 
       {/* 3. Analysis Timeline */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-        <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between">
+        <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between border-b border-slate-50">
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold text-slate-900">Analysis timeline</CardTitle>
             <CardDescription className="text-sm text-slate-500 font-medium">Daily sentiment volume vs. rating trend</CardDescription>
           </div>
-          <Badge variant="outline" className="text-[10px] font-bold py-1 px-3 text-slate-500 border-slate-200">Validated NLP inference</Badge>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-[#1e293b]" />
+            <span className="text-[10px] font-bold text-slate-500 uppercase">Sentiment Score (0-5)</span>
+          </div>
         </CardHeader>
-        <CardContent className="h-[400px] px-8 pb-8">
+        <CardContent className="h-[450px] p-8">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stats.timeline} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -182,7 +187,7 @@ export default function OverviewPage() {
               <Bar yAxisId="left" dataKey="Positive" stackId="a" fill={COLORS.positive} />
               <Bar yAxisId="left" dataKey="Neutral" stackId="a" fill={COLORS.neutral} />
               <Bar yAxisId="left" dataKey="Negative" stackId="a" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" name="Sentiment Score" dataKey="Sentiment Score" stroke="#1e293b" strokeWidth={3} dot={{ r: 3, fill: '#1e293b', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+              <Line yAxisId="right" type="monotone" name="Sentiment Score" dataKey="Sentiment Score" stroke="#1e293b" strokeWidth={4} dot={{ r: 4, fill: '#1e293b', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6, strokeWidth: 0 }} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -196,7 +201,7 @@ export default function OverviewPage() {
             <CardDescription className="text-sm text-slate-500 font-medium">Comparative brand performance metrics</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="h-[400px] px-8 py-8">
+        <CardContent className="h-[400px] p-8">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={stats.timeline}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -204,7 +209,7 @@ export default function OverviewPage() {
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} unit="%" domain={[0, 100]} dx={-10} />
               <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', fontSize: '13px', fontWeight: '600', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
               <Legend verticalAlign="top" align="right" height={40} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', fontWeight: 700, paddingBottom: '20px' }} />
-              <Line type="monotone" name="P&G Portfolio" dataKey="P&G" stroke={COLORS.pg} strokeWidth={3} dot={{ r: 4, fill: COLORS.pg, strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6, strokeWidth: 0 }} />
+              <Line type="monotone" name="P&G Portfolio" dataKey="P&G" stroke={COLORS.pg} strokeWidth={4} dot={{ r: 5, fill: COLORS.pg, strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 7, strokeWidth: 0 }} />
               <Line type="monotone" name="Industry Competitors" dataKey="Competitors" stroke="#cbd5e1" strokeWidth={2} strokeDasharray="5 5" dot={false} />
             </LineChart>
           </ResponsiveContainer>
