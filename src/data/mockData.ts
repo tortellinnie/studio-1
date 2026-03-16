@@ -116,6 +116,41 @@ export const dynamicVectorScores = vectorLabels.map(label => {
   };
 });
 
+// COMPETITIVE INDEX DELTA LOGIC
+export const pgBrands = ['Tide', 'Ariel', 'Downy'];
+
+export function getSuperiorityMatrix() {
+  const competitorEntries = cacheEntries.filter(e => !e.isPNG);
+  
+  const getAvgScore = (entries: typeof cacheEntries, vector: string) => {
+    const vectorEntries = entries.filter(e => e.vectors.includes(vector));
+    if (vectorEntries.length === 0) return 0;
+    const pos = vectorEntries.filter(e => e.sentimentLabel === 'positive').length;
+    return (pos / vectorEntries.length);
+  };
+
+  const marketAverages = vectorLabels.reduce((acc, vector) => {
+    acc[vector] = getAvgScore(competitorEntries, vector);
+    return acc;
+  }, {} as any);
+
+  return pgBrands.map((brand, bIdx) => {
+    // Distribute P&G entries across brands for simulation
+    const brandEntries = cacheEntries.filter((e, i) => e.isPNG && (i % pgBrands.length === bIdx));
+    
+    const deltas = vectorLabels.map(vector => {
+      const brandScore = getAvgScore(brandEntries, vector);
+      const marketScore = marketAverages[vector];
+      return {
+        vector,
+        delta: Math.round((brandScore - marketScore) * 100)
+      };
+    });
+
+    return { brand, deltas };
+  });
+}
+
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.pgScore - b.pgScore)[0] || { vector: 'None', pgScore: 100 };
 export const bestVector = [...dynamicVectorScores].sort((a, b) => b.pgScore - a.pgScore)[0] || { vector: 'None', pgScore: 0 };
 
@@ -124,4 +159,10 @@ export const allIndustryProducts = [
   { id: 'pg-2', name: 'Ariel Sunrise Fresh', brand: 'P&G', originalRating: 4.9, correctedRating: 4.1, sentimentScore: 78, isPNG: true },
   { id: 'uni-1', name: 'Surf Cherry Blossom', brand: 'Unilever', originalRating: 4.7, correctedRating: 3.5, sentimentScore: 62, isPNG: false },
   { id: 'loc-1', name: 'Champion High Foam', brand: 'Local', originalRating: 4.6, correctedRating: 3.2, sentimentScore: 55, isPNG: false },
+];
+
+export const competitiveBenchmark = [
+  { brand: 'P&G', sentiment: 82, marketShare: 45, growth: 12 },
+  { brand: 'Unilever', sentiment: 62, marketShare: 30, growth: -5 },
+  { brand: 'Local Players', sentiment: 55, marketShare: 25, growth: 2 },
 ];
