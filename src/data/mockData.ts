@@ -86,11 +86,6 @@ export function getStatsForPeriod(days: number) {
 }
 
 export const globalStats = getStatsForPeriod(90);
-export const dynamicGlobalSentiment = {
-  positive: globalStats.posPct,
-  negative: globalStats.negPct
-};
-export const globalCorrectedRating = globalStats.correctedRating;
 
 // VECTOR ANALYSIS (Spider Map Comparison Logic)
 const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
@@ -118,7 +113,6 @@ export const dynamicVectorScores = vectorLabels.map(label => {
 
 // COMPETITIVE INDEX DELTA LOGIC
 export const industrySkus = [
-  // P&G Portfolio
   { name: 'Tide Original', brand: 'P&G', isPNG: true },
   { name: 'Tide Pods', brand: 'P&G', isPNG: true },
   { name: 'Ariel Sunrise Fresh', brand: 'P&G', isPNG: true },
@@ -126,7 +120,6 @@ export const industrySkus = [
   { name: 'Downy Garden Bloom', brand: 'P&G', isPNG: true },
   { name: 'Downy Mystique', brand: 'P&G', isPNG: true },
   { name: 'Downy Antibac', brand: 'P&G', isPNG: true },
-  // Competitors (Deriving from Market Baseline)
   { name: 'Surf Cherry Blossom', brand: 'Unilever', isPNG: false },
   { name: 'Breeze Power Clean', brand: 'Unilever', isPNG: false },
   { name: 'Champion High Foam', brand: 'Local', isPNG: false },
@@ -149,7 +142,6 @@ export function getSuperiorityMatrix() {
   }, {} as any);
 
   return industrySkus.map((sku, idx) => {
-    // Distribute entries across SKUs for simulation based on origin
     const pool = cacheEntries.filter(e => e.isPNG === sku.isPNG);
     const skuEntries = pool.filter((e, i) => i % (sku.isPNG ? 7 : 4) === (idx % (sku.isPNG ? 7 : 4)));
     
@@ -164,6 +156,28 @@ export function getSuperiorityMatrix() {
 
     return { brand: sku.name, producer: sku.brand, deltas, isPNG: sku.isPNG };
   });
+}
+
+// HERO SKU PODIUM LOGIC
+export function getRankedHeroSkus() {
+  const pgPortfolio = industrySkus.filter(s => s.isPNG);
+  
+  const ranked = pgPortfolio.map((sku, idx) => {
+    // Map existing cache entries to P&G SKUs deterministically for the simulation
+    const skuEntries = cacheEntries.filter(e => e.isPNG).filter((_, i) => i % pgPortfolio.length === idx);
+    const total = skuEntries.length || 1;
+    const positive = skuEntries.filter(e => e.sentimentLabel === 'positive').length;
+    const ratio = positive / total;
+    
+    return {
+      ...sku,
+      ratio,
+      points: Math.round(ratio * 10000),
+      avatar: `https://picsum.photos/seed/${sku.name}/200`
+    };
+  }).sort((a, b) => b.ratio - a.ratio);
+
+  return ranked;
 }
 
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.pgScore - b.pgScore)[0] || { vector: 'None', pgScore: 100 };
