@@ -20,9 +20,9 @@ import {
   Radar,
   PolarRadiusAxis
 } from 'recharts';
-import { getStatsForPeriod, dynamicVectorScores } from '@/data/mockData';
+import { getStatsForPeriod, dynamicVectorScores, allIndustryProducts } from '@/data/mockData';
 import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Info } from "lucide-react";
+import { TrendingUp, TrendingDown, Info, Star } from "lucide-react";
 
 const COLORS = {
   positive: "#10b981", // Emerald 500
@@ -66,7 +66,7 @@ export default function OverviewPage() {
                 <item.icon className={cn("h-4 w-4", item.trendColor)} />
               </div>
               <div className="space-y-1">
-                <h3 className="text-3xl font-extrabold text-slate-900 tabular-nums">{item.value}</h3>
+                <h3 className="text-3xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
                 <div className="flex items-center gap-2">
                   <span className={cn("text-xs font-bold", item.trendColor)}>{item.trend}</span>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-normal">vs Previous</p>
@@ -77,14 +77,14 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. Primary Strategic Visual (Radar + Sidebar) */}
+      {/* 2. Primary Strategic Visual (Radar + Control Sidebar) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Main Vector Card */}
-        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col min-h-[650px]">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-4">5 Vectors of superiority analysis</h3>
+        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col min-h-[600px]">
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10">5 Vectors of superiority analysis</h3>
           
           <div className="flex-1 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer width="100%" height={350}>
               <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
                 <PolarGrid stroke="#e2e8f0" />
                 <PolarAngleAxis 
@@ -116,7 +116,7 @@ export default function OverviewPage() {
           </div>
         </Card>
 
-        {/* Clinical Sidebar */}
+        {/* Control Sidebar */}
         <div className="lg:col-span-3 space-y-6">
           {/* Period Selectors */}
           <div className="flex flex-col p-1.5 bg-slate-100/50 rounded-xl border border-slate-200">
@@ -142,7 +142,7 @@ export default function OverviewPage() {
           
           {/* Volume Cards */}
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex items-center gap-3">
+            <div className="flex items-baseline gap-2">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
                 {stats.total.toLocaleString()}
               </p>
@@ -152,7 +152,7 @@ export default function OverviewPage() {
           </Card>
 
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex items-center gap-3">
+            <div className="flex items-baseline gap-2">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
                 {stats.totalUsers.toLocaleString()}
               </p>
@@ -169,10 +169,6 @@ export default function OverviewPage() {
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold text-slate-900">Analysis timeline</CardTitle>
             <CardDescription className="text-sm text-slate-500 font-medium">Daily sentiment volume vs. rating trend</CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-[#1e293b]" />
-            <span className="text-[10px] font-bold text-slate-500 uppercase">Sentiment Score (0-5)</span>
           </div>
         </CardHeader>
         <CardContent className="h-[450px] p-8">
@@ -215,6 +211,73 @@ export default function OverviewPage() {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      {/* 5. Industry SKU Rankings */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-slate-900">Industry SKU rankings</h2>
+        <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <th className="px-8 py-6">Rank</th>
+                    <th className="px-8 py-6">Brand SKU</th>
+                    <th className="px-8 py-6 text-center">Original rating</th>
+                    <th className="px-8 py-6 text-center">Corrected rating</th>
+                    <th className="px-8 py-6">Sentiment score</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {allIndustryProducts.map((item, idx) => (
+                    <tr key={item.id} className="hover:bg-slate-50/50 transition-colors group">
+                      <td className="px-8 py-8">
+                        <div className={cn(
+                          "flex h-10 w-10 items-center justify-center font-bold text-sm rounded-lg",
+                          item.isPNG ? "bg-[#ebf2ff] text-[#003da5]" : "bg-slate-100 text-slate-400"
+                        )}>
+                          {idx + 1}
+                        </div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-lg font-bold text-slate-900">{item.name}</span>
+                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{item.brand}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-8 text-center">
+                        <span className="text-lg font-bold text-slate-300 tabular-nums">
+                          {item.originalRating.toFixed(1)}
+                        </span>
+                      </td>
+                      <td className="px-8 py-8 text-center">
+                        <div className="flex items-center justify-center gap-2 font-extrabold text-[#003da5] text-4xl tabular-nums">
+                          <Star className="h-5 w-5 fill-[#003da5] stroke-none" />
+                          {item.correctedRating.toFixed(1)}
+                        </div>
+                      </td>
+                      <td className="px-8 py-8">
+                         <div className="flex flex-col gap-2 min-w-[200px]">
+                            <div className="flex justify-between items-center text-[11px] font-bold">
+                              <span className="text-emerald-600">{item.sentimentScore}% Positive</span>
+                              <TrendingUp className="h-3 w-3 text-emerald-500" />
+                            </div>
+                            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                               <div 
+                                 className="h-full bg-emerald-500 transition-all duration-1000 ease-out" 
+                                 style={{ width: `${item.sentimentScore}%` }} 
+                               />
+                            </div>
+                         </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
