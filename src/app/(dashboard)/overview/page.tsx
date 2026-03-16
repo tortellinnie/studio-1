@@ -11,7 +11,9 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  Legend,
+  Legend
+} from 'recharts';
+import { 
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
@@ -34,7 +36,6 @@ export default function OverviewPage() {
   const [period, setPeriod] = useState(90);
   const [stats, setStats] = useState(getStatsForPeriod(90));
   const [isClient, setIsClient] = useState(false);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -53,14 +54,14 @@ export default function OverviewPage() {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-4 space-y-3">
-          <div className="flex flex-col gap-1 border-b border-slate-100 pb-2">
-            <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{data.name}</p>
+        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-5 space-y-4 min-w-[200px]">
+          <div className="flex flex-col gap-1 border-b border-slate-100 pb-3">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{data.name}</p>
             <div className="bg-emerald-500 text-white text-[11px] font-black px-2.5 py-1 rounded-md self-start">
               {data.gap}
             </div>
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
               <span className="text-[#003da5]">P&G POSITIVE</span>
               <span className="tabular-nums">{data.pg_pos}</span>
@@ -79,7 +80,7 @@ export default function OverviewPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Executive overview</h1>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-normal">Executive overview</h1>
         <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Strategic performance audit & market baseline comparative pulse</p>
       </div>
 
@@ -87,24 +88,16 @@ export default function OverviewPage() {
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900">Daily sentiment pulse</CardTitle>
+            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Daily sentiment pulse</CardTitle>
             <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="h-[550px] p-8 relative">
+        <CardContent className="h-[500px] p-8">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart 
               data={stats.timeline} 
               margin={{ top: 20, right: 10, left: 0, bottom: 0 }} 
               barGap={8}
-              onMouseMove={(state) => {
-                if (state.activeTooltipIndex !== undefined) {
-                  setHoverIndex(state.activeTooltipIndex);
-                } else {
-                  setHoverIndex(null);
-                }
-              }}
-              onMouseLeave={() => setHoverIndex(null)}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
@@ -123,24 +116,6 @@ export default function OverviewPage() {
               <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          
-          {/* Dynamic Hover Badges (Sentiment Gap) */}
-          <div className="absolute inset-0 pointer-events-none p-8" style={{ top: '160px', height: '40px' }}>
-            <div className="relative w-full h-full flex justify-between px-10">
-              {stats.timeline.map((d, i) => (
-                <div key={`gap-${i}`} className="flex flex-col items-center flex-1">
-                  <div className={cn(
-                    "transition-all duration-300 transform scale-90",
-                    hoverIndex === i ? "opacity-100 -translate-y-2 scale-100" : "opacity-0"
-                  )}>
-                    <div className="bg-emerald-500 text-white text-[11px] font-black px-3 py-1 rounded-md shadow-lg whitespace-nowrap">
-                      {d.gap}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </CardContent>
       </Card>
 
@@ -155,7 +130,7 @@ export default function OverviewPage() {
           <Card key={i} className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-bold text-slate-500">{item.title}</p>
+                <p className="text-sm font-bold text-slate-500 tracking-normal">{item.title}</p>
                 <item.icon className={cn("h-4 w-4", item.trendColor)} />
               </div>
               <div className="space-y-1">
@@ -173,7 +148,7 @@ export default function OverviewPage() {
       {/* 3. 5 Vectors Analysis centerpiece */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-tight">5 Vectors of superiority analysis</h3>
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal">5 Vectors of superiority analysis</h3>
           
           <div className="w-full flex justify-center mb-10">
             <div className="h-[350px] w-full max-w-[500px]">
@@ -202,7 +177,7 @@ export default function OverviewPage() {
               <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-4 py-1">
                 <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{v.healthScore}%</span>
                 <div className="space-y-0.5">
-                  <p className="text-xs font-bold text-slate-500">{v.vector}</p>
+                  <p className="text-xs font-bold text-slate-500 tracking-normal">{v.vector}</p>
                   <p className="text-[10px] font-bold text-slate-300 tracking-normal uppercase">N={v.count.toLocaleString()}</p>
                 </div>
               </div>
@@ -257,7 +232,7 @@ export default function OverviewPage() {
 
       {/* 4. Industry SKU Rankings Podium */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Industry SKU rankings</h2>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-normal">Industry SKU rankings</h2>
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -284,7 +259,7 @@ export default function OverviewPage() {
                       </td>
                       <td className="px-8 py-8">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-lg font-bold text-slate-900 tracking-tight">{item.name}</span>
+                          <span className="text-lg font-bold text-slate-900 tracking-normal">{item.name}</span>
                           <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.brand}</span>
                         </div>
                       </td>
