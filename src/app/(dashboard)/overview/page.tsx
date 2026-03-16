@@ -28,7 +28,8 @@ const COLORS = {
   mkt_positive: "#003da533",
   mkt_neutral: "#64748b33",
   mkt_negative: "#ef444433",
-  mkt_grey: "#94a3b8"
+  mkt_grey: "#94a3b8",
+  mkt_red: "#ef4444"
 };
 
 export default function OverviewPage() {
@@ -43,13 +44,13 @@ export default function OverviewPage() {
 
   if (!isClient) return null;
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTimelineTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-5 space-y-4 min-w-[220px]">
+        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-5 space-y-4 min-w-[240px]">
           <div className="flex flex-col gap-1 border-b border-slate-100 pb-3">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{data.name}</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{data.name}</p>
             <div className={cn(
               "text-white text-[11px] font-black px-2.5 py-1 rounded-md self-start uppercase tracking-tighter",
               data.gap.includes('Lead') ? "bg-emerald-500" : "bg-red-500"
@@ -76,8 +77,8 @@ export default function OverviewPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-normal">Executive overview</h1>
-        <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Strategic performance audit & market baseline comparative pulse</p>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Executive overview</h1>
+        <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">Strategic performance audit & market baseline comparative pulse</p>
       </div>
 
       {/* 1. KPI Row */}
@@ -91,14 +92,14 @@ export default function OverviewPage() {
           <Card key={i} className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-bold text-slate-500 tracking-normal">{item.title}</p>
+                <p className="text-sm font-bold text-slate-500 tracking-tight">{item.title}</p>
                 <item.icon className={cn("h-4 w-4", item.trendColor)} />
               </div>
               <div className="space-y-1">
-                <h3 className="text-3xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
+                <h3 className="text-3xl font-extrabold text-slate-900 tabular-nums tracking-tight">{item.value}</h3>
                 <div className="flex items-center gap-2">
                   <span className={cn("text-xs font-bold", item.trendColor)}>{item.trend}</span>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-normal">vs Previous</p>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">vs Previous</p>
                 </div>
               </div>
             </CardContent>
@@ -106,12 +107,12 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. Daily Sentiment Pulse (Primary Time-Series Anchor) */}
+      {/* 2. Daily Sentiment Pulse */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
+            <CardTitle className="text-2xl font-bold text-slate-900 tracking-tight">Daily sentiment pulse</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-widest">P&G brands vs market baseline comparative audit</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="h-[500px] p-8">
@@ -124,7 +125,7 @@ export default function OverviewPage() {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} ticks={[0, 4, 8, 15]} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+              <Tooltip content={<CustomTimelineTooltip />} cursor={{ fill: 'transparent' }} />
               <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
               
               <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive} />
@@ -140,9 +141,9 @@ export default function OverviewPage() {
       </Card>
 
       {/* 3. 5-Vector Superiority centerpiece */}
-      <div className="grid grid-cols-1 lg:col-span-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal uppercase tracking-tight">5-Vector Superiority Spider Map</h3>
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-tight uppercase tracking-tighter">5-Vector Superiority Spider Map</h3>
           
           <div className="w-full flex justify-center mb-10">
             <div className="h-[400px] w-full max-w-[600px]">
@@ -165,10 +166,9 @@ export default function OverviewPage() {
                   <Radar
                     name="Market Average"
                     dataKey="mktScore"
-                    stroke={COLORS.mkt_grey}
+                    stroke={COLORS.mkt_red}
                     strokeWidth={2}
-                    fill={COLORS.mkt_grey}
-                    fillOpacity={0.1}
+                    fill="transparent"
                     strokeDasharray="4 4"
                   />
                   <Tooltip 
@@ -181,16 +181,16 @@ export default function OverviewPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-5 w-full gap-4 pt-10 mt-6 border-t border-slate-100">
+          <div className="grid grid-cols-5 w-full gap-8 pt-10 mt-6 border-t border-slate-100">
             {dynamicVectorScores.map((v) => (
-              <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-4 py-1">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none">{v.pgScore}%</span>
-                  <span className="text-[10px] font-bold text-slate-400 tabular-nums">/ {v.mktScore}%</span>
+              <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-5 py-1">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none tracking-tight">{v.pgScore}%</span>
+                  <span className="text-xs font-bold text-slate-300 tabular-nums">/ {v.mktScore}%</span>
                 </div>
-                <div className="space-y-0.5 mt-2">
-                  <p className="text-[11px] font-bold text-slate-500 tracking-normal uppercase">{v.vector}</p>
-                  <p className="text-[9px] font-bold text-slate-300 tracking-normal uppercase">Baseline N={v.mktCount}</p>
+                <div className="space-y-1 mt-3">
+                  <p className="text-[11px] font-black text-slate-500 tracking-wider uppercase">{v.vector}</p>
+                  <p className="text-[9px] font-bold text-slate-300 tracking-widest uppercase">Baseline N={v.mktCount}</p>
                 </div>
               </div>
             ))}
@@ -209,7 +209,7 @@ export default function OverviewPage() {
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 className={cn(
-                  "w-full py-3 text-sm font-bold transition-all rounded-lg text-left px-4 tracking-normal",
+                  "w-full py-3 text-sm font-bold transition-all rounded-lg text-left px-4",
                   period === p.id 
                     ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
                     : "text-slate-500 hover:text-slate-700"
@@ -222,29 +222,29 @@ export default function OverviewPage() {
           
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
             <div className="flex items-baseline gap-2">
-              <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
+              <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-tight">
                 {stats.total.toLocaleString()}
               </p>
               <p className="text-sm font-bold text-emerald-600">+43.6%</p>
             </div>
-            <p className="text-sm font-semibold text-slate-400 italic mt-4 uppercase tracking-wider">Total data samples</p>
+            <p className="text-sm font-semibold text-slate-400 italic mt-4 uppercase tracking-widest">Total data samples</p>
           </Card>
 
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
             <div className="flex items-baseline gap-2">
-              <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
+              <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-tight">
                 {stats.totalUsers.toLocaleString()}
               </p>
               <p className="text-sm font-bold text-emerald-600">+36.8%</p>
             </div>
-            <p className="text-sm font-semibold text-slate-400 italic mt-4 uppercase tracking-wider">Unique consumers</p>
+            <p className="text-sm font-semibold text-slate-400 italic mt-4 uppercase tracking-widest">Unique consumers</p>
           </Card>
         </div>
       </div>
 
-      {/* 4. Industry SKU Rankings Podium */}
+      {/* 4. Industry SKU Rankings */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-normal">Industry SKU rankings</h2>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Industry SKU rankings</h2>
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -271,7 +271,7 @@ export default function OverviewPage() {
                       </td>
                       <td className="px-8 py-8">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-lg font-bold text-slate-900 tracking-normal">{item.name}</span>
+                          <span className="text-lg font-bold text-slate-900 tracking-tight">{item.name}</span>
                           <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.brand}</span>
                         </div>
                       </td>
@@ -281,7 +281,7 @@ export default function OverviewPage() {
                         </span>
                       </td>
                       <td className="px-8 py-8 text-center">
-                        <div className="flex items-center justify-center gap-2 font-extrabold text-[#003da5] text-4xl tabular-nums">
+                        <div className="flex items-center justify-center gap-2 font-extrabold text-[#003da5] text-4xl tabular-nums tracking-tight">
                           <Star className="h-5 w-5 fill-[#003da5] stroke-none" />
                           {item.correctedRating.toFixed(1)}
                         </div>
