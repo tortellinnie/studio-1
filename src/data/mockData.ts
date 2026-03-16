@@ -13,10 +13,11 @@ export const totalCacheCount = rawEntries.length;
 // Simulate 90-day time distribution deterministically based on entry index
 export const cacheEntries = rawEntries.map((item, index) => {
   const date = new Date('2024-03-15T00:00:00Z');
-  // Stabilize denominator calculation
   const stableDenominator = rawEntries.length > 0 ? rawEntries.length / 90 : 1;
   date.setDate(date.getDate() - Math.floor(index / stableDenominator));
-  return { ...item, timestamp: new Date(date) };
+  // Deterministically assign to P&G or Market (60/40 split)
+  const isPNG = index % 10 < 6; 
+  return { ...item, timestamp: new Date(date), isPNG };
 });
 
 // PERIOD-BASED CALCULATIONS
@@ -28,57 +29,70 @@ export function getStatsForPeriod(days: number) {
   const total = filtered.length || 1;
   const positive = filtered.filter(e => e.sentimentLabel === 'positive');
   const negative = filtered.filter(e => e.sentimentLabel === 'negative');
-  const neutral = filtered.filter(e => e.sentimentLabel === 'neutral');
 
   const posPct = Math.round((positive.length / total) * 100);
   const negPct = Math.round((negative.length / total) * 100);
-  const neutralPct = Math.round((neutral.length / total) * 100);
   
   const weightedSum = positive.reduce((acc, curr) => acc + curr.score, 0);
   const correctedRating = (1 + (weightedSum / total) * 4).toFixed(2);
 
-  // Timeline grouping by day
+  // Timeline grouping by day for Daily Sentiment Pulse
   const timelineMap = new Map();
   filtered.forEach(e => {
     const dStr = e.timestamp.toISOString().split('T')[0];
     if (!timelineMap.has(dStr)) {
-      timelineMap.set(dStr, { date: dStr, positive: 0, neutral: 0, negative: 0, totalScore: 0, count: 0 });
+      timelineMap.set(dStr, { 
+        date: dStr, 
+        pg_pos: 0, pg_neu: 0, pg_neg: 0,
+        mkt_pos: 0, mkt_neu: 0, mkt_neg: 0,
+        pg_total_score: 0, pg_count: 0,
+        mkt_total_score: 0, mkt_count: 0
+      });
     }
     const day = timelineMap.get(dStr);
-    day[e.sentimentLabel]++;
-    day.totalScore += e.score;
-    day.count++;
+    const prefix = e.isPNG ? 'pg' : 'mkt';
+    day[`${prefix}_${e.sentimentLabel === 'positive' ? 'pos' : e.sentimentLabel === 'negative' ? 'neg' : 'neu'}`]++;
+    day[`${prefix}_total_score`] += e.score;
+    day[`${prefix}_count`]++;
   });
 
-  const timeline = Array.from(timelineMap.values()).sort((a, b) => a.date.localeCompare(b.date)).map(d => ({
-    name: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    Positive: d.positive,
-    Neutral: d.neutral,
-    Negative: d.negative,
-    'Sentiment Score': parseFloat((1 + (d.totalScore / d.count) * 4).toFixed(1)),
-    // Add comparative data
-    'P&G': Math.min(100, Math.max(0, Math.round((d.positive / (d.count || 1)) * 100))),
-    'Competitors': Math.min(100, Math.max(0, Math.round((d.positive / (d.count || 1)) * 100) - 12 + (Math.sin(new Date(d.date).getTime()) * 5)))
-  }));
+  const timeline = Array.from(timelineMap.values()).sort((a, b) => a.date.localeCompare(b.date)).map(d => {
+    const pgPosPct = d.pg_count > 0 ? (d.pg_pos / d.pg_count) * 100 : 0;
+    const mktPosPct = d.mkt_count > 0 ? (d.mkt_pos / d.mkt_count) * 100 : 0;
+    const gap = Math.round(pgPosPct - mktPosPct);
+    
+    return {
+      name: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      // Bar A (P&G)
+      pg_pos: d.pg_pos,
+      pg_neu: d.pg_neu,
+      pg_neg: d.pg_neg,
+      // Bar B (Market Average)
+      mkt_pos: d.mkt_pos,
+      mkt_neu: d.mkt_neu,
+      mkt_neg: d.mkt_neg,
+      // Gap Indicator Metadata
+      gap: gap > 0 ? `+${gap}% Lead` : `${gap}% Gap`,
+      gapType: gap >= 0 ? 'lead' : 'lag',
+      totalCount: d.pg_pos + d.pg_neu + d.pg_neg + d.mkt_pos + d.mkt_neu + d.mkt_neg
+    };
+  });
 
   return {
     total,
     posPct,
     negPct,
-    neutralPct,
     totalUsers: new Set(filtered.map(e => e.internalReviewId)).size,
     correctedRating: parseFloat(correctedRating),
     timeline,
-    revenueAtRisk: Math.round(negative.reduce((acc, e) => acc + (e.score * (50000000 / totalCacheCount)), 0)),
-    ratingInflation: 14.8 // Mocked based on user requirement
+    ratingInflation: 14.8
   };
 }
 
 export const globalStats = getStatsForPeriod(90);
 export const dynamicGlobalSentiment = {
   positive: globalStats.posPct,
-  negative: globalStats.negPct,
-  neutral: globalStats.neutralPct
+  negative: globalStats.negPct
 };
 export const globalCorrectedRating = globalStats.correctedRating;
 
@@ -93,33 +107,6 @@ export const dynamicVectorScores = vectorLabels.map(label => {
 
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0] || { vector: 'None', healthScore: 100 };
 export const bestVector = [...dynamicVectorScores].sort((a, b) => b.healthScore - a.healthScore)[0] || { vector: 'None', healthScore: 0 };
-
-export const personaInsights = {
-  supplyChain: {
-    alertScore: 7,
-    recommendation: `Logistics friction detected in ${criticalVector.vector}. Recommended SKU ranging optimization to prevent stockouts.`
-  },
-  brandManager: {
-    taglishNuance: globalStats.posPct > 65 ? "'Sulit' (Value) sentiment is dominating over 'Mahal' (Price)." : "Pricing friction is eroding brand equity.",
-    campaignPivot: "Strong 'Bango' (Scent) resonance detected. Pivot marketing towards long-lasting fragrance hooks."
-  },
-  socialStrategist: {
-    viralRisk: globalStats.negPct > 15 ? "HIGH" : "LOW",
-    suggestedResponse: "Salamat sa feedback! We hear you. DM us para matulungan namin kayo directly sa concern niyo. 💙"
-  }
-};
-
-export const promoRecommendations = [
-  { sku: "Downy Garden Bloom", priority: "High", targetVector: "Value Perception", recommendedPromo: "Buy 1 Take 1 Flash Sale" },
-  { sku: "Ariel Sunrise Fresh", priority: "Medium", targetVector: "Retail Availability", recommendedPromo: "Free Vouchers" },
-  { sku: "Tide Perfect Clean", priority: "High", targetVector: "Quality Reassurance", recommendedPromo: "Sampling Bundle" }
-];
-
-export const competitiveBenchmark = [
-  { brand: 'P&G', sentiment: globalStats.posPct, marketShare: 42, growth: 12 },
-  { brand: 'Unilever', sentiment: Math.max(0, globalStats.posPct - 15), marketShare: 35, growth: 8 },
-  { brand: 'Local', sentiment: Math.max(0, globalStats.posPct - 25), marketShare: 15, growth: 5 },
-];
 
 export const allIndustryProducts = [
   { id: 'pg-1', name: 'Downy Garden Bloom', brand: 'P&G', originalRating: 4.8, correctedRating: 4.2, sentimentScore: 82, isPNG: true },

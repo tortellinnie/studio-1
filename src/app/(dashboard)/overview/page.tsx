@@ -11,24 +11,23 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  LineChart, 
-  Line,
   Legend,
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
   Radar,
-  PolarRadiusAxis
+  Cell,
+  LabelList
 } from 'recharts';
 import { getStatsForPeriod, dynamicVectorScores, allIndustryProducts } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Info, Star } from "lucide-react";
 
 const COLORS = {
-  positive: "#10b981", // Emerald 500
-  neutral: "#f59e0b",  // Amber 500
-  negative: "#ef4444", // Rose 500
-  pg: "#003da5",       // P&G Blue
+  positive: "#10b981", 
+  neutral: "#64748b",  
+  negative: "#ef4444", 
+  pg: "#003da5",       
 };
 
 export default function OverviewPage() {
@@ -48,6 +47,35 @@ export default function OverviewPage() {
     A: v.healthScore,
     fullMark: 100,
   }));
+
+  const CustomGapLabel = (props: any) => {
+    const { x, y, width, value } = props;
+    if (!value) return null;
+    
+    return (
+      <g>
+        <rect 
+          x={x + width / 2 - 25} 
+          y={y - 25} 
+          width={50} 
+          height={18} 
+          rx={4} 
+          fill={value.includes('+') ? '#10b981' : '#ef4444'} 
+        />
+        <text 
+          x={x + width / 2} 
+          y={y - 13} 
+          fill="#fff" 
+          textAnchor="middle" 
+          dominantBaseline="middle" 
+          fontSize="9" 
+          fontWeight="800"
+        >
+          {value}
+        </text>
+      </g>
+    );
+  };
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
@@ -77,30 +105,31 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. Primary Strategic Visual (Radar + Control Sidebar) */}
+      {/* 2. 5 Vectors Analysis centerpiece */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Vector Card */}
-        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col min-h-[600px]">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10">5 Vectors of superiority analysis</h3>
+        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full">5 Vectors of superiority analysis</h3>
           
-          <div className="flex-1 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height={350}>
-              <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
-                <PolarGrid stroke="#e2e8f0" />
-                <PolarAngleAxis 
-                  dataKey="vector" 
-                  tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
-                />
-                <Radar
-                  name="Health Score"
-                  dataKey="A"
-                  stroke={COLORS.pg}
-                  strokeWidth={4}
-                  fill={COLORS.pg}
-                  fillOpacity={0.1}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+          <div className="w-full flex justify-center mb-10">
+            <div className="h-[350px] w-full max-w-[500px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
+                  <PolarGrid stroke="#e2e8f0" />
+                  <PolarAngleAxis 
+                    dataKey="vector" 
+                    tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
+                  />
+                  <Radar
+                    name="Health Score"
+                    dataKey="A"
+                    stroke={COLORS.pg}
+                    strokeWidth={4}
+                    fill={COLORS.pg}
+                    fillOpacity={0.1}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
           <div className="grid grid-cols-5 w-full gap-4 pt-10 mt-6 border-t border-slate-100">
@@ -116,9 +145,8 @@ export default function OverviewPage() {
           </div>
         </Card>
 
-        {/* Control Sidebar */}
+        {/* Sidebar Controls */}
         <div className="lg:col-span-3 space-y-6">
-          {/* Period Selectors */}
           <div className="flex flex-col p-1.5 bg-slate-100/50 rounded-xl border border-slate-200">
             {[
               { id: 7, label: 'Past 7 days' },
@@ -140,7 +168,6 @@ export default function OverviewPage() {
             ))}
           </div>
           
-          {/* Volume Cards */}
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
             <div className="flex items-baseline gap-2">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
@@ -148,7 +175,7 @@ export default function OverviewPage() {
               </p>
               <p className="text-sm font-bold text-emerald-600">+43.6%</p>
             </div>
-            <p className="text-sm font-semibold text-slate-400 italic mt-4">Total data samples</p>
+            <p className="text-sm font-semibold text-slate-400 italic mt-4 uppercase tracking-wider">Total data samples</p>
           </Card>
 
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
@@ -158,61 +185,48 @@ export default function OverviewPage() {
               </p>
               <p className="text-sm font-bold text-emerald-600">+36.8%</p>
             </div>
-            <p className="text-sm font-semibold text-slate-400 italic mt-4">Unique consumers</p>
+            <p className="text-sm font-semibold text-slate-400 italic mt-4 uppercase tracking-wider">Unique consumers</p>
           </Card>
         </div>
       </div>
 
-      {/* 3. Analysis Timeline */}
+      {/* 3. Daily Sentiment Pulse (Comparative Bar Timeline) */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between border-b border-slate-50">
           <div className="space-y-1">
-            <CardTitle className="text-xl font-bold text-slate-900">Analysis timeline</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-medium">Daily sentiment volume vs. rating trend</CardDescription>
+            <CardTitle className="text-xl font-bold text-slate-900">Daily sentiment pulse</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-medium uppercase tracking-tight">P&G brands vs market baseline comparative audit</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="h-[450px] p-8">
+        <CardContent className="h-[500px] p-8">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={stats.timeline} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <BarChart data={stats.timeline} margin={{ top: 40, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
-              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '13px' }} />
-              <Legend verticalAlign="top" align="center" height={40} iconType="square" iconSize={8} wrapperStyle={{ fontSize: '12px', fontWeight: 700, paddingBottom: '20px' }} />
-              <Bar yAxisId="left" dataKey="Positive" stackId="a" fill={COLORS.positive} />
-              <Bar yAxisId="left" dataKey="Neutral" stackId="a" fill={COLORS.neutral} />
-              <Bar yAxisId="left" dataKey="Negative" stackId="a" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" name="Sentiment Score" dataKey="Sentiment Score" stroke="#1e293b" strokeWidth={4} dot={{ r: 4, fill: '#1e293b', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6, strokeWidth: 0 }} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
+              <Tooltip 
+                cursor={{ fill: 'transparent' }}
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '13px' }} 
+              />
+              <Legend verticalAlign="top" align="center" height={40} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px', fontWeight: 800, paddingBottom: '30px', textTransform: 'uppercase' }} />
+              
+              {/* P&G Stacked Bars */}
+              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.pg} radius={[0, 0, 0, 0]}>
+                <LabelList dataKey="gap" content={<CustomGapLabel />} />
+              </Bar>
+              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
+              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} />
+
+              {/* Market Stacked Bars (Ghosted) */}
+              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.pg} fillOpacity={0.2} stroke={COLORS.pg} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.neutral} fillOpacity={0.2} stroke={COLORS.neutral} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.negative} fillOpacity={0.2} stroke={COLORS.negative} strokeDasharray="2 2" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
-      {/* 4. Sentiment Velocity */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between pb-10 pt-8 px-8 border-b border-slate-50">
-          <div className="space-y-1">
-            <CardTitle className="text-xl font-bold text-slate-900">Sentiment velocity</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-medium">Comparative brand performance metrics</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="h-[400px] p-8">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={stats.timeline}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} unit="%" domain={[0, 100]} dx={-10} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', fontSize: '13px', fontWeight: '600', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
-              <Legend verticalAlign="top" align="right" height={40} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', fontWeight: 700, paddingBottom: '20px' }} />
-              <Line type="monotone" name="P&G Portfolio" dataKey="P&G" stroke={COLORS.pg} strokeWidth={4} dot={{ r: 5, fill: COLORS.pg, strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 7, strokeWidth: 0 }} />
-              <Line type="monotone" name="Industry Competitors" dataKey="Competitors" stroke="#cbd5e1" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* 5. Industry SKU Rankings */}
+      {/* 4. Industry SKU Rankings Podium */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-slate-900">Industry SKU rankings</h2>
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
@@ -225,7 +239,7 @@ export default function OverviewPage() {
                     <th className="px-8 py-6">Brand SKU</th>
                     <th className="px-8 py-6 text-center">Original rating</th>
                     <th className="px-8 py-6 text-center">Corrected rating</th>
-                    <th className="px-8 py-6">Sentiment score</th>
+                    <th className="px-8 py-6">Pulse Health</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">

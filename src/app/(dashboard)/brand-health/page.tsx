@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -19,10 +20,10 @@ import {
 import { 
   dynamicVectorScores, 
   totalCacheCount,
-  globalStats,
   criticalVector,
   bestVector,
-  allIndustryProducts
+  allIndustryProducts,
+  globalStats
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 
@@ -46,19 +47,19 @@ export default function BrandHealthPage() {
   return (
     <div className="space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Industry health audit</h1>
-        <p className="text-sm text-slate-500 font-semibold tracking-normal">
-          Vector analysis from {totalCacheCount.toLocaleString()} Taglish NLP samples
+        <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Market Baseline Audit</h1>
+        <p className="text-sm text-slate-500 font-semibold tracking-normal uppercase">
+          Comparative Pulse Analytics from {totalCacheCount.toLocaleString()} Historical Samples
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Industry Superiority Spider Graph */}
+        {/* Market Superiority Spider Graph */}
         <Card className="lg:col-span-7 border-slate-200 shadow-sm rounded-xl bg-white p-8">
           <CardHeader className="px-0 pt-0 pb-8 flex flex-row items-center justify-between border-b border-slate-100">
             <div className="flex items-center gap-4">
               <Activity className="h-6 w-6 text-[#003da5]" />
-              <CardTitle className="text-xl font-bold text-slate-900 tracking-tight">Vectors of superiority</CardTitle>
+              <CardTitle className="text-xl font-bold text-slate-900 tracking-tight">Market Health Vectors</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="pt-10 flex flex-col items-center">
@@ -84,30 +85,30 @@ export default function BrandHealthPage() {
             </div>
             <div className="grid grid-cols-3 w-full gap-6 mt-10 border-t border-slate-100 pt-10">
               <div className="text-center">
-                <p className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Critical friction</p>
+                <p className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Critical Friction</p>
                 <p className="text-xl font-extrabold text-red-500 tabular-nums">{criticalVector.vector}</p>
               </div>
               <div className="text-center border-x border-slate-100">
-                <p className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Market positive</p>
+                <p className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Market Lead</p>
                 <p className="text-xl font-extrabold text-slate-900 tabular-nums">{globalStats.posPct}%</p>
               </div>
               <div className="text-center">
-                <p className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Core anchor</p>
+                <p className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Core Anchor</p>
                 <p className="text-xl font-extrabold text-emerald-500 tabular-nums">{bestVector.vector}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Promo prioritization */}
+        {/* Strategic SKU Prioritization */}
         <div className="lg:col-span-5 space-y-8">
           <div className="space-y-3">
             <h2 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
               <Tag className="h-8 w-8 text-[#003da5]" />
-              Promo prioritization
+              Promo Prioritization
             </h2>
             <p className="text-base text-slate-500 font-medium leading-relaxed max-w-sm">
-              Targeted SKU recommendations based on sentiment friction points.
+              Pulse-informed SKU recommendations derived from market baseline comparative gap analysis.
             </p>
           </div>
 
@@ -119,19 +120,19 @@ export default function BrandHealthPage() {
                     <h3 className="text-3xl font-bold text-slate-900 leading-tight">
                       {topProduct.name}
                     </h3>
-                    <p className="text-sm font-bold text-slate-400">
-                      Status: Top Performer
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-tighter">
+                      Status: Performance Leader
                     </p>
                   </div>
                   <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-black px-3 py-1.5 rounded-md border-none tracking-widest uppercase">
-                    PRIORITY
+                    STRATEGIC
                   </Badge>
                 </div>
 
                 <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 flex items-center gap-6 justify-between">
                   <div className="space-y-4">
                     <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.1em]">
-                      Recommended action
+                      Recommended Action
                     </p>
                     <p className="text-xl font-bold text-slate-900 leading-tight">
                       [{topProduct.name}] your top performing product, consider creating promos!

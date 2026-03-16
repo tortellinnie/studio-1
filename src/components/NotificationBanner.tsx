@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -14,12 +15,12 @@ export function NotificationBanner() {
           </div>
           <div className="flex flex-col gap-1">
             <AlertTitle className="text-lg font-bold text-red-800 uppercase tracking-tight flex items-center gap-2">
-              Critical: {criticalVector.vector} Friction Detected
+              Critical Baseline Pulse: {criticalVector.vector} Friction
               <span className="text-[10px] font-black bg-red-100 px-2 py-0.5 rounded-full ml-2">SYSTEM ALERT</span>
             </AlertTitle>
             <AlertDescription className="text-base text-red-700/80 font-medium leading-relaxed max-w-2xl">
-              An NLP inference audit of {totalCacheCount} samples confirms a surge in negative sentiment regarding <strong>{criticalVector.vector}</strong>. 
-              This trend is currently depressing the corrected market rating to <span className="font-bold underline">{criticalVector.healthScore}%</span> health.
+              Comparative pulse analytics across {totalCacheCount} samples confirms a widening sentiment gap in <strong>{criticalVector.vector}</strong>. 
+              P&G internal performance is currently being pressured by a market-wide baseline downturn in this vector.
             </AlertDescription>
           </div>
         </div>
