@@ -21,7 +21,9 @@ import {
   Megaphone,
   Truck,
   MessageCircle,
-  AlertTriangle
+  AlertTriangle,
+  Tag,
+  ShieldAlert
 } from "lucide-react";
 import { 
   dynamicVectorScores, 
@@ -29,7 +31,8 @@ import {
   dynamicGlobalSentiment,
   criticalVector,
   bestVector,
-  personaInsights
+  personaInsights,
+  promoRecommendations
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 
@@ -186,35 +189,39 @@ export default function BrandHealthPage() {
         </div>
       </div>
 
-      {/* Deep Vector Analysis */}
+      {/* Promo Recommendations - SKU promo prioritization by sentiment trend */}
       <div className="space-y-8 pt-6 border-t border-slate-100">
         <h2 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-4 font-headline uppercase tracking-tighter">
-          <CheckCircle2 className="h-8 w-8 text-[#003da5]" />
-          Vector-Specific Performance Insights
+          <Tag className="h-8 w-8 text-[#003da5]" />
+          Promo Recommendations & Prioritization
         </h2>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {dynamicVectorScores.map((v) => (
-            <Card key={v.vector} className="shadow-sm border-slate-200 hover:border-[#003da5]/30 transition-all bg-white group">
-              <CardContent className="p-8 space-y-6">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{v.vector} Health Index</h4>
-                  <Badge variant="outline" className="border-slate-100 text-[10px] font-black uppercase">{v.count} Mentions</Badge>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {promoRecommendations.map((promo, idx) => (
+            <Card key={idx} className="border-l-4 border-l-[#003da5] bg-white shadow-sm hover:shadow-md transition-all">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <Badge className={cn(
+                    "text-[9px] font-black uppercase px-2 rounded-md",
+                    promo.priority === 'High' ? 'bg-red-500 text-white' : 'bg-orange-400 text-white'
+                  )}>PRIORITY: {promo.priority}</Badge>
+                  <span className="text-[10px] font-black text-slate-400 uppercase">Trend: Negative</span>
                 </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-6xl font-black text-slate-900 tracking-tighter tabular-nums">{v.healthScore}%</span>
-                  <span className={cn(
-                    "text-xs font-black uppercase tracking-widest",
-                    v.healthScore > dynamicGlobalSentiment.positive ? "text-emerald-500" : "text-red-500"
-                  )}>
-                    {v.healthScore > dynamicGlobalSentiment.positive ? "Above Avg" : "At Risk"}
-                  </span>
+                <CardTitle className="text-xl font-black text-slate-900 tracking-tighter mt-4">{promo.sku}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-4">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Target Vector</p>
+                  <p className="text-sm font-black text-slate-700 uppercase tracking-tight">{promo.targetVector}</p>
                 </div>
-                <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
-                  <div 
-                    className={cn("h-full rounded-full transition-all duration-1000", v.healthScore > 70 ? "bg-emerald-500" : "bg-[#003da5]")} 
-                    style={{ width: `${v.healthScore}%` }} 
-                  />
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <Tag className="h-5 w-5 text-[#003da5]" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Recommended Promo</p>
+                    <p className="text-base font-black text-slate-900 tracking-tighter">{promo.recommendedPromo}</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

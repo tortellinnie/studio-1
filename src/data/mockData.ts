@@ -91,7 +91,12 @@ export const allIndustryProducts = rawSkus.map((sku, i) => {
     reviewCount: Math.round(totalCacheCount / rawSkus.length),
     originalRating: 4.8,
     correctedRating: (1 + (sentimentScore / 100) * 4).toFixed(2),
-    sentimentScore
+    sentimentScore,
+    promoPriority: sentimentScore < dynamicGlobalSentiment.positive ? "High" : "Low",
+    vectors: {
+      value: dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0,
+      product: dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0
+    }
   };
 }).sort((a, b) => parseFloat(b.correctedRating) - parseFloat(a.correctedRating));
 
@@ -107,4 +112,19 @@ export const sentimentTrends = [
   { month: 'Jan', positive: 65, negative: 15 },
   { month: 'Feb', positive: 68, negative: 12 },
   { month: 'Mar', positive: dynamicGlobalSentiment.positive, negative: dynamicGlobalSentiment.negative }
+];
+
+export const promoRecommendations = [
+  { sku: "Downy Garden Bloom", priority: "High", targetVector: "Value Perception", recommendedPromo: "Buy 1 Take 1 Flash Sale" },
+  { sku: "Ariel Sunrise Fresh", priority: "Medium", targetVector: "Retail Availability", recommendedPromo: "Free Shipping Vouchers" },
+  { sku: "Tide Perfect Clean", priority: "High", targetVector: "Quality Reassurance", recommendedPromo: "Sampling Bundle" }
+];
+
+export const accountRecommendations = [
+  { 
+    name: "Lazada", 
+    priorityScore: 92, 
+    rationale: "High logistics friction detected in Taglish comments. Immediate delivery intervention required.",
+    recommendedActions: ["Upgrade 3PL tracking", "Incentivize bulk purchasing"]
+  }
 ];
