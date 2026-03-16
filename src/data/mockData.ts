@@ -1,4 +1,44 @@
 
+import inferenceCache from '../../inference_cache.json';
+
+// Type definition for the cache
+type CacheItem = {
+  internalReviewId: string;
+  sentimentLabel: string;
+  score: number;
+  vectors: string;
+};
+
+const cacheEntries = Object.values(inferenceCache) as CacheItem[];
+
+// Calculate dynamic global stats
+export const totalCacheCount = cacheEntries.length;
+export const positiveCount = cacheEntries.filter(e => e.sentimentLabel === 'positive').length;
+export const negativeCount = cacheEntries.filter(e => e.sentimentLabel === 'negative').length;
+export const neutralCount = cacheEntries.filter(e => e.sentimentLabel === 'neutral').length;
+
+export const dynamicGlobalSentiment = {
+  positive: Math.round((positiveCount / totalCacheCount) * 100),
+  negative: Math.round((negativeCount / totalCacheCount) * 100),
+  neutral: Math.round((neutralCount / totalCacheCount) * 100),
+};
+
+// Process Vectors of Superiority
+const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
+export const dynamicVectorScores = vectorLabels.map(label => {
+  const mentionedEntries = cacheEntries.filter(e => e.vectors.includes(label));
+  const posMentions = mentionedEntries.filter(e => e.sentimentLabel === 'positive').length;
+  const healthScore = mentionedEntries.length > 0 
+    ? Math.round((posMentions / mentionedEntries.length) * 100) 
+    : 0;
+    
+  return {
+    vector: label,
+    count: mentionedEntries.length,
+    healthScore
+  };
+});
+
 export const pngProducts = [
   {
     id: 'p1',
@@ -27,19 +67,6 @@ export const pngProducts = [
     vectors: { product: 86, packaging: 80, value: 75, communication: 70, retailExec: 60 }
   },
   {
-    id: 'p1-3',
-    name: 'Down: Antibac',
-    brand: 'Downy (P&G)',
-    category: 'Fabric Care',
-    subcategory: 'Fabric Conditioner',
-    reviewCount: 8900,
-    originalRating: 4.7,
-    correctedRating: 4.4,
-    sentimentScore: 72,
-    sentimentDistribution: { positive: 72, neutral: 20, negative: 8 },
-    vectors: { product: 84, packaging: 78, value: 70, communication: 75, retailExec: 65 }
-  },
-  {
     id: 'p2',
     name: 'Ariel Sunrise Fresh Liquid',
     brand: 'Ariel (P&G)',
@@ -53,19 +80,6 @@ export const pngProducts = [
     vectors: { product: 85, packaging: 80, value: 45, communication: 70, retailExec: 85 }
   },
   {
-    id: 'p2-2',
-    name: 'Ariel Detox Liquid',
-    brand: 'Ariel (P&G)',
-    category: 'Fabric Care',
-    subcategory: 'Liquid Detergent',
-    reviewCount: 9500,
-    originalRating: 4.7,
-    correctedRating: 4.2,
-    sentimentScore: 68,
-    sentimentDistribution: { positive: 68, neutral: 22, negative: 10 },
-    vectors: { product: 82, packaging: 75, value: 50, communication: 68, retailExec: 80 }
-  },
-  {
     id: 'p3',
     name: 'Tide Perfect Clean Powder',
     brand: 'Tide (P&G)',
@@ -77,78 +91,34 @@ export const pngProducts = [
     sentimentScore: 65,
     sentimentDistribution: { positive: 65, neutral: 25, negative: 10 },
     vectors: { product: 82, packaging: 75, value: 60, communication: 68, retailExec: 70 }
+  },
+  {
+    id: 'p4',
+    name: 'Safeguard Bar Soap',
+    brand: 'Safeguard (P&G)',
+    category: 'Personal Care',
+    subcategory: 'Bar Soap',
+    reviewCount: 8760,
+    originalRating: 4.7,
+    correctedRating: 3.9,
+    sentimentScore: 62,
+    sentimentDistribution: { positive: 62, neutral: 25, negative: 13 },
+    vectors: { product: 80, packaging: 70, value: 65, communication: 60, retailExec: 75 }
   }
-];
-
-export const competitorProducts = [
-  { id: 'c1', name: 'Surf Cherry Blossom', brand: 'Surf', sentimentScore: 63 },
-  { id: 'c2', name: 'Breeze Power Clean', brand: 'Breeze', sentimentScore: 65 }
-];
-
-export const multiBrandTrends = [
-  { month: 'Jan', 'P&G': 65, 'Surf': 60, 'Breeze': 62 },
-  { month: 'Feb', 'P&G': 67, 'Surf': 61, 'Breeze': 61 },
-  { month: 'Mar', 'P&G': 66, 'Surf': 62, 'Breeze': 63 },
-  { month: 'Apr', 'P&G': 69, 'Surf': 60, 'Breeze': 64 },
-  { month: 'May', 'P&G': 70, 'Surf': 63, 'Breeze': 62 },
-  { month: 'Jun', 'P&G': 72, 'Surf': 63, 'Breeze': 65 }
-];
-
-export const brandComparison = [
-  { brand: 'Downy (P&G)', sentiment: 78 },
-  { brand: 'Ariel (P&G)', sentiment: 72 },
-  { brand: 'Tide (P&G)', sentiment: 65 },
-  { brand: 'Surf', sentiment: 63 },
-  { brand: 'Breeze', sentiment: 65 }
-];
-
-export const competitiveBenchmark = [
-  { brand: 'Downy (P&G)', sentiment: 78, marketShare: 42, growth: 5.2 },
-  { brand: 'Ariel (P&G)', sentiment: 72, marketShare: 35, growth: 3.1 },
-  { brand: 'Tide (P&G)', sentiment: 65, marketShare: 28, growth: -1.2 },
-  { brand: 'Surf', sentiment: 63, marketShare: 45, growth: 2.4 },
-  { brand: 'Breeze', sentiment: 65, marketShare: 32, growth: 1.8 },
-  { brand: 'Champion', sentiment: 58, marketShare: 15, growth: 4.5 },
-  { brand: 'Zonrox', sentiment: 61, marketShare: 22, growth: 0.5 }
 ];
 
 export const accountRecommendations = [
   {
     account: 'Lazada Philippines',
     sentimentTrend: 'improving',
-    priorityScore: 88,
+    priorityScore: 92,
     topProduct: 'Downy Garden Bloom',
-    rationale: 'Sentiment is 15pts above category average. High demand signals in Taglish reviews for "long-lasting scent" justify 30% inventory increase for upcoming 11.11 sale.',
+    rationale: `Sentiment is ${dynamicGlobalSentiment.positive - 50}pts above category average. High demand signals in Taglish reviews for "long-lasting scent" justify inventory optimization.`,
     recommendedActions: [
       'Increase ad spend on Downy bundle deals',
       'Optimize keyword bidding for "long-lasting scent"',
       'Monitor competitor "Surf" flash sale activity'
     ]
-  }
-];
-
-export const sampleReviews = [
-  {
-    id: 'r1',
-    productId: 'p1',
-    account: 'Lazada',
-    date: '2023-10-20',
-    sentiment: 'positive',
-    sentimentScore: 0.92,
-    originalRating: 5,
-    text: 'Sobrang bango ng Downy! Sulit na sulit ang pagbili ko, mabilis din dumating.',
-    vectors: { product: 0.98, packaging: 0.85, value: 0.92, communication: 0.88, retailExecution: 0.95 }
-  },
-  {
-    id: 'r2',
-    productId: 'p2',
-    account: 'Lazada',
-    date: '2023-10-21',
-    sentiment: 'negative',
-    sentimentScore: 0.35,
-    originalRating: 5,
-    text: 'Bakit parang ang mahal na? Okay naman yung labada pero di na kasing sulit dati.',
-    vectors: { product: 0.80, packaging: 0.75, value: 0.40, communication: 0.70, retailExecution: 0.80 }
   }
 ];
 
@@ -158,13 +128,5 @@ export const sentimentTrends = [
   { month: 'Mar', positive: 63, neutral: 26, negative: 11 },
   { month: 'Apr', positive: 66, neutral: 23, negative: 11 },
   { month: 'May', positive: 67, neutral: 23, negative: 10 },
-  { month: 'Jun', positive: 68, neutral: 22, negative: 10 }
-];
-
-export const vectorScores = [
-  { vector: 'Product', pngAvg: 85, competitorAvg: 72 },
-  { vector: 'Packaging', pngAvg: 68, competitorAvg: 65 },
-  { vector: 'Value', pngAvg: 78, competitorAvg: 70 },
-  { vector: 'Comm', pngAvg: 72, competitorAvg: 68 },
-  { vector: 'Retail', pngAvg: 65, competitorAvg: 63 }
+  { month: 'Jun', positive: dynamicGlobalSentiment.positive, neutral: dynamicGlobalSentiment.neutral, negative: dynamicGlobalSentiment.negative }
 ];
