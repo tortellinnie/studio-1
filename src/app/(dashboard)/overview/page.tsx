@@ -61,64 +61,25 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
-      {/* 1. Header & Context */}
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold text-slate-900 tracking-normal">Dashboard to track sentiment analysis process</h1>
-        <p className="text-slate-500 text-base font-medium max-w-4xl leading-relaxed">
-          This hub highlights the strategic dashboard used to showcase NLP sentiment analysis across Lazada e-commerce channels. 
-          The engine determines consumer sentiments regarding product superiority through tracking various validated KPIs.
-        </p>
-      </div>
-
-      {/* 2. Top Card Summaries (KPIs) */}
+      {/* 1. KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { 
-            title: "Market positive", 
-            value: `${stats.posPct}%`, 
-            sub: "Overall sentiment health", 
-            trend: "+2.4%",
-            trendColor: "text-emerald-600",
-            icon: TrendingUp
-          },
-          { 
-            title: "Corrected rating", 
-            value: stats.correctedRating.toFixed(2), 
-            sub: "NLP Adjusted vs 4.82", 
-            trend: "-0.12",
-            trendColor: "text-red-600",
-            icon: TrendingDown
-          },
-          { 
-            title: "Rating inflation", 
-            value: `${stats.ratingInflation}%`, 
-            sub: "Platform bias detected", 
-            trend: "+1.1%",
-            trendColor: "text-amber-600",
-            icon: Info
-          },
-          { 
-            title: "Negative friction", 
-            value: `${stats.negPct}%`, 
-            sub: "Unmet consumer needs", 
-            trend: "-0.8%",
-            trendColor: "text-red-600",
-            icon: TrendingDown
-          },
+          { title: "Market positive", value: `${stats.posPct}%`, sub: "Overall sentiment health", trend: "+2.4%", trendColor: "text-emerald-600", icon: TrendingUp },
+          { title: "Corrected rating", value: stats.correctedRating.toFixed(2), sub: "NLP Adjusted vs 4.82", trend: "-0.12", trendColor: "text-red-600", icon: TrendingDown },
+          { title: "Rating inflation", value: `${stats.ratingInflation}%`, sub: "Platform bias detected", trend: "+1.1%", trendColor: "text-amber-600", icon: Info },
+          { title: "Negative friction", value: `${stats.negPct}%`, sub: "Unmet consumer needs", trend: "-0.8%", trendColor: "text-red-600", icon: TrendingDown },
         ].map((item, i) => (
           <Card key={i} className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
             <CardContent className="p-8">
               <div className="flex items-center justify-between mb-6">
-                <p className="text-base font-bold text-slate-500 tracking-normal">{item.title}</p>
+                <p className="text-base font-bold text-slate-500">{item.title}</p>
                 <item.icon className={cn("h-5 w-5", item.trendColor)} />
               </div>
               <div className="space-y-2">
-                <h3 className="text-5xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
+                <h3 className="text-5xl font-extrabold text-slate-900 tabular-nums">{item.value}</h3>
                 <div className="flex items-center gap-2 pt-1">
-                  <span className={cn("text-xs font-bold px-2 py-1 rounded bg-slate-50", item.trendColor)}>
-                    {item.trend}
-                  </span>
-                  <p className="text-sm text-slate-400 font-semibold tracking-normal">{item.sub}</p>
+                  <span className={cn("text-xs font-bold px-2 py-1 rounded bg-slate-50", item.trendColor)}>{item.trend}</span>
+                  <p className="text-sm text-slate-400 font-semibold">{item.sub}</p>
                 </div>
               </div>
             </CardContent>
@@ -126,7 +87,7 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 3. 5 Vectors of Superiority Row */}
+      {/* 2. 5 Vectors of Superiority Analysis (The Piece) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10">
           <h3 className="text-xl font-bold text-slate-900 mb-12 text-center w-full">5 Vectors of superiority analysis</h3>
@@ -134,19 +95,19 @@ export default function OverviewPage() {
             {/* Numeric side: vectors list */}
             <div className="space-y-5">
               <div className="mb-4">
-                <p className="text-xs font-bold text-slate-400 tracking-normal">STRUCTURAL HEALTH DISTRIBUTION</p>
+                <p className="text-xs font-bold text-slate-400">STRUCTURAL HEALTH DISTRIBUTION</p>
               </div>
               {dynamicVectorScores.map((v) => (
                 <div key={v.vector} className="flex flex-col border-l-[6px] pl-6 py-1" style={{ borderColor: v.healthScore > 75 ? COLORS.positive : v.healthScore > 50 ? COLORS.neutral : COLORS.negative }}>
                   <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-1">{v.healthScore}%</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-500 tracking-normal">{v.vector}</span>
+                    <span className="text-sm font-bold text-slate-500">{v.vector}</span>
                     <span className="text-[10px] font-bold text-slate-300">N={v.count}</span>
                   </div>
                 </div>
               ))}
             </div>
-            {/* Visual side: the radar spider graph */}
+            {/* Visual side: Large Radar Chart */}
             <div className="h-80 w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
@@ -179,7 +140,7 @@ export default function OverviewPage() {
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 className={cn(
-                  "w-full py-2.5 text-sm font-bold transition-all rounded-md tracking-normal text-left px-4",
+                  "w-full py-2.5 text-sm font-bold transition-all rounded-md text-left px-4",
                   period === p.id 
                     ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
                     : "text-slate-500 hover:text-slate-700"
@@ -195,7 +156,7 @@ export default function OverviewPage() {
               <div className="flex justify-between items-start">
                 <div>
                   <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900">{stats.total.toLocaleString()}</p>
-                  <p className="text-sm font-bold text-slate-400 italic mt-3 tracking-normal">Total data samples</p>
+                  <p className="text-sm font-bold text-slate-400 italic mt-3">Total data samples</p>
                 </div>
                 <div className="text-right text-emerald-600">
                   <p className="text-lg font-bold leading-none">+43.6%</p>
@@ -207,7 +168,7 @@ export default function OverviewPage() {
               <div className="flex justify-between items-start">
                 <div>
                   <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900">{stats.totalUsers.toLocaleString()}</p>
-                  <p className="text-sm font-bold text-slate-400 italic mt-3 tracking-normal">Unique consumers</p>
+                  <p className="text-sm font-bold text-slate-400 italic mt-3">Unique consumers</p>
                 </div>
                 <div className="text-right text-emerald-600">
                   <p className="text-lg font-bold leading-none">+36.8%</p>
@@ -219,14 +180,14 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* 4. Analysis Timeline */}
+      {/* 3. Analysis Timeline */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Analysis timeline</CardTitle>
-            <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Daily sentiment volume vs. rating trend</CardDescription>
+            <CardTitle className="text-2xl font-bold text-slate-900">Analysis timeline</CardTitle>
+            <CardDescription className="text-base text-slate-500 font-medium">Daily sentiment volume vs. rating trend</CardDescription>
           </div>
-          <Badge variant="outline" className="text-xs font-bold py-1.5 px-3 text-slate-500 border-slate-200 tracking-normal">Validated NLP inference</Badge>
+          <Badge variant="outline" className="text-xs font-bold py-1.5 px-3 text-slate-500 border-slate-200">Validated NLP inference</Badge>
         </CardHeader>
         <CardContent className="h-[450px] px-8 pb-8">
           <ResponsiveContainer width="100%" height="100%">
@@ -246,12 +207,12 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 5. Sentiment Velocity (Comparative) */}
+      {/* 4. Sentiment Velocity */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Sentiment velocity</CardTitle>
-            <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Comparative brand performance metrics</CardDescription>
+            <CardTitle className="text-2xl font-bold text-slate-900">Sentiment velocity</CardTitle>
+            <CardDescription className="text-base text-slate-500 font-medium">Comparative brand performance metrics</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="h-[450px] px-8 py-8">
@@ -269,11 +230,11 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 6. Sentiment Mix Deep-dive */}
+      {/* 5. Sentiment Mix */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-10 max-w-4xl mx-auto w-full">
         <div className="space-y-1 mb-10 text-center">
-          <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Market sentiment mix</CardTitle>
-          <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Consolidated distribution across all monitored channels</CardDescription>
+          <CardTitle className="text-2xl font-bold text-slate-900">Market sentiment mix</CardTitle>
+          <CardDescription className="text-base text-slate-500 font-medium">Consolidated distribution across all monitored channels</CardDescription>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12">
           <div className="h-80 w-full">
@@ -301,7 +262,7 @@ export default function OverviewPage() {
             {pieData.map((item) => (
               <div key={item.name} className="flex flex-col border-l-[6px] pl-8 py-1" style={{ borderColor: item.color }}>
                 <span className="text-5xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{item.value}%</span>
-                <span className="text-base font-bold text-slate-400 tracking-normal">{item.name}</span>
+                <span className="text-base font-bold text-slate-400">{item.name}</span>
               </div>
             ))}
           </div>
