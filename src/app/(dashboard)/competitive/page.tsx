@@ -66,12 +66,12 @@ export default function CompetitiveAnalysisPage() {
         ))}
       </div>
 
-      {/* NEW: Competitive Index Delta Table (War Room View) */}
+      {/* NEW: Competitive Index Delta Table (Expanded War Room View) */}
       <Card className="border-slate-200 shadow-sm rounded-xl overflow-hidden bg-white">
         <CardHeader className="p-8 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold text-slate-900 tracking-normal uppercase">Competitive superiority matrix</CardTitle>
-            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal">Superiority margin: (Brand Score - Market Baseline %)</CardDescription>
+            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal">Superiority margin per SKU: (P&G Score - Market Baseline %)</CardDescription>
           </div>
           <ShieldCheck className="h-6 w-6 text-[#003da5]" />
         </CardHeader>
@@ -80,22 +80,25 @@ export default function CompetitiveAnalysisPage() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-slate-50/50">
-                  <th className="p-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Brand SKU</th>
+                  <th className="p-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">Product SKU</th>
                   {vectorLabels.map(v => (
-                    <th key={v} className="p-6 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">{v}</th>
+                    <th key={v} className="p-6 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">{v}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {matrix.map((row) => (
-                  <tr key={row.brand} className="border-b border-slate-50 last:border-0">
+                  <tr key={row.brand} className="border-b border-slate-50 hover:bg-slate-50/30 transition-colors last:border-0">
                     <td className="p-6">
-                      <span className="text-base font-bold text-slate-900 tracking-normal">{row.brand}</span>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-bold text-slate-900 tracking-normal">{row.brand}</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase">{row.producer}</span>
+                      </div>
                     </td>
                     {row.deltas.map((d, i) => (
                       <td key={i} className="p-2">
                         <div className={cn(
-                          "h-16 flex items-center justify-center rounded-lg text-sm font-black tabular-nums tracking-normal transition-all",
+                          "h-14 flex items-center justify-center rounded-lg text-sm font-bold tabular-nums tracking-normal transition-all",
                           d.delta > 0 ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : 
                           d.delta < 0 ? "bg-red-50 text-red-700 border border-red-100" : 
                           "bg-slate-50 text-slate-400 border border-slate-100"
@@ -122,14 +125,14 @@ export default function CompetitiveAnalysisPage() {
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis type="number" dataKey="sentiment" name="Sentiment" unit="%" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} />
-                <YAxis type="number" dataKey="marketShare" name="Share" unit="%" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} />
+                <XAxis type="number" dataKey="sentiment" name="Sentiment" unit="%" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} />
+                <YAxis type="number" dataKey="marketShare" name="Share" unit="%" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} />
                 <ZAxis type="number" dataKey="growth" range={[100, 1000]} />
                 <Tooltip 
                   cursor={{ strokeDasharray: '3 3' }}
-                  contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', fontWeight: 700, fontSize: '14px', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', textTransform: 'uppercase' }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', fontWeight: 600, fontSize: '14px', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', textTransform: 'uppercase' }}
                 />
-                <Legend verticalAlign="top" align="right" height={40} iconType="circle" wrapperStyle={{ fontWeight: 900, fontSize: '10px', paddingBottom: '20px', textTransform: 'uppercase' }} />
+                <Legend verticalAlign="top" align="right" height={40} iconType="circle" wrapperStyle={{ fontWeight: 700, fontSize: '10px', paddingBottom: '20px', textTransform: 'uppercase' }} />
                 <Scatter name="P&G Portfolio" data={competitiveBenchmark.filter(d => d.brand === 'P&G')} fill="#003da5" />
                 <Scatter name="Competitors" data={competitiveBenchmark.filter(d => d.brand !== 'P&G')} fill="#cbd5e1" />
               </ScatterChart>
@@ -146,7 +149,7 @@ export default function CompetitiveAnalysisPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     <th className="p-8">Rank</th>
                     <th className="p-8">Brand SKU</th>
                     <th className="p-8 text-center">Original rating</th>
@@ -168,7 +171,7 @@ export default function CompetitiveAnalysisPage() {
                       <td className="p-8">
                         <div className="flex flex-col gap-1">
                           <span className="text-lg font-bold text-slate-900 group-hover:text-[#003da5] transition-colors tracking-normal">{item.name}</span>
-                          <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{item.brand}</span>
+                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.brand}</span>
                         </div>
                       </td>
                       <td className="p-8 text-center">
@@ -184,7 +187,7 @@ export default function CompetitiveAnalysisPage() {
                       </td>
                       <td className="p-8">
                          <div className="flex flex-col gap-3 min-w-[220px]">
-                            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
                               <span className="text-emerald-600">{item.sentimentScore}% Positive</span>
                               <TrendingUp className="h-4 w-4 text-emerald-500" />
                             </div>

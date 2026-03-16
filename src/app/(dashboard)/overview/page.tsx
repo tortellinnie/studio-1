@@ -17,7 +17,6 @@ import {
   Radar,
   PolarRadiusAxis
 } from 'recharts';
-import { Star } from "lucide-react";
 import { getStatsForPeriod, dynamicVectorScores } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Info } from "lucide-react";
@@ -35,23 +34,14 @@ const COLORS = {
 };
 
 export default function OverviewPage() {
-  const { measure, incentivized, timeline: filterTimeline, sector, period } = useFilters();
+  const { measure, timeline: filterTimeline, sector, period } = useFilters();
   const [stats, setStats] = useState(getStatsForPeriod(period));
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    // Dynamic logic: simulate data shifts when filters change
-    const baseStats = getStatsForPeriod(period);
-    
-    // Simple mock adjustment to prove interactivity
-    if (incentivized === 'yes') {
-      baseStats.posPct += 2;
-      baseStats.correctedRating += 0.15;
-    }
-    
-    setStats(baseStats);
-  }, [period, measure, incentivized, filterTimeline, sector]);
+    setStats(getStatsForPeriod(period));
+  }, [period, measure, filterTimeline, sector]);
 
   if (!isClient) return null;
 
@@ -75,7 +65,7 @@ export default function OverviewPage() {
               <span className="tabular-nums">{data.pg_pos}</span>
             </div>
             <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
-              <span className="text-slate-400 uppercase">Market Average</span>
+              <span className="text-slate-400 uppercase text-[9px]">Market Average</span>
               <span className="tabular-nums text-slate-400">{data.mkt_pos}</span>
             </div>
           </div>
@@ -123,7 +113,7 @@ export default function OverviewPage() {
         <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-normal">Grouping: {filterTimeline.toUpperCase()} | P&G brands vs market baseline comparative audit</CardDescription>
+            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-normal">P&G brands vs market baseline comparative audit</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="h-[500px] p-8">
@@ -137,7 +127,7 @@ export default function OverviewPage() {
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} ticks={[0, 4, 8, 15]} />
               <Tooltip content={<CustomTimelineTooltip />} cursor={{ fill: 'transparent' }} />
-              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
+              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 700, paddingBottom: '40px', textTransform: 'uppercase' }} />
               
               <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive} />
               <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
@@ -151,86 +141,61 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 3. 5-Vector Superiority centerpiece */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal uppercase">5-Vector Superiority Spider Map</h3>
-          
-          <div className="w-full flex justify-center mb-10">
-            <div className="h-[400px] w-full max-w-[600px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={dynamicVectorScores}>
-                  <PolarGrid stroke="#e2e8f0" />
-                  <PolarAngleAxis 
-                    dataKey="vector" 
-                    tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
-                  />
-                  <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
-                  <Radar
-                    name="P&G Internal"
-                    dataKey="pgScore"
-                    stroke={COLORS.positive}
-                    strokeWidth={3}
-                    fill={COLORS.positive}
-                    fillOpacity={0.2}
-                  />
-                  <Radar
-                    name="Market Average"
-                    dataKey="mktScore"
-                    stroke={COLORS.mkt_red}
-                    strokeWidth={2}
-                    fill="transparent"
-                    strokeDasharray="4 4"
-                  />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                    itemStyle={{ fontWeight: 700, fontSize: '12px', textTransform: 'uppercase' }}
-                  />
-                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', paddingBottom: '20px' }} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
+      {/* 3. 5-Vector Superiority centerpiece - EXPANDED */}
+      <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
+        <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal uppercase">5-Vector Superiority Spider Map</h3>
+        
+        <div className="w-full flex justify-center mb-10">
+          <div className="h-[550px] w-full max-w-[800px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="75%" data={dynamicVectorScores}>
+                <PolarGrid stroke="#e2e8f0" />
+                <PolarAngleAxis 
+                  dataKey="vector" 
+                  tick={{ fill: '#64748b', fontSize: 14, fontWeight: 600 }} 
+                />
+                <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+                <Radar
+                  name="P&G Internal"
+                  dataKey="pgScore"
+                  stroke={COLORS.positive}
+                  strokeWidth={3}
+                  fill={COLORS.positive}
+                  fillOpacity={0.2}
+                />
+                <Radar
+                  name="Market Average"
+                  dataKey="mktScore"
+                  stroke={COLORS.mkt_red}
+                  strokeWidth={2}
+                  fill="transparent"
+                  strokeDasharray="4 4"
+                />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  itemStyle={{ fontWeight: 600, fontSize: '12px', textTransform: 'uppercase' }}
+                />
+                <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', paddingBottom: '20px' }} />
+              </RadarChart>
+            </ResponsiveContainer>
           </div>
-
-          <div className="grid grid-cols-5 w-full gap-8 pt-10 mt-6 border-t border-slate-100">
-            {dynamicVectorScores.map((v) => (
-              <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-5 py-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-slate-900 tabular-nums leading-none tracking-normal">{v.pgScore}%</span>
-                  <span className="text-xs font-bold text-slate-300 tabular-nums">/ {v.mktScore}%</span>
-                </div>
-                <div className="space-y-1 mt-3">
-                  <p className="text-[11px] font-bold text-slate-500 tracking-normal uppercase">{v.vector}</p>
-                  <p className="text-[9px] font-bold text-slate-300 tracking-normal uppercase">Baseline N={v.mktCount}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Sidebar Status (Refined: Image match) */}
-        <div className="lg:col-span-3 space-y-6">
-          <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex items-baseline gap-3">
-              <p className="text-5xl font-bold leading-none tabular-nums text-slate-900 tracking-normal">
-                {stats.total.toLocaleString()}
-              </p>
-              <p className="text-sm font-bold text-emerald-600">+43.6%</p>
-            </div>
-            <p className="text-xs font-bold text-slate-400 italic mt-6 uppercase tracking-widest">Total data samples</p>
-          </Card>
-
-          <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex items-baseline gap-3">
-              <p className="text-5xl font-bold leading-none tabular-nums text-slate-900 tracking-normal">
-                {stats.totalUsers.toLocaleString()}
-              </p>
-              <p className="text-sm font-bold text-emerald-600">+36.8%</p>
-            </div>
-            <p className="text-xs font-bold text-slate-400 italic mt-6 uppercase tracking-widest">Unique consumers</p>
-          </Card>
         </div>
-      </div>
+
+        <div className="grid grid-cols-5 w-full gap-12 pt-10 mt-6 border-t border-slate-100">
+          {dynamicVectorScores.map((v) => (
+            <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-6 py-1">
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-bold text-slate-900 tabular-nums leading-none tracking-normal">{v.pgScore}%</span>
+                <span className="text-sm font-bold text-slate-300 tabular-nums">/ {v.mktScore}%</span>
+              </div>
+              <div className="space-y-1 mt-4">
+                <p className="text-xs font-bold text-slate-500 tracking-normal uppercase">{v.vector}</p>
+                <p className="text-[10px] font-bold text-slate-300 tracking-normal uppercase">Baseline N={v.mktCount}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 }

@@ -116,8 +116,16 @@ export const dynamicVectorScores = vectorLabels.map(label => {
   };
 });
 
-// COMPETITIVE INDEX DELTA LOGIC
-export const pgBrands = ['Tide', 'Ariel', 'Downy'];
+// COMPETITIVE INDEX DELTA LOGIC (Expanded to full SKU list)
+export const strategicSkus = [
+  { name: 'Tide Original', brand: 'P&G' },
+  { name: 'Tide Pods', brand: 'P&G' },
+  { name: 'Ariel Sunrise Fresh', brand: 'P&G' },
+  { name: 'Ariel Power Gel', brand: 'P&G' },
+  { name: 'Downy Garden Bloom', brand: 'P&G' },
+  { name: 'Downy Mystique', brand: 'P&G' },
+  { name: 'Downy Antibac', brand: 'P&G' }
+];
 
 export function getSuperiorityMatrix() {
   const competitorEntries = cacheEntries.filter(e => !e.isPNG);
@@ -134,20 +142,20 @@ export function getSuperiorityMatrix() {
     return acc;
   }, {} as any);
 
-  return pgBrands.map((brand, bIdx) => {
-    // Distribute P&G entries across brands for simulation
-    const brandEntries = cacheEntries.filter((e, i) => e.isPNG && (i % pgBrands.length === bIdx));
+  return strategicSkus.map((sku, idx) => {
+    // Distribute P&G entries across SKUs for simulation
+    const skuEntries = cacheEntries.filter((e, i) => e.isPNG && (i % strategicSkus.length === idx));
     
     const deltas = vectorLabels.map(vector => {
-      const brandScore = getAvgScore(brandEntries, vector);
+      const skuScore = getAvgScore(skuEntries, vector);
       const marketScore = marketAverages[vector];
       return {
         vector,
-        delta: Math.round((brandScore - marketScore) * 100)
+        delta: Math.round((skuScore - marketScore) * 100)
       };
     });
 
-    return { brand, deltas };
+    return { brand: sku.name, producer: sku.brand, deltas };
   });
 }
 
