@@ -5,19 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   ShoppingCart, 
-  TrendingUp, 
-  Lightbulb,
   Table as TableIcon,
   ShieldCheck,
-  Zap
+  Zap,
+  Lightbulb
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
 import { 
   pngProducts, 
   dynamicVectorScores, 
-  dynamicGlobalSentiment,
-  accountRecommendations 
+  accountRecommendations,
+  totalCacheCount 
 } from "@/data/mockData";
 
 export default function AccountRecommendationsPage() {
@@ -27,7 +25,7 @@ export default function AccountRecommendationsPage() {
     <div className="space-y-12 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="space-y-1">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline uppercase tracking-tighter">Account-Level Recommendations</h1>
-        <p className="text-base text-muted-foreground font-medium">Strategic SKU performance and retail execution matrix powered by GenAI</p>
+        <p className="text-base text-muted-foreground font-medium">Strategic SKU performance matrix powered by {totalCacheCount.toLocaleString()} inference samples</p>
       </div>
 
       {/* Product-Account Performance Matrix */}
@@ -45,22 +43,22 @@ export default function AccountRecommendationsPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] uppercase font-black text-slate-400 tracking-widest">
-                  <th className="p-10">Product SKU</th>
-                  <th className="p-10 text-center">Account</th>
-                  <th className="p-10">Sentiment Index</th>
-                  <th className="p-10 text-center">Corrected Rating</th>
-                  <th className="p-10">Price Perception</th>
-                  <th className="p-10">Retail Execution</th>
+                  <th className="p-8">Product SKU</th>
+                  <th className="p-8 text-center">Account</th>
+                  <th className="p-8">Sentiment Index</th>
+                  <th className="p-8 text-center">Corrected Rating</th>
+                  <th className="p-8">Price Perception</th>
+                  <th className="p-8">Retail Execution</th>
                 </tr>
               </thead>
               <tbody>
                 {pngProducts.map((row, i) => (
                   <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
-                    <td className="p-10 font-black text-slate-900 text-lg group-hover:text-[#003da5] transition-colors tracking-tight">{row.name}</td>
-                    <td className="p-10 text-center">
+                    <td className="p-8 font-black text-slate-900 text-lg group-hover:text-[#003da5] transition-colors tracking-tight">{row.name}</td>
+                    <td className="p-8 text-center">
                       <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-200 bg-white px-4 py-1 tracking-widest text-slate-500">LAZADA</Badge>
                     </td>
-                    <td className="p-10 min-w-[180px]">
+                    <td className="p-8 min-w-[180px]">
                       <div className="space-y-3">
                         <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
                           <span>{row.sentimentScore.toFixed(0)}% Corrected</span>
@@ -70,7 +68,7 @@ export default function AccountRecommendationsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-10 text-center">
+                    <td className="p-8 text-center">
                       <div className="flex flex-col items-center gap-1">
                         <span className="font-black text-[#003da5] text-4xl tabular-nums leading-none tracking-tighter">{row.correctedRating}</span>
                         <div className="flex gap-0.5">
@@ -80,7 +78,7 @@ export default function AccountRecommendationsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-10 min-w-[180px]">
+                    <td className="p-8 min-w-[180px]">
                        <div className="space-y-3">
                         <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
                           <span>{dynamicVectorScores.find(v => v.vector === "Value")?.healthScore}% Pos</span>
@@ -90,7 +88,7 @@ export default function AccountRecommendationsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-10 min-w-[180px]">
+                    <td className="p-8 min-w-[180px]">
                        <div className="space-y-3">
                         <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
                           <span>{dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore}% Pos</span>
@@ -124,7 +122,7 @@ export default function AccountRecommendationsPage() {
                 <CardTitle className="text-4xl font-black text-slate-900 tracking-tighter">{lazada.account}</CardTitle>
               </div>
               <div className="flex gap-3">
-                <Badge className="bg-emerald-500 text-white font-black h-8 px-6 uppercase tracking-[0.2em] text-[10px] rounded-lg shadow-sm shadow-emerald-500/20">IMPROVING</Badge>
+                <Badge className="bg-emerald-500 text-white font-black h-8 px-6 uppercase tracking-[0.2em] text-[10px] rounded-lg shadow-sm shadow-emerald-500/20">HEALTH STABLE</Badge>
                 <Badge variant="outline" className="border-slate-200 text-slate-400 font-black h-8 px-6 uppercase tracking-[0.2em] text-[10px] rounded-lg bg-white">TIER 1 ACCOUNT</Badge>
               </div>
             </div>

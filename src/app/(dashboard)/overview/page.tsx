@@ -15,8 +15,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
   Legend
 } from "recharts";
 import { 
@@ -39,7 +37,8 @@ import {
   positiveCount,
   negativeCount,
   neutralCount,
-  dynamicVectorScores,
+  criticalVector,
+  bestVector,
   globalCorrectedRating
 } from "@/data/mockData";
 
@@ -58,9 +57,6 @@ export default function OverviewPage() {
 
   if (!isClient) return null;
 
-  // Find the lowest health score vector for the alert
-  const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0];
-
   return (
     <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -77,10 +73,10 @@ export default function OverviewPage() {
       {/* Metric Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { title: "Reviews Analyzed", value: totalCacheCount.toLocaleString(), sub: "Inference cache load", icon: CheckCircle2, iconColor: "text-slate-400" },
-          { title: "Avg Corrected Rating", value: globalCorrectedRating, sub: "NLP Sentiment Correction", icon: TrendingUp, iconColor: "text-emerald-500" },
-          { title: "Vector Health Score", value: `${dynamicGlobalSentiment.positive}%`, sub: "Weighted Portfolio Avg", icon: AlertCircle, iconColor: "text-[#003da5]" },
-          { title: "Growth Advantage", value: "+5.2%", sub: "vs Competitive Mean", icon: TrendingUp, iconColor: "text-emerald-500" },
+          { title: "Total Analyzed", value: totalCacheCount.toLocaleString(), sub: "Inference cache load", icon: CheckCircle2, iconColor: "text-slate-400" },
+          { title: "Corrected Rating", value: globalCorrectedRating, sub: "NLP Sentiment Correction", icon: TrendingUp, iconColor: "text-emerald-500" },
+          { title: "Global Health", value: `${dynamicGlobalSentiment.positive}%`, sub: "Weighted Portfolio Avg", icon: Activity, iconColor: "text-[#003da5]" },
+          { title: "Dominant Vector", value: bestVector.vector, sub: `${bestVector.healthScore}% Positive Ratio`, icon: TrendingUp, iconColor: "text-emerald-500" },
         ].map((item, i) => (
           <Card key={i} className="shadow-sm border-slate-200 bg-white hover:border-[#003da5]/30 transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
@@ -104,10 +100,10 @@ export default function OverviewPage() {
               <AlertCircle className="h-4 w-4 text-red-500" />
             </div>
             <p className="text-sm font-bold text-slate-900 leading-snug">
-              Surge in "{criticalVector?.vector || "Packaging"}" concerns detected in recent Lazada reviews.
+              Low health detected in "{criticalVector.vector}" vector (Score: {criticalVector.healthScore}%).
             </p>
             <button className="text-[10px] font-extrabold text-red-700 flex items-center gap-1 hover:underline uppercase tracking-tighter">
-              VIEW ANALYSIS <ArrowUpRight className="h-3 w-3" />
+              RESOLVE ISSUES <ArrowUpRight className="h-3 w-3" />
             </button>
           </CardContent>
         </Card>
@@ -118,10 +114,10 @@ export default function OverviewPage() {
               <TrendingUp className="h-4 w-4 text-emerald-500" />
             </div>
             <p className="text-sm font-bold text-slate-900 leading-snug">
-              {pngProducts[0].name} sentiment is currently {pngProducts[0].sentimentScore.toFixed(0)}% - exceeding baseline.
+              {pngProducts[0].name} corrected rating is {pngProducts[0].correctedRating} stars.
             </p>
             <button className="text-[10px] font-extrabold text-emerald-700 flex items-center gap-1 hover:underline uppercase tracking-tighter">
-              RETAIL PLAN <ArrowUpRight className="h-3 w-3" />
+              SCALE GROWTH <ArrowUpRight className="h-3 w-3" />
             </button>
           </CardContent>
         </Card>
@@ -132,7 +128,7 @@ export default function OverviewPage() {
               <Activity className="h-4 w-4 text-blue-500" />
             </div>
             <p className="text-sm font-bold text-slate-900 leading-snug">
-              Localized Fabric Care sentiment index is stable across {totalCacheCount} data points.
+              Stability confirmed across all {totalCacheCount} Fabric Care inference points.
             </p>
             <button className="text-[10px] font-extrabold text-blue-700 flex items-center gap-1 hover:underline uppercase tracking-tighter">
               BENCHMARKS <ArrowUpRight className="h-3 w-3" />
@@ -188,13 +184,13 @@ export default function OverviewPage() {
           <CardContent className="p-0">
             <div className="divide-y divide-slate-50">
               {pngProducts.map((item, i) => (
-                <div key={i} className="p-10 space-y-6 hover:bg-slate-50/50 transition-colors">
+                <div key={i} className="p-8 space-y-6 hover:bg-slate-50/50 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
                       <h4 className="text-xl font-extrabold text-slate-900 tracking-tight">{item.name}</h4>
-                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Analysis for {item.reviewCount.toLocaleString()} Fabric Care reviews</p>
+                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Analysis for {item.reviewCount.toLocaleString()} reviews</p>
                     </div>
-                    <Badge variant="outline" className="h-7 px-4 border-slate-200 text-slate-500 font-bold text-[10px] uppercase">{item.category}</Badge>
+                    <Badge variant="outline" className="h-7 px-4 border-slate-200 text-slate-500 font-bold text-[10px] uppercase">{item.subcategory}</Badge>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                     <div className="space-y-3">
@@ -280,29 +276,6 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Vector Analysis Chart */}
-      <Card className="shadow-sm border-slate-200 bg-white">
-        <CardHeader className="p-8 pb-4">
-          <CardTitle className="text-lg font-extrabold text-slate-900 uppercase">5 Vectors of Superiority - Real-Time Health Index</CardTitle>
-        </CardHeader>
-        <CardContent className="h-[450px] p-8 pt-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={dynamicVectorScores} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="vector" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fontWeight: 700 }} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fontWeight: 700 }} />
-              <Tooltip 
-                cursor={{ fill: '#f8fafc' }}
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              />
-              <Legend verticalAlign="bottom" align="center" iconType="rect" wrapperStyle={{ paddingTop: '20px' }} />
-              <Bar dataKey="healthScore" name="Health Score (%)" fill="#003da5" barSize={60} radius={[6, 6, 0, 0]} />
-              <Bar dataKey="count" name="Mention Frequency" fill="#cbd5e1" barSize={60} radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
     </div>
   );
 }

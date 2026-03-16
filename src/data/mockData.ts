@@ -24,7 +24,6 @@ export const dynamicGlobalSentiment = {
 };
 
 // Global Corrected Rating (Scale 1-5 based on sentiment)
-// Base rating 1 + (positive ratio * 4)
 export const globalCorrectedRating = (1 + (positiveCount / totalCacheCount) * 4).toFixed(2);
 
 // Process Vectors of Superiority
@@ -43,102 +42,68 @@ export const dynamicVectorScores = vectorLabels.map(label => {
   };
 });
 
-export const competitiveBenchmark = [
-  { brand: 'P&G Portfolio', sentiment: dynamicGlobalSentiment.positive, marketShare: 42, growth: 5.2 },
-  { brand: 'Surf', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 15), marketShare: 28, growth: -1.2 },
-  { brand: 'Breeze', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 10), marketShare: 15, growth: 2.4 },
-  { brand: 'Champion', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 18), marketShare: 8, growth: 0.8 },
-  { brand: 'Zonrox', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 8), marketShare: 12, growth: 3.1 },
-];
+// Identify strategic focus areas from the data
+export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0];
+export const bestVector = [...dynamicVectorScores].sort((a, b) => b.healthScore - a.healthScore)[0];
 
-// Helper to jitter scores slightly for variety while staying anchored to dynamic data
 const jitter = (base: number, amount: number) => Math.max(0, Math.min(100, base + (Math.random() * amount * 2 - amount)));
 
-export const pngProducts = [
-  {
-    id: 'p1',
-    name: 'Downy Garden Bloom',
-    brand: 'Downy (P&G)',
-    category: 'Fabric Care',
-    subcategory: 'Fabric Conditioner',
-    reviewCount: Math.round(totalCacheCount * 0.45),
-    originalRating: 4.9,
-    correctedRating: (parseFloat(globalCorrectedRating) + 0.2).toFixed(2),
-    sentimentScore: jitter(dynamicGlobalSentiment.positive, 3),
-    sentimentDistribution: { 
-      positive: Math.round(jitter(dynamicGlobalSentiment.positive, 2)), 
-      neutral: dynamicGlobalSentiment.neutral, 
-      negative: Math.round(jitter(dynamicGlobalSentiment.negative, 1)) 
-    },
-    vectors: { 
-      product: dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0, 
-      packaging: dynamicVectorScores.find(v => v.vector === "Packaging")?.healthScore || 0, 
-      value: dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0, 
-      communication: dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0, 
-      retailExec: dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0 
-    }
-  },
-  {
-    id: 'p2',
-    name: 'Ariel Sunrise Fresh',
-    brand: 'Ariel (P&G)',
-    category: 'Fabric Care',
-    subcategory: 'Liquid Detergent',
-    reviewCount: Math.round(totalCacheCount * 0.30),
-    originalRating: 4.8,
-    correctedRating: (parseFloat(globalCorrectedRating) + 0.05).toFixed(2),
-    sentimentScore: jitter(dynamicGlobalSentiment.positive, 2),
-    sentimentDistribution: { 
-      positive: Math.round(jitter(dynamicGlobalSentiment.positive, 2)), 
-      neutral: dynamicGlobalSentiment.neutral, 
-      negative: Math.round(jitter(dynamicGlobalSentiment.negative, 2)) 
-    },
-    vectors: { 
-      product: jitter(dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0, 1),
-      packaging: jitter(dynamicVectorScores.find(v => v.vector === "Packaging")?.healthScore || 0, 2),
-      value: jitter(dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0, 5),
-      communication: jitter(dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0, 1),
-      retailExec: jitter(dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0, 1)
-    }
-  },
-  {
-    id: 'p3',
-    name: 'Tide Perfect Clean',
-    brand: 'Tide (P&G)',
-    category: 'Fabric Care',
-    subcategory: 'Powder Detergent',
-    reviewCount: Math.round(totalCacheCount * 0.25),
-    originalRating: 4.9,
-    correctedRating: globalCorrectedRating,
-    sentimentScore: dynamicGlobalSentiment.positive,
-    sentimentDistribution: { 
-      positive: dynamicGlobalSentiment.positive, 
-      neutral: dynamicGlobalSentiment.neutral, 
-      negative: dynamicGlobalSentiment.negative 
-    },
-    vectors: { 
-      product: jitter(dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0, 1),
-      packaging: jitter(dynamicVectorScores.find(v => v.vector === "Packaging")?.healthScore || 0, 1),
-      value: jitter(dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0, 1),
-      communication: jitter(dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0, 1),
-      retailExec: jitter(dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0, 1)
-    }
-  }
+// Expanded SKU list distributed across the cache volume
+const rawSkus = [
+  { name: 'Downy Garden Bloom', brand: 'Downy (P&G)', category: 'Fabric Care', sub: 'FabCon', weight: 0.25 },
+  { name: 'Ariel Sunrise Fresh', brand: 'Ariel (P&G)', category: 'Fabric Care', sub: 'Liquid', weight: 0.20 },
+  { name: 'Tide Perfect Clean', brand: 'Tide (P&G)', category: 'Fabric Care', sub: 'Powder', weight: 0.15 },
+  { name: 'Downy Passion', brand: 'Downy (P&G)', category: 'Fabric Care', sub: 'FabCon', weight: 0.15 },
+  { name: 'Ariel Detox', brand: 'Ariel (P&G)', category: 'Fabric Care', sub: 'Liquid', weight: 0.10 },
+  { name: 'Tide With Downy', brand: 'Tide (P&G)', category: 'Fabric Care', sub: 'Powder', weight: 0.10 },
+  { name: 'Downy Antibac', brand: 'Downy (P&G)', category: 'Fabric Care', sub: 'FabCon', weight: 0.05 },
 ];
+
+export const pngProducts = rawSkus.map((sku, i) => ({
+  id: `p-${i}`,
+  name: sku.name,
+  brand: sku.brand,
+  category: sku.category,
+  subcategory: sku.sub,
+  reviewCount: Math.round(totalCacheCount * sku.weight),
+  originalRating: 4.8 + (Math.random() * 0.2),
+  correctedRating: (parseFloat(globalCorrectedRating) + (sku.weight * 0.5) - 0.1).toFixed(2),
+  sentimentScore: jitter(dynamicGlobalSentiment.positive, 5),
+  sentimentDistribution: { 
+    positive: Math.round(jitter(dynamicGlobalSentiment.positive, 3)), 
+    neutral: dynamicGlobalSentiment.neutral, 
+    negative: Math.round(jitter(dynamicGlobalSentiment.negative, 2)) 
+  },
+  vectors: { 
+    product: jitter(dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0, 2),
+    packaging: jitter(dynamicVectorScores.find(v => v.vector === "Packaging")?.healthScore || 0, 3),
+    value: jitter(dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0, 5),
+    communication: jitter(dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0, 2),
+    retailExec: jitter(dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0, 2)
+  }
+})).sort((a, b) => parseFloat(b.correctedRating) - parseFloat(a.correctedRating));
 
 export const accountRecommendations = [
   {
     account: 'Lazada Philippines',
-    sentimentTrend: 'improving',
-    priorityScore: 92,
-    topProduct: 'Downy Garden Bloom',
-    rationale: `Sentiment is ${Math.max(0, dynamicGlobalSentiment.positive - 50)}pts above category average based on ${totalCacheCount} inference samples. High demand signals in localized reviews justify inventory optimization.`,
+    sentimentTrend: 'stable',
+    priorityScore: Math.round(jitter(dynamicGlobalSentiment.positive, 5)),
+    topProduct: pngProducts[0].name,
+    rationale: `Portfolio health is driven by high ${bestVector.vector} sentiment (${bestVector.healthScore}%). However, consumer concerns regarding ${criticalVector.vector} are suppressing the potential corrected rating across ${totalCacheCount} samples.`,
     recommendedActions: [
-      'Increase ad spend on Downy bundle deals',
-      'Optimize keyword bidding for "long-lasting scent"',
-      'Monitor competitor "Surf" flash sale activity'
+      `Mitigate ${criticalVector.vector} issues through last-mile audit`,
+      `Leverage ${bestVector.vector} advantage in platform marketing`,
+      `Bundle ${pngProducts[0].name} with high-growth variants`
     ]
   }
+];
+
+export const competitiveBenchmark = [
+  { brand: 'P&G Portfolio', sentiment: dynamicGlobalSentiment.positive, marketShare: 42, growth: 5.2 },
+  { brand: 'Surf', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 12), marketShare: 28, growth: -1.2 },
+  { brand: 'Breeze', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 8), marketShare: 15, growth: 2.4 },
+  { brand: 'Champion', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 15), marketShare: 8, growth: 0.8 },
+  { brand: 'Zonrox', sentiment: Math.max(0, dynamicGlobalSentiment.positive - 6), marketShare: 12, growth: 3.1 },
 ];
 
 export const sentimentTrends = [
