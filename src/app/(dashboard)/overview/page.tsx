@@ -24,10 +24,12 @@ import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Info, Star } from "lucide-react";
 
 const COLORS = {
-  positive: "#10b981", 
-  neutral: "#64748b",  
-  negative: "#ef4444", 
-  pg: "#003da5",       
+  positive: "#003da5", // P&G Positive (Solid Blue)
+  neutral: "#64748b",  // P&G Neutral (Solid Slate)
+  negative: "#ef4444", // P&G Negative (Solid Red)
+  mkt_positive: "#003da533", // Market Positive (Ghosted Blue)
+  mkt_neutral: "#64748b33",  // Market Neutral (Ghosted Slate)
+  mkt_negative: "#ef444433", // Market Negative (Ghosted Red)
 };
 
 export default function OverviewPage() {
@@ -50,26 +52,26 @@ export default function OverviewPage() {
 
   const CustomGapLabel = (props: any) => {
     const { x, y, width, value } = props;
-    if (!value) return null;
+    if (!value || !value.includes('+')) return null;
     
     return (
       <g>
         <rect 
-          x={x + width / 2 - 25} 
-          y={y - 25} 
-          width={50} 
+          x={x + width / 2 - 28} 
+          y={y - 28} 
+          width={56} 
           height={18} 
           rx={4} 
-          fill={value.includes('+') ? '#10b981' : '#ef4444'} 
+          fill="#10b981" 
         />
         <text 
           x={x + width / 2} 
-          y={y - 13} 
+          y={y - 16} 
           fill="#fff" 
           textAnchor="middle" 
           dominantBaseline="middle" 
           fontSize="9" 
-          fontWeight="800"
+          fontWeight="900"
         >
           {value}
         </text>
@@ -105,7 +107,43 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. 5 Vectors Analysis centerpiece */}
+      {/* 2. Daily Sentiment Pulse (Primary Time-Series Anchor) */}
+      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
+        <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
+          <div className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-slate-900">Daily sentiment pulse</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="h-[550px] p-8">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={stats.timeline} margin={{ top: 40, right: 10, left: 0, bottom: 0 }} barGap={8}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} />
+              <Tooltip 
+                cursor={{ fill: 'transparent' }}
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '12px' }} 
+              />
+              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
+              
+              {/* P&G Stacked Bar (A) */}
+              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive}>
+                <LabelList dataKey="gap" content={<CustomGapLabel />} />
+              </Bar>
+              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
+              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
+
+              {/* Market Baseline Stacked Bar (B) */}
+              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.mkt_positive} stroke={COLORS.positive} strokeWidth={1} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.mkt_neutral} stroke={COLORS.neutral} strokeWidth={1} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* 3. 5 Vectors Analysis */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
           <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full">5 Vectors of superiority analysis</h3>
@@ -122,9 +160,9 @@ export default function OverviewPage() {
                   <Radar
                     name="Health Score"
                     dataKey="A"
-                    stroke={COLORS.pg}
+                    stroke="#003da5"
                     strokeWidth={4}
-                    fill={COLORS.pg}
+                    fill="#003da5"
                     fillOpacity={0.1}
                   />
                 </RadarChart>
@@ -189,42 +227,6 @@ export default function OverviewPage() {
           </Card>
         </div>
       </div>
-
-      {/* 3. Daily Sentiment Pulse (Comparative Bar Timeline) */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-        <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between border-b border-slate-50">
-          <div className="space-y-1">
-            <CardTitle className="text-xl font-bold text-slate-900">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-medium uppercase tracking-tight">P&G brands vs market baseline comparative audit</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="h-[500px] p-8">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={stats.timeline} margin={{ top: 40, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
-              <Tooltip 
-                cursor={{ fill: 'transparent' }}
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '13px' }} 
-              />
-              <Legend verticalAlign="top" align="center" height={40} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px', fontWeight: 800, paddingBottom: '30px', textTransform: 'uppercase' }} />
-              
-              {/* P&G Stacked Bars */}
-              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.pg} radius={[0, 0, 0, 0]}>
-                <LabelList dataKey="gap" content={<CustomGapLabel />} />
-              </Bar>
-              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
-              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} />
-
-              {/* Market Stacked Bars (Ghosted) */}
-              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.pg} fillOpacity={0.2} stroke={COLORS.pg} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.neutral} fillOpacity={0.2} stroke={COLORS.neutral} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.negative} fillOpacity={0.2} stroke={COLORS.negative} strokeDasharray="2 2" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
 
       {/* 4. Industry SKU Rankings Podium */}
       <div className="space-y-6">
