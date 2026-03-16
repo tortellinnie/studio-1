@@ -78,51 +78,46 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. 5 Vectors Analysis Centerpiece */}
+      {/* 2. Primary Strategic Visual (Radar + Sidebar) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10">
-          <div className="flex flex-col items-center">
-            <h3 className="text-2xl font-bold text-slate-900 mb-12">5 Vectors of superiority analysis</h3>
-            
-            {/* Centered Radar Chart */}
-            <div className="h-[450px] w-full max-w-2xl mb-16">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                  <PolarGrid stroke="#e2e8f0" strokeWidth={1} />
-                  <PolarAngleAxis 
-                    dataKey="vector" 
-                    tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                  <Radar
-                    name="Health Score"
-                    dataKey="A"
-                    stroke={COLORS.pg}
-                    strokeWidth={4}
-                    fill={COLORS.pg}
-                    fillOpacity={0.1}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
+        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col">
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-12">5 Vectors of superiority analysis</h3>
+          
+          <div className="flex-1 flex items-center justify-center min-h-[450px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                <PolarGrid stroke="#e2e8f0" />
+                <PolarAngleAxis 
+                  dataKey="vector" 
+                  tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
+                />
+                <Radar
+                  name="Health Score"
+                  dataKey="A"
+                  stroke={COLORS.pg}
+                  strokeWidth={4}
+                  fill={COLORS.pg}
+                  fillOpacity={0.1}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
 
-            {/* Values Grid Below - No color green, using P&G blue bars */}
-            <div className="grid grid-cols-2 md:grid-cols-5 w-full gap-8 border-t border-slate-100 pt-12">
-              {dynamicVectorScores.map((v) => (
-                <div key={v.vector} className="flex flex-col border-l-[6px] border-l-[#003da5] pl-6 py-1">
-                  <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-2 tracking-normal">{v.healthScore}%</span>
-                  <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-500">{v.vector}</p>
-                    <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wide">N={v.count}</p>
-                  </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 w-full gap-8 border-t border-slate-100 pt-12 mt-10">
+            {dynamicVectorScores.map((v) => (
+              <div key={v.vector} className="flex flex-col border-l-[6px] border-l-[#003da5] pl-6 py-1">
+                <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-2 tracking-normal">{v.healthScore}%</span>
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-slate-500">{v.vector}</p>
+                  <p className="text-[10px] font-bold text-slate-300 uppercase tracking-normal">N={v.count}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </Card>
 
-        {/* Sidebar Controls */}
-        <div className="lg:col-span-3 flex flex-col gap-4">
+        {/* Sidebar Controls & Volume */}
+        <div className="lg:col-span-3 flex flex-col gap-6">
           <div className="flex flex-col p-1 bg-slate-100 rounded-lg border border-slate-200">
             {[
               { id: 7, label: 'Past 7 days' },
@@ -144,30 +139,25 @@ export default function OverviewPage() {
             ))}
           </div>
           
-          <div className="flex-1 grid grid-rows-2 gap-4">
-            <Card className="border-l-[10px] border-l-[#003da5] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">{stats.total.toLocaleString()}</p>
-                  <p className="text-sm font-bold text-slate-400 italic mt-3">Total data samples</p>
-                </div>
-                <div className="text-right text-emerald-600">
-                  <p className="text-lg font-bold leading-none">+43.6%</p>
-                </div>
-              </div>
-            </Card>
-            <Card className="border-l-[10px] border-l-[#003da5] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">{stats.totalUsers.toLocaleString()}</p>
-                  <p className="text-sm font-bold text-slate-400 italic mt-3">Unique consumers</p>
-                </div>
-                <div className="text-right text-emerald-600">
-                  <p className="text-lg font-bold leading-none">+36.8%</p>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
+            <div className="flex justify-between items-start">
+              <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
+                {stats.total.toLocaleString()}
+              </p>
+              <p className="text-lg font-bold text-emerald-600 leading-none">+43.6%</p>
+            </div>
+            <p className="text-sm font-bold text-slate-400 italic mt-4">Total data samples</p>
+          </Card>
+
+          <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
+            <div className="flex justify-between items-start">
+              <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
+                {stats.totalUsers.toLocaleString()}
+              </p>
+              <p className="text-lg font-bold text-emerald-600 leading-none">+36.8%</p>
+            </div>
+            <p className="text-sm font-bold text-slate-400 italic mt-4">Unique consumers</p>
+          </Card>
         </div>
       </div>
 
