@@ -46,35 +46,35 @@ export function NavMain() {
 
   return (
     <>
-      <SidebarHeader className="p-8 pb-12">
+      <SidebarHeader className="p-6 pb-8">
         <div className="flex flex-col gap-1">
-          <span className="text-2xl font-black tracking-tighter text-slate-900 uppercase">P&G Hub</span>
-          <span className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em]">Strategic Intelligence</span>
+          <span className="text-xl font-bold tracking-tight text-white uppercase">P&G Hub</span>
+          <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Strategic Intelligence</span>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="px-4">
+      <SidebarContent className="px-3">
         <SidebarGroup>
-          <SidebarGroupLabel className="px-4 pb-4 text-[9px] font-black uppercase tracking-[0.3em] text-slate-300">
+          <SidebarGroupLabel className="px-4 pb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">
             Strategic Tools
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-2">
+            <SidebarMenu className="gap-1">
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={pathname === item.url}
                     className={cn(
-                      "transition-all duration-300 h-12 px-4 group",
+                      "transition-all duration-200 h-10 px-4 group rounded-md",
                       pathname === item.url 
-                        ? "bg-slate-900 text-white shadow-xl translate-x-1" 
-                        : "hover:bg-slate-100 text-slate-500 hover:text-slate-900"
+                        ? "bg-white/10 text-white font-semibold" 
+                        : "text-white/60 hover:bg-white/5 hover:text-white"
                     )}
                   >
                     <Link href={item.url}>
-                      <item.icon className={cn("h-4 w-4 mr-3", pathname === item.url ? "text-white" : "text-slate-400 group-hover:text-slate-900")} />
-                      <span className="font-bold text-xs uppercase tracking-widest">{item.title}</span>
+                      <item.icon className={cn("h-4 w-4 mr-3", pathname === item.url ? "text-white" : "text-white/40 group-hover:text-white")} />
+                      <span className="text-sm">{item.title}</span>
                       {pathname === item.url && <ChevronRight className="ml-auto h-3 w-3 text-white/50" />}
                     </Link>
                   </SidebarMenuButton>
@@ -85,20 +85,20 @@ export function NavMain() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-8 border-t border-slate-100">
-        <SidebarMenu className="gap-4">
+      <SidebarFooter className="p-6 border-t border-white/5">
+        <SidebarMenu className="gap-3">
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="text-slate-400 hover:text-slate-900 transition-colors h-auto p-0">
+            <SidebarMenuButton asChild className="text-white/40 hover:text-white transition-colors h-auto p-0">
               <Link href="/settings">
                 <Settings className="h-4 w-4 mr-3" />
-                <span className="text-[10px] font-black uppercase tracking-widest">System Logs</span>
+                <span className="text-xs font-medium">System Logs</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-slate-300 hover:text-red-500 transition-colors h-auto p-0 group">
-              <LogOut className="h-4 w-4 mr-3 group-hover:rotate-180 transition-transform duration-500" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Sign Out</span>
+            <SidebarMenuButton className="text-white/40 hover:text-red-400 transition-colors h-auto p-0 group">
+              <LogOut className="h-4 w-4 mr-3" />
+              <span className="text-xs font-medium">Sign Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

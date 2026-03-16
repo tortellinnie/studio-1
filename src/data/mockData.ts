@@ -5,7 +5,6 @@ type CacheItem = {
   sentimentLabel: string;
   score: number;
   vectors: string;
-  timestamp?: Date;
 };
 
 const rawEntries = Object.values(inferenceCache) as CacheItem[];
@@ -14,7 +13,8 @@ export const totalCacheCount = rawEntries.length;
 // Simulate 90-day time distribution deterministically based on entry index
 export const cacheEntries = rawEntries.map((item, index) => {
   const date = new Date('2024-03-15T00:00:00Z');
-  const denominator = Math.max(totalCacheCount / 90, 1);
+  // Use a stable denominator to avoid initialization order issues
+  const denominator = totalCacheCount > 0 ? totalCacheCount / 90 : 1;
   date.setDate(date.getDate() - Math.floor(index / denominator));
   return { ...item, timestamp: new Date(date) };
 });
@@ -24,7 +24,7 @@ export function getStatsForPeriod(days: number) {
   const cutoff = new Date('2024-03-15T00:00:00Z');
   cutoff.setDate(cutoff.getDate() - days);
   
-  const filtered = cacheEntries.filter(e => e.timestamp! >= cutoff);
+  const filtered = cacheEntries.filter(e => e.timestamp >= cutoff);
   const total = filtered.length || 1;
   const positive = filtered.filter(e => e.sentimentLabel === 'positive');
   const negative = filtered.filter(e => e.sentimentLabel === 'negative');
@@ -40,7 +40,7 @@ export function getStatsForPeriod(days: number) {
   // Timeline grouping by day
   const timelineMap = new Map();
   filtered.forEach(e => {
-    const dStr = e.timestamp!.toISOString().split('T')[0];
+    const dStr = e.timestamp.toISOString().split('T')[0];
     if (!timelineMap.has(dStr)) {
       timelineMap.set(dStr, { date: dStr, positive: 0, neutral: 0, negative: 0, totalScore: 0, count: 0 });
     }
@@ -98,21 +98,21 @@ const productPos = dynamicVectorScores.find(v => v.vector === "Product")?.health
 export const personaInsights = {
   supplyChain: {
     alertScore: Math.min(10, Math.max(1, 10 - Math.floor(retailPos / 10))),
-    recommendation: `Logistics friction identified in ${criticalVector.vector} vector. Action: Prioritize multi-pack bundles for high-volume accounts to absorb rising 3PL costs.`
+    recommendation: `Logistics friction in ${criticalVector.vector}. Action: Prioritize multi-pack bundles.`
   },
   brandManager: {
-    taglishNuance: valuePos > 65 ? "'Sulit' (Value) sentiment is defending price gaps." : "'Mahal' friction is eroding brand equity.",
-    campaignPivot: productPos > 75 ? "Double down on 'Linis' superiority." : "Pivot marketing to 'Bango' hooks immediately."
+    taglishNuance: valuePos > 65 ? "'Sulit' sentiment is stable." : "'Mahal' friction is eroding brand equity.",
+    campaignPivot: productPos > 75 ? "Double down on 'Linis' superiority." : "Pivot marketing to 'Bango' hooks."
   },
   socialStrategist: {
     viralRisk: dynamicGlobalSentiment.negative > 15 ? "CRITICAL" : "MODERATE",
-    suggestedResponse: "Hi! Salamat sa feedback. We hear you sa concerns sa delivery. We're working to make sure next time 'sulit' ang experience. DM us para matulungan namin kayo directly! 💙"
+    suggestedResponse: "Hi! Salamat sa feedback. We hear you sa concerns. DM us para matulungan namin kayo directly! 💙"
   }
 };
 
 export const promoRecommendations = [
   { sku: "Downy Garden Bloom", priority: "High", targetVector: "Value Perception", recommendedPromo: "Buy 1 Take 1 Flash Sale" },
-  { sku: "Ariel Sunrise Fresh", priority: "Medium", targetVector: "Retail Availability", recommendedPromo: "Free Shipping Vouchers" },
+  { sku: "Ariel Sunrise Fresh", priority: "Medium", targetVector: "Retail Availability", recommendedPromo: "Free Vouchers" },
   { sku: "Tide Perfect Clean", priority: "High", targetVector: "Quality Reassurance", recommendedPromo: "Sampling Bundle" }
 ];
 

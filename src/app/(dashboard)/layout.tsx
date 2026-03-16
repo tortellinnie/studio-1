@@ -1,11 +1,10 @@
-
 "use client";
 
 import { Sidebar, SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { NavMain } from "@/components/nav-main";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, User as UserIcon, Settings } from "lucide-react";
+import { Search, Bell, Settings } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -23,61 +22,48 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex h-screen w-full overflow-hidden bg-background">
-        <Sidebar variant="sidebar" className="border-r border-sidebar-border/50">
+      <div className="flex h-screen w-full overflow-hidden bg-slate-50">
+        <Sidebar variant="sidebar" className="border-r border-slate-200 bg-[#003da5]">
           <NavMain />
         </Sidebar>
         <SidebarInset className="flex-1 flex flex-col overflow-hidden">
           {/* Global Top Bar */}
-          <header className="flex h-16 shrink-0 items-center justify-between px-6 border-b border-border/50 bg-background/50 backdrop-blur-xl z-20">
+          <header className="flex h-14 shrink-0 items-center justify-between px-6 border-b border-slate-200 bg-white z-20">
             <div className="flex items-center gap-4 flex-1">
-              <div className="relative w-full max-w-md group hidden md:block">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <div className="relative w-full max-w-sm group hidden md:block">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary transition-colors" />
                 <Input 
-                  placeholder="Search generations, prompts, or help..." 
-                  className="pl-9 h-9 bg-muted/30 border-none focus-visible:ring-1 focus-visible:ring-primary/30 transition-all" 
+                  placeholder="Search intelligence..." 
+                  className="pl-9 h-8 bg-slate-50 border-slate-200 focus-visible:ring-1 transition-all text-sm" 
                 />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                  <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-                    <span className="text-xs">⌘</span>K
-                  </kbd>
-                </div>
               </div>
             </div>
             
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="relative h-9 w-9 text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-slate-900">
                 <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary border-2 border-background" />
               </Button>
               
-              <div className="h-6 w-px bg-border mx-1" />
+              <div className="h-4 w-px bg-slate-200 mx-1" />
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                    <Avatar className="h-9 w-9 border border-border">
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8 border border-slate-200">
                       <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" />
-                      <AvatarFallback>AJ</AvatarFallback>
+                      <AvatarFallback>PG</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">Alex Johnson</p>
-                      <p className="text-xs leading-none text-muted-foreground">alex.j@genai-studio.io</p>
-                    </div>
+                <DropdownMenuContent className="w-56" align="end">
+                  <DropdownMenuLabel className="font-normal text-xs text-slate-500 uppercase tracking-widest">
+                    P&G Administrator
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="gap-2">
-                    <UserIcon className="h-4 w-4" /> Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2">
-                    <Settings className="h-4 w-4" /> Settings
-                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-sm">Profile</DropdownMenuItem>
+                  <DropdownMenuItem className="text-sm">System Logs</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-destructive">
+                  <DropdownMenuItem className="text-destructive text-sm font-medium">
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -85,8 +71,10 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto p-4 md:p-8 max-w-7xl mx-auto w-full">
-            {children}
+          <main className="flex-1 overflow-y-auto p-6 md:p-10">
+            <div className="max-w-7xl mx-auto w-full">
+              {children}
+            </div>
           </main>
         </SidebarInset>
       </div>
