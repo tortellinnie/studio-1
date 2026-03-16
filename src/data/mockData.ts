@@ -10,9 +10,9 @@ type CacheItem = {
 
 const rawEntries = Object.values(inferenceCache) as CacheItem[];
 
-// Simulate 90-day time distribution
-const cacheEntries = rawEntries.map((item, index) => {
-  const date = new Date();
+// Simulate 90-day time distribution deterministically
+export const cacheEntries = rawEntries.map((item, index) => {
+  const date = new Date('2024-03-15T00:00:00Z');
   date.setDate(date.getDate() - (index % 90));
   return { ...item, timestamp: date };
 });
@@ -21,27 +21,27 @@ export const totalCacheCount = cacheEntries.length;
 
 // PERIOD-BASED CALCULATIONS
 export function getStatsForPeriod(days: number) {
-  const cutoff = new Date();
+  const cutoff = new Date('2024-03-15T00:00:00Z');
   cutoff.setDate(cutoff.getDate() - days);
   
   const filtered = cacheEntries.filter(e => e.timestamp! >= cutoff);
   const total = filtered.length || 1;
   const positive = filtered.filter(e => e.sentimentLabel === 'positive');
   const negative = filtered.filter(e => e.sentimentLabel === 'negative');
-  const neutral = filtered.filter(e => e.sentimentLabel === 'neutral');
 
   const posPct = Math.round((positive.length / total) * 100);
   const negPct = Math.round((negative.length / total) * 100);
+  const neutralPct = 100 - posPct - negPct;
   
   // 0-5 Rating conversion: Weighted by confidence scores
   const weightedSum = positive.reduce((acc, curr) => acc + curr.score, 0);
-  const correctedRating = ((weightedSum / total) * 5).toFixed(1);
+  const correctedRating = (1 + (weightedSum / total) * 4).toFixed(1);
 
   return {
     total,
     posPct,
     negPct,
-    neutralPct: 100 - posPct - negPct,
+    neutralPct,
     correctedRating: parseFloat(correctedRating),
     revenueAtRisk: Math.round(negative.reduce((acc, e) => acc + (e.score * (50000000 / totalCacheCount)), 0))
   };
@@ -49,8 +49,14 @@ export function getStatsForPeriod(days: number) {
 
 // Global Static Stats (All Time)
 export const globalStats = getStatsForPeriod(90);
+export const dynamicGlobalSentiment = {
+  positive: globalStats.posPct,
+  negative: globalStats.negPct,
+  neutral: globalStats.neutralPct
+};
+export const globalCorrectedRating = globalStats.correctedRating;
 
-// VECTOR ANALYSIS
+// VECTOR ANALYSIS (The 5 Vectors of Superiority)
 const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
 export const dynamicVectorScores = vectorLabels.map(label => {
   const mentioned = cacheEntries.filter(e => e.vectors.includes(label));
@@ -65,20 +71,20 @@ export const bestVector = [...dynamicVectorScores].sort((a, b) => b.healthScore 
 // PERSONA BRIEFING ENGINE
 const productPos = dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0;
 const retailPos = dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0;
+const valuePos = dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0;
 
 export const personaInsights = {
   supplyChain: {
     alertScore: 10 - Math.round(retailPos / 10),
-    recommendation: `Logistics friction in ${criticalVector.vector === "Retail Execution" ? "Luzon Hubs" : "Packaging"} identified. Priority SKUs flagged for stock buffers.`
+    recommendation: `Logistics friction in ${criticalVector.vector === "Retail Execution" ? "Luzon Hubs" : "Secondary Packaging"} identified. SKU ranging alert: Prioritize multi-pack bundles to absorb logistics surcharges.`
   },
   brandManager: {
-    resonance: dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0,
-    taglishNuance: dynamicVectorScores.find(v => v.vector === "Value")?.healthScore! > 70 ? "'Sulit' outweighs 'Mahal'" : "Price friction peaking",
-    campaignPivot: productPos > 80 ? "Leverage Cleanliness Superiority" : "Pivot to 'Bango' hooks"
+    taglishNuance: valuePos > 70 ? "'Sulit' signals strong" : "Friction: 'Mahal' dominates",
+    campaignPivot: productPos > 80 ? "Double down on 'Linis' claims" : "Pivot to 'Bango' hooks immediately"
   },
   socialStrategist: {
-    viralRisk: globalStats.negPct > 15 ? "CRITICAL" : "LOW",
-    suggestedResponse: "Salamat sa feedback! We hear you sa concerns sa delivery. We're fixing this para mas 'sulit' ang P&G order niyo next time. DM us for help!"
+    viralRisk: globalStats.negPct > 15 ? "CRITICAL" : "MODERATE",
+    suggestedResponse: "Hi! Salamat sa feedback. We hear you sa concerns sa delivery. Ginagawa namin ang lahat para maging 'sulit' ang experience niyo next time. DM us para matulungan namin kayo directly! 💙"
   }
 };
 
@@ -104,11 +110,21 @@ export const allIndustryProducts = rawSkus.map((sku, i) => {
   };
 }).sort((a, b) => parseFloat(b.correctedRating) - parseFloat(a.correctedRating));
 
+export const competitiveBenchmark = rawSkus.map((sku, i) => ({
+  brand: sku.brand,
+  sentiment: sku.isPNG ? globalStats.posPct + (i * 2) : globalStats.posPct - (i * 3),
+  marketShare: sku.isPNG ? 25 + (i * 5) : 15 - (i * 2),
+  growth: 100 + (i * 50)
+}));
+
 // TREND DATA
 export const sentimentTrends = [
-  { month: 'Jan', positive: 65, negative: 15 },
-  { month: 'Feb', positive: 68, negative: 12 },
-  { month: 'Mar', positive: globalStats.posPct, negative: globalStats.negPct }
+  { month: 'OCT', positive: 65, negative: 15 },
+  { month: 'NOV', positive: 68, negative: 12 },
+  { month: 'DEC', positive: 72, negative: 10 },
+  { month: 'JAN', positive: 64, negative: 18 },
+  { month: 'FEB', positive: 70, negative: 14 },
+  { month: 'MAR', positive: globalStats.posPct, negative: globalStats.negPct }
 ];
 
 export const promoRecommendations = [

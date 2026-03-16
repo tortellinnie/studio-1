@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { 
   RadarChart, 
   PolarGrid, 
@@ -14,10 +15,9 @@ import {
 import { 
   Activity,
   Zap,
-  Truck,
-  MessageCircle,
   Tag,
-  ShieldAlert
+  ShieldAlert,
+  ArrowUpRight
 } from "lucide-react";
 import { 
   dynamicVectorScores, 
@@ -25,7 +25,6 @@ import {
   globalStats,
   criticalVector,
   bestVector,
-  personaInsights,
   promoRecommendations
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
@@ -48,9 +47,9 @@ export default function BrandHealthPage() {
   return (
     <div className="space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="space-y-2">
-        <h1 className="text-5xl font-black text-slate-900 tracking-tighter uppercase">Brand Health Audit</h1>
-        <p className="text-sm text-slate-400 font-bold uppercase tracking-[0.3em]">
-          Vector Superiority from {totalCacheCount.toLocaleString()} Taglish NLP samples
+        <h1 className="text-5xl font-black text-slate-900 tracking-tighter uppercase">Industry Health Audit</h1>
+        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em]">
+          Vector Analysis from {totalCacheCount.toLocaleString()} Taglish NLP samples
         </p>
       </div>
 
@@ -59,15 +58,15 @@ export default function BrandHealthPage() {
         <Card className="lg:col-span-7 glass-card p-8">
           <CardHeader className="px-0 pt-0 pb-8 flex flex-row items-center justify-between border-b border-slate-50">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-primary text-white shadow-lg">
+              <div className="p-3 bg-primary text-white">
                 <Activity className="h-6 w-6" />
               </div>
               <div>
-                <CardTitle className="text-2xl font-black text-slate-900 uppercase">The 5 Vectors of Superiority</CardTitle>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Taglish sentiment distribution</p>
+                <CardTitle className="text-2xl font-black text-slate-900 uppercase tracking-tight">Vectors of Superiority</CardTitle>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Taglish sentiment distribution across the industry</p>
               </div>
             </div>
-            <Badge className="bg-emerald-500 text-white font-black uppercase tracking-widest px-4 py-1 text-[9px]">Live NLP Index</Badge>
+            <Badge className="bg-emerald-500 text-white font-black uppercase tracking-widest px-4 py-1 text-[9px] rounded-none">NLP VALIDATED</Badge>
           </CardHeader>
           <CardContent className="pt-10 flex flex-col items-center">
             <div className="h-[450px] w-full">
@@ -107,7 +106,7 @@ export default function BrandHealthPage() {
           </CardContent>
         </Card>
 
-        {/* Promo Strategy & Alerts */}
+        {/* Promo Strategy */}
         <div className="lg:col-span-5 space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter flex items-center gap-3">
@@ -130,8 +129,8 @@ export default function BrandHealthPage() {
                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Strategy: {promo.targetVector}</p>
                     </div>
                     <Badge className={cn(
-                      "text-[9px] font-black uppercase px-3 py-1",
-                      promo.priority === 'High' ? 'bg-red-500' : 'bg-orange-400'
+                      "text-[9px] font-black uppercase px-3 py-1 rounded-none",
+                      promo.priority === 'High' ? 'bg-red-500 text-white' : 'bg-orange-400 text-white'
                     )}>
                       {promo.priority} Priority
                     </Badge>
@@ -141,7 +140,7 @@ export default function BrandHealthPage() {
                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Recommended Promo</p>
                       <p className="text-sm font-bold text-slate-900">{promo.recommendedPromo}</p>
                     </div>
-                    <button className="p-2 bg-white border border-slate-200 shadow-sm hover:scale-110 transition-transform">
+                    <button className="p-2 bg-white border border-slate-200 hover:scale-110 transition-transform">
                       <Zap className="h-4 w-4 text-primary" />
                     </button>
                   </div>
