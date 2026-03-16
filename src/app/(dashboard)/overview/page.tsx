@@ -41,7 +41,8 @@ import {
   globalCorrectedRating,
   revenueAtRisk,
   personaInsights,
-  accountSignals
+  accountSignals,
+  sentimentTrends
 } from "@/data/mockData";
 
 const distributionData = [
@@ -149,7 +150,7 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
 
-        {/* Global Health Module */}
+        {/* Global Market Health Module */}
         <Card className="lg:col-span-4 shadow-sm border-slate-200 bg-white overflow-hidden">
           <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/20">
             <CardTitle className="text-xl font-black text-slate-900 uppercase tracking-tight text-center">Global Market Health</CardTitle>
