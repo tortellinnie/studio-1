@@ -44,9 +44,9 @@ export default function BrandHealthPage() {
   const topProduct = allIndustryProducts.find(p => p.isPNG) || allIndustryProducts[0];
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold text-slate-900 tracking-normal">Industry health audit</h1>
+        <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Industry health audit</h1>
         <p className="text-sm text-slate-500 font-semibold tracking-normal">
           Vector analysis from {totalCacheCount.toLocaleString()} Taglish NLP samples
         </p>
@@ -58,7 +58,7 @@ export default function BrandHealthPage() {
           <CardHeader className="px-0 pt-0 pb-8 flex flex-row items-center justify-between border-b border-slate-100">
             <div className="flex items-center gap-4">
               <Activity className="h-6 w-6 text-[#003da5]" />
-              <CardTitle className="text-xl font-bold text-slate-900 tracking-normal">Vectors of superiority</CardTitle>
+              <CardTitle className="text-xl font-bold text-slate-900 tracking-tight">Vectors of superiority</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="pt-10 flex flex-col items-center">
@@ -99,41 +99,47 @@ export default function BrandHealthPage() {
           </CardContent>
         </Card>
 
-        {/* Promo Strategy */}
+        {/* Promo prioritization */}
         <div className="lg:col-span-5 space-y-8">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-3 tracking-normal">
-              <Tag className="h-6 w-6 text-[#003da5]" />
+          <div className="space-y-3">
+            <h2 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+              <Tag className="h-8 w-8 text-[#003da5]" />
               Promo prioritization
             </h2>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed tracking-normal">
+            <p className="text-base text-slate-500 font-medium leading-relaxed max-w-sm">
               Targeted SKU recommendations based on sentiment friction points.
             </p>
           </div>
 
-          <div className="space-y-6">
-            <Card className="overflow-hidden border-none ring-1 ring-slate-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-all">
-              <div className="h-1.5 w-full bg-[#003da5]" />
-              <CardContent className="p-6 space-y-5">
+          <div className="pt-2">
+            <Card className="overflow-hidden border-slate-200 rounded-[2.5rem] bg-white shadow-sm border-t-[10px] border-t-[#003da5]">
+              <CardContent className="p-10 space-y-8">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900 tracking-normal">{topProduct.name}</h3>
-                    <p className="text-xs font-semibold text-slate-400 pt-1 tracking-normal">Status: Top Performer</p>
+                  <div className="space-y-2">
+                    <h3 className="text-3xl font-bold text-slate-900 leading-tight">
+                      {topProduct.name}
+                    </h3>
+                    <p className="text-sm font-bold text-slate-400">
+                      Status: Top Performer
+                    </p>
                   </div>
-                  <Badge className="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-md border-none">
+                  <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-black px-3 py-1.5 rounded-md border-none tracking-widest uppercase">
                     PRIORITY
                   </Badge>
                 </div>
-                <div className="bg-slate-50 p-5 rounded-xl border border-slate-100 flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Recommended action</p>
-                    <p className="text-base font-semibold text-slate-900 leading-snug">
+
+                <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 flex items-center gap-6 justify-between">
+                  <div className="space-y-4">
+                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                      Recommended action
+                    </p>
+                    <p className="text-xl font-bold text-slate-900 leading-tight">
                       [{topProduct.name}] your top performing product, consider creating promos!
                     </p>
                   </div>
-                  <button className="p-3 bg-white border border-slate-200 rounded-lg hover:shadow-sm transition-all hover:bg-slate-50 group">
-                    <Zap className="h-5 w-5 text-[#003da5] group-hover:scale-110 transition-transform" />
-                  </button>
+                  <div className="h-14 w-14 shrink-0 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-center">
+                    <Zap className="h-6 w-6 text-[#003da5] fill-[#003da5]" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
