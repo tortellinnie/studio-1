@@ -21,7 +21,9 @@ import {
   Radar,
   PolarRadiusAxis
 } from 'recharts';
-import { getStatsForPeriod, dynamicVectorScores } from '@/data/mockData';
+import { getStatsForPeriod, dynamicVectorScores, allIndustryProducts } from '@/data/mockData';
+import { TopProductsPodium, wilsonLowerBound, type RankedProduct } from '@/components/TopProductsPodium';
+import { BrandSignalPanel } from '@/components/BrandSignalPanel';
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Info } from "lucide-react";
 
@@ -43,6 +45,18 @@ export default function OverviewPage() {
   }, [period]);
 
   if (!isClient) return null;
+
+  // Rank by raw score: (sentimentScore% / 100) * reviewCount
+  // = estimated total positive reviews on the platform (volume-aware)
+  // Wilson score is displayed in the gauge for statistical confidence.
+  const rankedProducts: RankedProduct[] = [...allIndustryProducts]
+    .map((p) => ({
+      ...p,
+      wilson: wilsonLowerBound(p.sentimentScore, p.samplesAnalyzed),
+      rawScore: (p.sentimentScore / 100) * p.reviewCount,
+    }))
+    .sort((a, b) => b.rawScore - a.rawScore)
+    .map((p, i) => ({ ...p, rank: i + 1 }));
 
   const radarData = dynamicVectorScores.map(v => ({
     vector: v.vector,
@@ -78,7 +92,13 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. Primary Strategic Visual (Radar + Sidebar) */}
+      {/* 2. Brand Signal — 3 core questions */}
+      <BrandSignalPanel />
+
+      {/* 3. Top Performing SKUs Podium */}
+      <TopProductsPodium products={rankedProducts} />
+
+      {/* 4. Primary Strategic Visual (Radar + Sidebar) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col">
           <h3 className="text-2xl font-bold text-slate-900 text-center mb-12">5 Vectors of superiority analysis</h3>
@@ -161,7 +181,7 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* 3. Analysis Timeline */}
+      {/* 5. Analysis Timeline */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between">
           <div className="space-y-1">
@@ -188,7 +208,7 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 4. Sentiment Velocity */}
+      {/* 6. Sentiment Velocity */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1">

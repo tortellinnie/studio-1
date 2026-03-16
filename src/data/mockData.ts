@@ -115,15 +115,87 @@ export const promoRecommendations = [
   { sku: "Tide Perfect Clean", priority: "High", targetVector: "Quality Reassurance", recommendedPromo: "Sampling Bundle" }
 ];
 
+// Action playbook keyed by vector name — used by the Brand Signal "What to do?" panel
+export const vectorActionMap: Record<string, {
+  urgency: 'Immediate' | 'Short-term' | 'Monitor';
+  title: string;
+  description: string;
+  cta: string;
+}> = {
+  'Value': {
+    urgency: 'Immediate',
+    title: 'Value Perception Intervention',
+    description: '35 reviews explicitly compare Lazada prices as higher than supermarket alternatives, with 71 linking price to unmet quality expectations. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative, timed to Lazada coins events.',
+    cta: 'Develop bundle strategy',
+  },
+  'Retail Execution': {
+    urgency: 'Immediate',
+    title: 'Fulfilment Standards Audit',
+    description: '31 delivery and order-accuracy complaints logged — key failures include wrong SKUs shipped and late delivery on high-velocity items. Recommend authorised seller scorecard review and SLA enforcement across all Lazada Mall listings.',
+    cta: 'Review seller SLAs',
+  },
+  'Communication': {
+    urgency: 'Short-term',
+    title: 'Product Claim Recalibration',
+    description: '182 reviews flag scent intensity below listing expectations — yet 409 reviews strongly praise fragrance when experienced directly. The gap signals over-promise in copy. Recommend a claim audit across all active Lazada A+ content and product descriptions.',
+    cta: 'Audit listing claims',
+  },
+  'Packaging': {
+    urgency: 'Short-term',
+    title: 'Transit Packaging Integrity',
+    description: '376 leak and spillage complaints across liquid SKUs — 2.8% of all analysed reviews cite products arriving damaged. Recommend secondary tamper-evident sealing for liquid SKUs and coordination with Lazada logistics on liquid-fragile handling protocols.',
+    cta: 'Initiate packaging audit',
+  },
+  'Product': {
+    urgency: 'Monitor',
+    title: 'Amplify Fragrance Superiority',
+    description: '2,922 reviews cite scent as the lead purchase trigger and 545 express explicit reorder intent — the highest loyalty signal in the dataset. Fragrance and fabric gentleness are the portfolio\'s strongest consumer anchors. Recommend amplifying both in A+ content and campaign creative.',
+    cta: 'Brief campaign team',
+  },
+};
+
+// Vector-level driver summaries derived from NLP analysis of 13,641 reviews
+export const vectorInsights: Record<string, { strength: string; risk: string }> = {
+  'Product': {
+    strength: '2,922 reviews cite fragrance as the lead purchase trigger; 1,642 praise fabric gentleness',
+    risk: '169 negative reviews report fragrance longevity below product claim expectations',
+  },
+  'Value': {
+    strength: '3,053 "sulit" (value-for-money) mentions — primarily driven by Lazada coins and discount events',
+    risk: '35 reviews flag Lazada pricing as higher than supermarket; eroding platform exclusivity',
+  },
+  'Packaging': {
+    strength: '780 reviews confirm intact, well-sealed delivery; a key trust signal for repeat purchase',
+    risk: '376 leak and spillage complaints — liquid SKUs are the primary failure point in last-mile delivery',
+  },
+  'Communication': {
+    strength: '1,227 reviews praise scent based on direct product experience, not ad exposure',
+    risk: '182 reviews cite scent intensity below what was advertised — a listing over-promise problem',
+  },
+  'Retail Execution': {
+    strength: '599 reviews praise fast shipping as a key satisfaction driver on the platform',
+    risk: '31 fulfilment errors and 35 price-vs-offline complaints signal operational and pricing gaps',
+  },
+};
+
 export const competitiveBenchmark = [
   { brand: 'P&G', sentiment: globalStats.posPct, marketShare: 42, growth: 12 },
   { brand: 'Unilever', sentiment: Math.max(0, globalStats.posPct - 15), marketShare: 35, growth: 8 },
   { brand: 'Local', sentiment: Math.max(0, globalStats.posPct - 25), marketShare: 15, growth: 5 },
 ];
 
+// Real product data derived from Lazada PH Fabric xlsx + inference_cache sentiment analysis.
+// reviewCount = total platform reviews (numberOfReviews from xlsx)
+// samplesAnalyzed = number of reviews matched in inference_cache (used for Wilson score)
+// sentimentScore = % positive from analyzed sample
+// correctedRating = NLP-adjusted: 1 + (sentimentScore/100) * 4
 export const allIndustryProducts = [
-  { id: 'pg-1', name: 'Downy Garden Bloom', brand: 'P&G', originalRating: 4.8, correctedRating: 4.2, sentimentScore: 82, isPNG: true },
-  { id: 'pg-2', name: 'Ariel Sunrise Fresh', brand: 'P&G', originalRating: 4.9, correctedRating: 4.1, sentimentScore: 78, isPNG: true },
-  { id: 'uni-1', name: 'Surf Cherry Blossom', brand: 'Unilever', originalRating: 4.7, correctedRating: 3.5, sentimentScore: 62, isPNG: false },
-  { id: 'loc-1', name: 'Champion High Foam', brand: 'Local', originalRating: 4.6, correctedRating: 3.2, sentimentScore: 55, isPNG: false },
+  { id: 'pg-1',  name: 'Downy Sunrise Fresh Garden Bloom',   brand: 'Downy / P&G',    originalRating: 4.98, correctedRating: 4.52, sentimentScore: 88.1, isPNG: true,  reviewCount: 16917, samplesAnalyzed: 320 },
+  { id: 'pg-2',  name: 'Ariel Liquid Sunrise Fresh Floral',  brand: 'Ariel / P&G',    originalRating: 4.97, correctedRating: 4.62, sentimentScore: 90.6, isPNG: true,  reviewCount: 11059, samplesAnalyzed: 180 },
+  { id: 'uni-1', name: 'Surf Cherry Blossom Liquid',         brand: 'Surf / Unilever', originalRating: 4.98, correctedRating: 4.77, sentimentScore: 94.3, isPNG: false, reviewCount:  9731, samplesAnalyzed: 105 },
+  { id: 'pg-3',  name: 'Ariel Liquid Floral Passion',        brand: 'Ariel / P&G',    originalRating: 4.96, correctedRating: 4.65, sentimentScore: 91.3, isPNG: true,  reviewCount:  9758, samplesAnalyzed: 115 },
+  { id: 'uni-2', name: 'Surf Rose Fresh Liquid',             brand: 'Surf / Unilever', originalRating: 4.98, correctedRating: 4.76, sentimentScore: 94.1, isPNG: false, reviewCount:  8603, samplesAnalyzed: 170 },
+  { id: 'loc-1', name: 'BritePH Fabric Conditioner Kit',     brand: 'BritePH / Local', originalRating: 4.95, correctedRating: 4.39, sentimentScore: 84.8, isPNG: false, reviewCount:  9077, samplesAnalyzed: 105 },
+  { id: 'uni-3', name: 'Surf Blossom Fresh Conditioner',     brand: 'Surf / Unilever', originalRating: 4.97, correctedRating: 4.47, sentimentScore: 86.7, isPNG: false, reviewCount:  7478, samplesAnalyzed: 128 },
+  { id: 'uni-4', name: 'Breeze Powermachine Ultraclean',     brand: 'Breeze / Unilever', originalRating: 4.96, correctedRating: 4.72, sentimentScore: 93.0, isPNG: false, reviewCount: 6421, samplesAnalyzed:  43 },
 ];

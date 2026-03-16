@@ -43,3 +43,11 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+
+# data files
+*.xlsx
+*.csv
+inference_cache.json
+
+# claude
+.claude/
