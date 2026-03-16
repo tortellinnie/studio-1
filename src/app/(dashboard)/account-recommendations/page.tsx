@@ -10,16 +10,18 @@ import {
   Zap,
   Lightbulb,
   TrendingUp,
-  Activity
+  Tag,
+  ArrowUpRight,
+  AlertTriangle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   allIndustryProducts, 
-  dynamicVectorScores, 
   accountRecommendations,
   totalCacheCount,
-  bestVector,
-  criticalVector
+  promoRecommendations,
+  criticalVector,
+  dynamicGlobalSentiment
 } from "@/data/mockData";
 
 export default function AccountRecommendationsPage() {
@@ -28,8 +30,8 @@ export default function AccountRecommendationsPage() {
   return (
     <div className="space-y-12 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline uppercase tracking-tighter">Strategic Industry Recommendations</h1>
-        <p className="text-base text-muted-foreground font-medium">Market-wide performance matrix powered by {totalCacheCount.toLocaleString()} inference samples</p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline uppercase tracking-tighter">Account Strategy & Promo Optimization</h1>
+        <p className="text-base text-muted-foreground font-medium">Data-driven SKU prioritization for {totalCacheCount.toLocaleString()} marketplace samples</p>
       </div>
 
       {/* Product-Account Performance Matrix */}
@@ -39,7 +41,7 @@ export default function AccountRecommendationsPage() {
             <div className="p-2.5 bg-[#003da5] rounded-xl shadow-lg shadow-[#003da5]/20">
               <TableIcon className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-xl font-black text-slate-900 uppercase tracking-tight">Market Performance Matrix</CardTitle>
+            <CardTitle className="text-xl font-black text-slate-900 uppercase tracking-tight">Product-Account Performance Matrix</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -48,69 +50,52 @@ export default function AccountRecommendationsPage() {
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] uppercase font-black text-slate-400 tracking-widest">
                   <th className="p-8">Brand SKU</th>
-                  <th className="p-8 text-center">Owner</th>
-                  <th className="p-8">Sentiment Index</th>
                   <th className="p-8 text-center">Corrected Rating</th>
-                  <th className="p-8">Value Health</th>
-                  <th className="p-8">Retail Exec</th>
+                  <th className="p-8">Sentiment Health</th>
+                  <th className="p-8">Promo Priority</th>
+                  <th className="p-8">Key Target Vector</th>
                 </tr>
               </thead>
               <tbody>
-                {allIndustryProducts.map((row, i) => (
+                {allIndustryProducts.slice(0, 8).map((row, i) => (
                   <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
                     <td className="p-8 min-w-[250px]">
                       <div className="flex flex-col">
-                        <span className="font-black text-slate-900 text-lg group-hover:text-[#003da5] transition-colors tracking-tight">{row.name}</span>
+                        <span className="font-black text-slate-900 text-lg group-hover:text-[#003da5] transition-colors tracking-tighter">{row.name}</span>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{row.brand}</span>
                       </div>
                     </td>
                     <td className="p-8 text-center">
-                      <Badge variant="outline" className={cn(
-                        "text-[10px] font-black uppercase px-4 py-1 tracking-widest",
-                        row.isPNG ? "border-[#003da5]/30 text-[#003da5] bg-[#ebf2ff]" : "border-slate-200 text-slate-500 bg-white"
-                      )}>
-                        {row.isPNG ? "P&G" : "COMPETITOR"}
-                      </Badge>
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="font-black text-[#003da5] text-4xl tabular-nums leading-none tracking-tighter">{row.correctedRating}</span>
+                        <span className="text-[9px] font-black text-emerald-500 uppercase tracking-tighter">NLP Verified</span>
+                      </div>
                     </td>
                     <td className="p-8 min-w-[180px]">
                       <div className="space-y-3">
                         <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
-                          <span>{row.sentimentScore.toFixed(0)}% Corrected</span>
+                          <span>{row.sentimentScore.toFixed(0)}% Pos</span>
                         </div>
                         <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
                           <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${row.sentimentScore}%` }} />
                         </div>
                       </div>
                     </td>
-                    <td className="p-8 text-center">
-                      <div className="flex flex-col items-center gap-1">
-                        <span className="font-black text-[#003da5] text-4xl tabular-nums leading-none tracking-tighter">{row.correctedRating}</span>
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <div key={s} className={cn("h-1 w-3 rounded-full", s <= Math.round(parseFloat(row.correctedRating)) ? "bg-[#003da5]" : "bg-slate-200")} />
-                          ))}
-                        </div>
-                      </div>
+                    <td className="p-8">
+                      <Badge className={cn(
+                        "text-[10px] font-black uppercase px-4 py-1 tracking-widest rounded-lg",
+                        row.promoPriority === "High" ? "bg-red-500 text-white" : 
+                        row.promoPriority === "Medium" ? "bg-orange-400 text-white" : 
+                        "bg-slate-100 text-slate-400"
+                      )}>
+                        {row.promoPriority}
+                      </Badge>
                     </td>
-                    <td className="p-8 min-w-[180px]">
-                       <div className="space-y-3">
-                        <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
-                          <span>{row.vectors.value.toFixed(0)}% Pos</span>
-                        </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
-                          <div className="h-full bg-[#003da5] rounded-full" style={{ width: `${row.vectors.value}%` }} />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-8 min-w-[180px]">
-                       <div className="space-y-3">
-                        <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
-                          <span>{row.vectors.retailExec.toFixed(0)}% Pos</span>
-                        </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
-                          <div className="h-full bg-[#003da5] rounded-full" style={{ width: `${row.vectors.retailExec}%` }} />
-                        </div>
-                      </div>
+                    <td className="p-8">
+                       <div className="flex items-center gap-2 text-xs font-black text-slate-600 uppercase tracking-tight">
+                         <Zap className="h-3 w-3 text-[#003da5]" />
+                         {row.vectors.value < dynamicGlobalSentiment.positive ? "Value Efficiency" : "Conversion"}
+                       </div>
                     </td>
                   </tr>
                 ))}
@@ -120,7 +105,48 @@ export default function AccountRecommendationsPage() {
         </CardContent>
       </Card>
 
+      {/* Promo Recommendations - SKU promo prioritization by sentiment trend */}
       <div className="space-y-8">
+        <h2 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-4 font-headline uppercase tracking-tighter">
+          <Tag className="h-8 w-8 text-[#003da5]" />
+          Promo Recommendations & Prioritization
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {promoRecommendations.map((promo, idx) => (
+            <Card key={idx} className="border-l-4 border-l-[#003da5] bg-white shadow-sm hover:shadow-md transition-all">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <Badge className={cn(
+                    "text-[9px] font-black uppercase px-2 rounded-md",
+                    promo.priority === 'High' ? 'bg-red-500 text-white' : 'bg-orange-400 text-white'
+                  )}>PRIORITY: {promo.priority}</Badge>
+                  <span className="text-[10px] font-black text-slate-400 uppercase">Trend: Negative</span>
+                </div>
+                <CardTitle className="text-xl font-black text-slate-900 tracking-tighter mt-4">{promo.sku}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-4">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Target Vector</p>
+                  <p className="text-sm font-black text-slate-700 uppercase tracking-tight">{promo.targetVector}</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <Tag className="h-5 w-5 text-[#003da5]" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Recommended Promo</p>
+                    <p className="text-base font-black text-slate-900 tracking-tighter">{promo.recommendedPromo}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Strategic Priority Cards */}
+      <div className="space-y-8 pt-6">
         <h2 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-4 font-headline uppercase tracking-tighter">
           <ShieldCheck className="h-8 w-8 text-[#003da5]" />
           Market-Wide Strategic Priorities
@@ -146,48 +172,23 @@ export default function AccountRecommendationsPage() {
             </div>
           </CardHeader>
           <CardContent className="p-14 space-y-16">
-            <div className="space-y-10">
-              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em] border-l-4 border-[#003da5] pl-4">Market Leaders (NLP Validated)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                {allIndustryProducts.slice(0, 3).map((product, idx) => (
-                  <div key={product.id} className="relative p-12 rounded-[2rem] border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:border-[#003da5]/20 transition-all group overflow-hidden">
-                    <div className="absolute top-0 right-0 h-32 w-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:bg-[#ebf2ff] transition-colors" />
-                    <div className="relative z-10 flex items-center justify-between mb-10">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ebf2ff] text-[#003da5] font-black text-xl shadow-inner group-hover:scale-110 transition-transform">
-                        {idx + 1}
-                      </div>
-                      {idx === 0 && (
-                        <Badge className="bg-[#22c55e] text-white text-[9px] font-black h-8 px-5 uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-500/20">MARKET LEADER</Badge>
-                      )}
-                    </div>
-                    <div className="relative z-10 space-y-3">
-                      <p className="text-2xl font-black text-slate-900 leading-none tracking-tight group-hover:text-[#003da5] transition-colors">{product.name}</p>
-                      <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest flex items-center gap-2">
-                        {product.brand}
-                      </p>
-                      <p className="text-xs text-emerald-600 font-extrabold uppercase tracking-widest flex items-center gap-2">
-                        {product.sentimentScore.toFixed(0)}% Corrected Sentiment
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div className="space-y-10 pt-14 border-t border-slate-100">
               <div className="flex items-center gap-5">
                 <div className="h-14 w-14 rounded-2xl bg-orange-100 flex items-center justify-center shadow-sm">
                   <Lightbulb className="h-8 w-8 text-orange-500" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Recommended Strategic Actions</h4>
-                  <p className="text-sm font-bold text-slate-400">Industry Inference Rationale: {lazada.rationale}</p>
+                  <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Inference-Based Strategic Rationale</h4>
+                  <p className="text-sm font-bold text-slate-400">Validated against {totalCacheCount} NLP segments</p>
                 </div>
               </div>
+              <p className="text-2xl text-slate-700 font-bold italic border-l-4 border-[#003da5] pl-8 py-4 leading-relaxed tracking-tight bg-slate-50/30 rounded-r-3xl">
+                "{lazada.rationale}"
+              </p>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 pl-4">
                 {lazada.recommendedActions.map((action, i) => (
                   <li key={i} className="flex items-start gap-8 group bg-slate-50/50 p-8 rounded-3xl border border-transparent hover:border-[#003da5]/10 hover:bg-white transition-all shadow-sm group">
-                    <div className="mt-3 h-3 w-3 rounded-full bg-[#003da5] shrink-0 group-hover:scale-150 transition-transform" />
+                    <div className="mt-3 h-3 w-3 rounded-full bg-[#003da5] shrink-0 group-hover:scale-150 transition-transform shadow-sm" />
                     <span className="text-xl font-bold text-slate-600 group-hover:text-slate-900 transition-colors leading-relaxed tracking-tight">
                       {action}
                     </span>
