@@ -11,19 +11,19 @@ type CacheItem = {
 
 const cacheEntries = Object.values(inferenceCache) as CacheItem[];
 
-// 1. CALCULATE GLOBAL INDUSTRY STATS (Taglish-Aware AI Sentiment Analysis)
+// 1. GLOBAL STATS
 export const totalCacheCount = cacheEntries.length;
-export const positiveCount = cacheEntries.filter(e => e.sentimentLabel === 'positive').length;
-export const negativeCount = cacheEntries.filter(e => e.sentimentLabel === 'negative').length;
-export const neutralCount = cacheEntries.filter(e => e.sentimentLabel === 'neutral').length;
+const positiveEntries = cacheEntries.filter(e => e.sentimentLabel === 'positive');
+const negativeEntries = cacheEntries.filter(e => e.sentimentLabel === 'negative');
+const neutralEntries = cacheEntries.filter(e => e.sentimentLabel === 'neutral');
 
 export const dynamicGlobalSentiment = {
-  positive: Math.round((positiveCount / totalCacheCount) * 100),
-  negative: Math.round((negativeCount / totalCacheCount) * 100),
-  neutral: Math.round((neutralCount / totalCacheCount) * 100),
+  positive: Math.round((positiveEntries.length / totalCacheCount) * 100),
+  negative: Math.round((negativeEntries.length / totalCacheCount) * 100),
+  neutral: Math.round((neutralEntries.length / totalCacheCount) * 100),
 };
 
-// 2. 5 VECTORS OF SUPERIORITY MAPPING (Strictly Data-Driven)
+// 2. VECTOR HEALTH (The 5 Vectors of Superiority)
 const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
 export const dynamicVectorScores = vectorLabels.map(label => {
   const mentionedEntries = cacheEntries.filter(e => e.vectors.includes(label));
@@ -42,86 +42,69 @@ export const dynamicVectorScores = vectorLabels.map(label => {
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0];
 export const bestVector = [...dynamicVectorScores].sort((a, b) => b.healthScore - a.healthScore)[0];
 
-// 3. COMPETITIVE INTELLIGENCE ENGINE (Industry-Wide SKU Assessment)
-const jitter = (base: number, amount: number) => Math.max(0, Math.min(100, base + (Math.random() * amount * 2 - amount)));
+// 3. STRATEGIC BRIEFING ENGINE (Persona Insights)
+const revenueBaseline = 50000000; // ₱50M
+const avgNegativeImpact = revenueBaseline / totalCacheCount;
+export const revenueAtRisk = Math.round(negativeEntries.reduce((acc, entry) => acc + (entry.score * avgNegativeImpact), 0));
 
+// Logic for Platform vs Formula
+const retailExecutionPos = dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0;
+const productPos = dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0;
+export const accountSignals = {
+  type: retailExecutionPos < productPos ? "Platform/Logistics" : "Formula/Product",
+  severity: 10 - Math.round(Math.min(retailExecutionPos, productPos) / 10)
+};
+
+export const personaInsights = {
+  supplyChain: {
+    alertScore: accountSignals.severity,
+    focus: criticalVector.vector === "Packaging" || criticalVector.vector === "Retail Execution" ? "Logistics Crisis" : "Quality Control",
+    recommendation: `Prioritize ${bestVector.vector}-heavy SKUs to buffer current ${criticalVector.vector} friction. Adjust safety stock for top-tier SKUs in South Luzon hubs.`
+  },
+  brandManager: {
+    resonance: dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0,
+    taglishNuance: dynamicVectorScores.find(v => v.vector === "Value")?.healthScore! > 70 ? "Sulit outweighs Mahal" : "Mahal perception peaking",
+    campaignPivot: productPos > 80 ? "Double down on 'Linis' superiority" : "Pivot to 'Bango' emotional hooks"
+  },
+  socialStrategist: {
+    viralRisk: negativeEntries.length > (totalCacheCount * 0.15) ? "HIGH" : "MODERATE",
+    suggestedResponse: "Salamat sa feedback! We're sorry if the product didn't meet expectations. Grounded sa comments niyo, we're fixing our logistics para mas 'sulit' ang order niyo next time. DM us for help!"
+  }
+};
+
+// 4. COMPETITIVE INTELLIGENCE
 const rawSkus = [
-  { name: 'Downy Garden Bloom', brand: 'Downy (P&G)', category: 'P&G', weight: 0.18, promoPriority: 'Low' },
-  { name: 'Ariel Sunrise Fresh', brand: 'Ariel (P&G)', category: 'P&G', weight: 0.15, promoPriority: 'Medium' },
-  { name: 'Surf Cherry Blossom', brand: 'Surf (Unilever)', category: 'Competitor', weight: 0.14, promoPriority: 'High' },
-  { name: 'Tide Perfect Clean', brand: 'Tide (P&G)', category: 'P&G', weight: 0.12, promoPriority: 'Low' },
-  { name: 'Breeze Power Clean', brand: 'Breeze (Unilever)', category: 'Competitor', weight: 0.10, promoPriority: 'Medium' },
-  { name: 'Champion High Foam', brand: 'Champion', category: 'Competitor', weight: 0.08, promoPriority: 'High' },
-  { name: 'Zonrox Colorsafe', brand: 'Zonrox', category: 'Competitor', weight: 0.07, promoPriority: 'Medium' },
-  { name: 'Downy Passion', brand: 'Downy (P&G)', category: 'P&G', weight: 0.06, promoPriority: 'Low' },
+  { name: 'Downy Garden Bloom', brand: 'Downy (P&G)', isPNG: true },
+  { name: 'Ariel Sunrise Fresh', brand: 'Ariel (P&G)', isPNG: true },
+  { name: 'Surf Cherry Blossom', brand: 'Surf (Unilever)', isPNG: false },
+  { name: 'Tide Perfect Clean', brand: 'Tide (P&G)', isPNG: true },
+  { name: 'Breeze Power Clean', brand: 'Breeze (Unilever)', isPNG: false },
+  { name: 'Champion High Foam', brand: 'Champion', isPNG: false },
+  { name: 'Zonrox Colorsafe', brand: 'Zonrox', isPNG: false },
 ];
 
 export const allIndustryProducts = rawSkus.map((sku, i) => {
-  const isPNG = sku.brand.includes('(P&G)');
-  // Anchor individual product sentiment to the global cache average with slight variance
-  const brandAnchor = isPNG ? dynamicGlobalSentiment.positive + 2 : dynamicGlobalSentiment.positive - 3;
-  const sentimentScore = jitter(brandAnchor, 3);
-  
+  const sentimentScore = sku.isPNG ? dynamicGlobalSentiment.positive + (i % 3) : dynamicGlobalSentiment.positive - (i % 5);
   return {
     id: `p-${i}`,
-    name: sku.name,
-    brand: sku.brand,
-    category: sku.category,
-    isPNG,
-    promoPriority: sku.promoPriority,
-    reviewCount: Math.round(totalCacheCount * sku.weight),
-    originalRating: 4.8 + (Math.random() * 0.1),
+    ...sku,
+    reviewCount: Math.round(totalCacheCount / rawSkus.length),
+    originalRating: 4.8,
     correctedRating: (1 + (sentimentScore / 100) * 4).toFixed(2),
-    sentimentScore,
-    sentimentDistribution: { 
-      positive: Math.round(sentimentScore), 
-      neutral: Math.round(jitter(dynamicGlobalSentiment.neutral, 2)), 
-      negative: Math.round(100 - sentimentScore - jitter(dynamicGlobalSentiment.neutral, 2))
-    },
-    vectors: { 
-      product: jitter(dynamicVectorScores.find(v => v.vector === "Product")?.healthScore || 0, 2),
-      packaging: jitter(dynamicVectorScores.find(v => v.vector === "Packaging")?.healthScore || 0, 2),
-      value: jitter(dynamicVectorScores.find(v => v.vector === "Value")?.healthScore || 0, 4),
-      communication: jitter(dynamicVectorScores.find(v => v.vector === "Communication")?.healthScore || 0, 2),
-      retailExec: jitter(dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore || 0, 2)
-    }
+    sentimentScore
   };
 }).sort((a, b) => parseFloat(b.correctedRating) - parseFloat(a.correctedRating));
 
 export const globalCorrectedRating = (allIndustryProducts.reduce((acc, p) => acc + parseFloat(p.correctedRating), 0) / allIndustryProducts.length).toFixed(2);
 
-// 4. PROMO RECOMMENDATIONS (SKU promo prioritization by sentiment trend)
-export const promoRecommendations = allIndustryProducts
-  .filter(p => p.promoPriority === 'High' || p.sentimentScore < dynamicGlobalSentiment.positive)
-  .map(p => ({
-    sku: p.name,
-    priority: p.promoPriority,
-    currentSentiment: `${p.sentimentScore.toFixed(0)}%`,
-    targetVector: p.vectors.value < 70 ? 'Value (Price Perception)' : 'Trial (Conversion)',
-    recommendedPromo: p.vectors.value < 70 ? 'Flash Deal (Buy 1 Take 1)' : 'Voucher Bundle'
-  }));
-
-export const accountRecommendations = [
-  {
-    account: 'Lazada Philippines',
-    priorityScore: Math.round(jitter(dynamicGlobalSentiment.positive, 5)),
-    rationale: `Industry health is anchored by ${bestVector.vector} (${bestVector.healthScore}%). Strategic focus required on ${criticalVector.vector} due to ${totalCacheCount} validated samples indicating friction.`,
-    recommendedActions: [
-      `Aggressive promo for SKUs with low ${criticalVector.vector} scores`,
-      `Leverage P&G ${bestVector.vector} superiority in platform carousel`,
-      `Deploy bundle vouchers to counter ${criticalVector.vector} negative trends`
-    ]
-  }
-];
-
 export const competitiveBenchmark = [
-  { brand: 'P&G Portfolio', sentiment: Math.round(allIndustryProducts.filter(p => p.isPNG).reduce((acc, p) => acc + p.sentimentScore, 0) / 4), marketShare: 42 },
-  { brand: 'Unilever Portfolio', sentiment: Math.round(allIndustryProducts.filter(p => p.brand.includes('Unilever')).reduce((acc, p) => acc + p.sentimentScore, 0) / 2), marketShare: 32 },
-  { brand: 'Local Players', sentiment: Math.round(allIndustryProducts.filter(p => !p.isPNG && !p.brand.includes('Unilever')).reduce((acc, p) => acc + p.sentimentScore, 0) / 2), marketShare: 26 },
+  { brand: 'P&G Portfolio', sentiment: dynamicGlobalSentiment.positive, marketShare: 42 },
+  { brand: 'Unilever Portfolio', sentiment: dynamicGlobalSentiment.positive - 5, marketShare: 32 },
+  { brand: 'Local Players', sentiment: dynamicGlobalSentiment.positive - 8, marketShare: 26 },
 ];
 
 export const sentimentTrends = [
-  { month: 'Jan', positive: Math.max(0, dynamicGlobalSentiment.positive - 10), neutral: 25, negative: 15 },
-  { month: 'Feb', positive: Math.max(0, dynamicGlobalSentiment.positive - 5), neutral: 24, negative: 12 },
-  { month: 'Mar', positive: dynamicGlobalSentiment.positive, neutral: dynamicGlobalSentiment.neutral, negative: dynamicGlobalSentiment.negative }
+  { month: 'Jan', positive: 65, negative: 15 },
+  { month: 'Feb', positive: 68, negative: 12 },
+  { month: 'Mar', positive: dynamicGlobalSentiment.positive, negative: dynamicGlobalSentiment.negative }
 ];
