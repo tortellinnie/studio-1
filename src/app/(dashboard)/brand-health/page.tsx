@@ -52,9 +52,6 @@ export default function BrandHealthPage() {
                     <div className="flex items-center gap-2 bg-slate-900 text-white shadow-xl px-4 py-1.5 rounded-full text-[12px] font-bold tracking-normal">
                       <span className="tabular-nums">{Math.round(sku.ratio * 100)}%</span>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-normal tabular-nums">
-                      {sku.positiveCount}/{sku.totalCount} Positive
-                    </span>
                   </div>
                   {index === 1 && (
                     <div className="animate-bounce mb-1">
@@ -99,14 +96,9 @@ export default function BrandHealthPage() {
                       <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-normal text-slate-400 border-slate-200 px-2.5 py-0.5">
                         {sku.brand}
                       </Badge>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[12px] font-bold text-[#003da5] tabular-nums tracking-normal">
-                          {Math.round(sku.ratio * 100)}%
-                        </span>
-                        <span className="text-[10px] font-bold text-slate-300 uppercase tabular-nums tracking-normal">
-                          ({sku.positiveCount}/{sku.totalCount})
-                        </span>
-                      </div>
+                      <span className="text-[12px] font-bold text-[#003da5] tabular-nums tracking-normal">
+                        {Math.round(sku.ratio * 100)}%
+                      </span>
                     </div>
                   </div>
                 </div>
