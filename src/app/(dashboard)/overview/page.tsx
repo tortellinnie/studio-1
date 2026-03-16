@@ -12,12 +12,12 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  BarChart,
-  Bar,
-  Legend,
   PieChart,
   Pie,
-  Cell
+  Cell,
+  BarChart,
+  Bar,
+  Legend
 } from "recharts";
 import { 
   CheckCircle2, 
@@ -58,12 +58,15 @@ export default function OverviewPage() {
 
   if (!isClient) return null;
 
+  // Find the lowest health score vector for the alert
+  const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0];
+
   return (
     <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline">Dashboard Overview</h1>
-          <p className="text-base text-muted-foreground font-medium">GenAI-powered dynamic insights from {totalCacheCount.toLocaleString()} real-time review samples</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline uppercase">Dashboard Overview</h1>
+          <p className="text-base text-muted-foreground font-medium">GenAI dynamic insights from {totalCacheCount.toLocaleString()} real-time Fabric Care samples</p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg border border-slate-200 shadow-sm">
           <Activity className="h-4 w-4 text-[#003da5]" />
@@ -101,9 +104,9 @@ export default function OverviewPage() {
               <AlertCircle className="h-4 w-4 text-red-500" />
             </div>
             <p className="text-sm font-bold text-slate-900 leading-snug">
-              Surge in "{dynamicVectorScores.find(v => v.healthScore < 70)?.vector || "Packaging"}" concerns detected in recent Lazada reviews.
+              Surge in "{criticalVector?.vector || "Packaging"}" concerns detected in recent Lazada reviews.
             </p>
-            <button className="text-[10px] font-extrabold text-red-700 flex items-center gap-1 hover:underline">
+            <button className="text-[10px] font-extrabold text-red-700 flex items-center gap-1 hover:underline uppercase tracking-tighter">
               VIEW ANALYSIS <ArrowUpRight className="h-3 w-3" />
             </button>
           </CardContent>
@@ -115,9 +118,9 @@ export default function OverviewPage() {
               <TrendingUp className="h-4 w-4 text-emerald-500" />
             </div>
             <p className="text-sm font-bold text-slate-900 leading-snug">
-              {pngProducts[0].name} sentiment is currently {dynamicGlobalSentiment.positive}% - exceeding baseline.
+              {pngProducts[0].name} sentiment is currently {pngProducts[0].sentimentScore.toFixed(0)}% - exceeding baseline.
             </p>
-            <button className="text-[10px] font-extrabold text-emerald-700 flex items-center gap-1 hover:underline">
+            <button className="text-[10px] font-extrabold text-emerald-700 flex items-center gap-1 hover:underline uppercase tracking-tighter">
               RETAIL PLAN <ArrowUpRight className="h-3 w-3" />
             </button>
           </CardContent>
@@ -129,9 +132,9 @@ export default function OverviewPage() {
               <Activity className="h-4 w-4 text-blue-500" />
             </div>
             <p className="text-sm font-bold text-slate-900 leading-snug">
-              Taglish NLP sentiment index is stable across {totalCacheCount} data points.
+              Localized Fabric Care sentiment index is stable across {totalCacheCount} data points.
             </p>
-            <button className="text-[10px] font-extrabold text-blue-700 flex items-center gap-1 hover:underline">
+            <button className="text-[10px] font-extrabold text-blue-700 flex items-center gap-1 hover:underline uppercase tracking-tighter">
               BENCHMARKS <ArrowUpRight className="h-3 w-3" />
             </button>
           </CardContent>
@@ -141,8 +144,8 @@ export default function OverviewPage() {
       {/* Taglish-Aware AI Sentiment Analysis */}
       <div className="space-y-6">
         <div className="space-y-1">
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 font-headline">Taglish-Aware AI Sentiment Analysis</h2>
-          <p className="text-sm text-muted-foreground font-medium">Dynamic insights parsed from your localized inference cache</p>
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 font-headline uppercase">Taglish-Aware AI Sentiment Analysis</h2>
+          <p className="text-sm text-muted-foreground font-medium">Dynamic insights parsed from your localized Fabric Care inference cache</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -189,7 +192,7 @@ export default function OverviewPage() {
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
                       <h4 className="text-xl font-extrabold text-slate-900 tracking-tight">{item.name}</h4>
-                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Analysis for {item.reviewCount.toLocaleString()} reviews</p>
+                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Analysis for {item.reviewCount.toLocaleString()} Fabric Care reviews</p>
                     </div>
                     <Badge variant="outline" className="h-7 px-4 border-slate-200 text-slate-500 font-bold text-[10px] uppercase">{item.category}</Badge>
                   </div>
@@ -223,11 +226,11 @@ export default function OverviewPage() {
         </Card>
       </div>
 
-      {/* Charts Row 1 */}
+      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="shadow-sm border-slate-200 bg-white">
           <CardHeader className="p-8 pb-4">
-            <CardTitle className="text-lg font-extrabold text-slate-900">Sentiment Trends (Anchored to Cache)</CardTitle>
+            <CardTitle className="text-lg font-extrabold text-slate-900 uppercase">Sentiment Trends (Anchored to Cache)</CardTitle>
           </CardHeader>
           <CardContent className="h-[400px] p-8 pt-0">
             <ResponsiveContainer width="100%" height="100%">
@@ -249,7 +252,7 @@ export default function OverviewPage() {
 
         <Card className="shadow-sm border-slate-200 bg-white">
           <CardHeader className="p-8 pb-4">
-            <CardTitle className="text-lg font-extrabold text-slate-900">Portfolio Health Distribution</CardTitle>
+            <CardTitle className="text-lg font-extrabold text-slate-900 uppercase">Portfolio Health Distribution</CardTitle>
           </CardHeader>
           <CardContent className="h-[400px] p-8 pt-0 relative flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
@@ -281,7 +284,7 @@ export default function OverviewPage() {
       {/* Vector Analysis Chart */}
       <Card className="shadow-sm border-slate-200 bg-white">
         <CardHeader className="p-8 pb-4">
-          <CardTitle className="text-lg font-extrabold text-slate-900">5 Vectors of Superiority - Real-Time Health Index</CardTitle>
+          <CardTitle className="text-lg font-extrabold text-slate-900 uppercase">5 Vectors of Superiority - Real-Time Health Index</CardTitle>
         </CardHeader>
         <CardContent className="h-[450px] p-8 pt-0">
           <ResponsiveContainer width="100%" height="100%">
