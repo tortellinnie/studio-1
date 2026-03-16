@@ -47,14 +47,6 @@ export function FilterSidebar() {
           <Button 
             variant="ghost" 
             size="sm" 
-            className={cn("w-full h-10 rounded-xl font-bold transition-all text-xs tracking-normal", measure === "psp" ? activeClass : inactiveClass)}
-            onClick={() => setMeasure("psp")}
-          >
-            PSP
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
             className={cn("w-full h-10 rounded-xl font-bold transition-all text-xs tracking-normal", measure === "sentiment" ? activeClass : inactiveClass)}
             onClick={() => setMeasure("sentiment")}
           >
