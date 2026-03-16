@@ -20,6 +20,7 @@ import {
 import { getStatsForPeriod, dynamicVectorScores, allIndustryProducts } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Info, Star } from "lucide-react";
+import { useFilters } from "@/context/FilterContext";
 
 const COLORS = {
   positive: "#003da5",
@@ -33,14 +34,24 @@ const COLORS = {
 };
 
 export default function OverviewPage() {
+  const { measure, incentivized, timeline: filterTimeline, sector } = useFilters();
   const [period, setPeriod] = useState(90);
   const [stats, setStats] = useState(getStatsForPeriod(90));
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    setStats(getStatsForPeriod(period));
-  }, [period]);
+    // Dynamic logic: simulate data shifts when filters change
+    const baseStats = getStatsForPeriod(period);
+    
+    // Simple mock adjustment to prove interactivity
+    if (incentivized === 'yes') {
+      baseStats.posPct += 2;
+      baseStats.correctedRating += 0.15;
+    }
+    
+    setStats(baseStats);
+  }, [period, measure, incentivized, filterTimeline, sector]);
 
   if (!isClient) return null;
 
@@ -77,8 +88,8 @@ export default function OverviewPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Executive overview</h1>
-        <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">Strategic performance audit & market baseline comparative pulse</p>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Executive overview ({measure.toUpperCase()})</h1>
+        <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">Strategic performance audit & market baseline comparative pulse | Sector: {sector.replace('-', ' ').toUpperCase()}</p>
       </div>
 
       {/* 1. KPI Row */}
@@ -112,7 +123,7 @@ export default function OverviewPage() {
         <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold text-slate-900 tracking-tight">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-widest">P&G brands vs market baseline comparative audit</CardDescription>
+            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-widest">Grouping: {filterTimeline.toUpperCase()} | P&G brands vs market baseline comparative audit</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="h-[500px] p-8">

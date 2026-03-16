@@ -1,11 +1,9 @@
-
 "use client";
 
 import * as React from "react";
 import { 
   Filter, 
   HelpCircle, 
-  ChevronDown, 
   Calendar as CalendarIcon,
   HelpCircle as InfoIcon
 } from "lucide-react";
@@ -20,15 +18,17 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import { useFilters } from "@/context/FilterContext";
 
 export function FilterSidebar() {
-  const [measure, setMeasure] = React.useState("5-star");
-  const [source, setSource] = React.useState("err");
-  const [division, setBrandDivision] = React.useState("focus");
-  const [incentivized, setIncentivized] = React.useState("no");
-  const [timeline, setTimeline] = React.useState("qtr");
-  const [viewMode, setViewMode] = React.useState("brand");
+  const { 
+    measure, setMeasure, 
+    division, setDivision, 
+    incentivized, setIncentivized, 
+    timeline, setTimeline, 
+    viewMode, setViewMode,
+    sector, setSector
+  } = useFilters();
 
   const activeClass = "bg-[#003da5] text-white hover:bg-[#003da5]/90";
   const inactiveClass = "bg-slate-200 text-slate-500 hover:bg-slate-300";
@@ -66,36 +66,10 @@ export function FilterSidebar() {
         </div>
       </div>
 
-      {/* 2. Source Type */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Source Type:</Label>
-          <InfoIcon className="h-3.5 w-3.5 text-slate-300" />
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className={cn("h-9 rounded-xl font-bold transition-all", source === "err" ? activeClass : inactiveClass)}
-            onClick={() => setSource("err")}
-          >
-            eR&R
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className={cn("h-9 rounded-xl font-bold transition-all", source === "icc" ? activeClass : inactiveClass)}
-            onClick={() => setSource("icc")}
-          >
-            ICC
-          </Button>
-        </div>
-      </div>
-
       {/* 3. Sub-Sector */}
       <div className="space-y-2">
         <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Sub-Sector:</Label>
-        <Select defaultValue="oral-care">
+        <Select value={sector} onValueChange={setSector}>
           <SelectTrigger className="h-9 rounded-lg border-slate-200 bg-slate-50 text-xs font-semibold">
             <SelectValue placeholder="Select sector" />
           </SelectTrigger>
@@ -114,7 +88,7 @@ export function FilterSidebar() {
           variant="ghost" 
           size="sm" 
           className={cn("w-full h-9 rounded-xl font-bold transition-all", division === "focus" ? activeClass : inactiveClass)}
-          onClick={() => setBrandDivision("focus")}
+          onClick={() => setDivision("focus")}
         >
           Focus Brands
         </Button>
