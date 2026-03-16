@@ -63,17 +63,13 @@ export function getStatsForPeriod(days: number) {
     
     return {
       name: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      // Bar A (P&G)
       pg_pos: d.pg_pos,
       pg_neu: d.pg_neu,
       pg_neg: d.pg_neg,
-      // Bar B (Market Average)
       mkt_pos: d.mkt_pos,
       mkt_neu: d.mkt_neu,
       mkt_neg: d.mkt_neg,
-      // Gap Indicator Metadata
-      gap: gap > 0 ? `+${gap}% Lead` : `${gap}% Gap`,
-      gapType: gap >= 0 ? 'lead' : 'lag',
+      gap: gap >= 0 ? `+${gap}% Lead` : `${gap}% Lag`,
       totalCount: d.pg_pos + d.pg_neu + d.pg_neg + d.mkt_pos + d.mkt_neu + d.mkt_neg
     };
   });
@@ -96,17 +92,32 @@ export const dynamicGlobalSentiment = {
 };
 export const globalCorrectedRating = globalStats.correctedRating;
 
-// VECTOR ANALYSIS
+// VECTOR ANALYSIS (Spider Map Comparison Logic)
 const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
 export const dynamicVectorScores = vectorLabels.map(label => {
-  const mentioned = cacheEntries.filter(e => e.vectors.includes(label));
-  const pos = mentioned.filter(e => e.sentimentLabel === 'positive').length;
-  const healthScore = mentioned.length > 0 ? Math.round((pos / mentioned.length) * 100) : 0;
-  return { vector: label, healthScore, count: mentioned.length };
+  const pgEntries = cacheEntries.filter(e => e.isPNG && e.vectors.includes(label));
+  const mktEntries = cacheEntries.filter(e => !e.isPNG && e.vectors.includes(label));
+
+  const calculateHealth = (entries: typeof cacheEntries) => {
+    if (entries.length === 0) return 0;
+    const pos = entries.filter(e => e.sentimentLabel === 'positive').length;
+    return Math.round((pos / entries.length) * 100);
+  };
+
+  const pgHealth = calculateHealth(pgEntries);
+  const mktHealth = calculateHealth(mktEntries);
+
+  return { 
+    vector: label, 
+    pgScore: pgHealth, 
+    mktScore: mktHealth,
+    pgCount: pgEntries.length,
+    mktCount: mktEntries.length
+  };
 });
 
-export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0] || { vector: 'None', healthScore: 100 };
-export const bestVector = [...dynamicVectorScores].sort((a, b) => b.healthScore - a.healthScore)[0] || { vector: 'None', healthScore: 0 };
+export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.pgScore - b.pgScore)[0] || { vector: 'None', pgScore: 100 };
+export const bestVector = [...dynamicVectorScores].sort((a, b) => b.pgScore - a.pgScore)[0] || { vector: 'None', pgScore: 0 };
 
 export const allIndustryProducts = [
   { id: 'pg-1', name: 'Downy Garden Bloom', brand: 'P&G', originalRating: 4.8, correctedRating: 4.2, sentimentScore: 82, isPNG: true },

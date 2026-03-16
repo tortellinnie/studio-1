@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,25 +10,25 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  Legend
-} from 'recharts';
-import { 
+  Legend,
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
-  Radar
+  Radar,
+  PolarRadiusAxis
 } from 'recharts';
 import { getStatsForPeriod, dynamicVectorScores, allIndustryProducts } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Info, Star } from "lucide-react";
 
 const COLORS = {
-  positive: "#003da5", // P&G Positive (Solid Blue)
-  neutral: "#64748b",  // P&G Neutral (Solid Slate)
-  negative: "#ef4444", // P&G Negative (Solid Red)
-  mkt_positive: "#003da533", // Market Positive (Ghosted Blue)
-  mkt_neutral: "#64748b33",  // Market Neutral (Ghosted Slate)
-  mkt_negative: "#ef444433", // Market Negative (Ghosted Red)
+  positive: "#003da5",
+  neutral: "#64748b",
+  negative: "#ef4444",
+  mkt_positive: "#003da533",
+  mkt_neutral: "#64748b33",
+  mkt_negative: "#ef444433",
+  mkt_grey: "#94a3b8"
 };
 
 export default function OverviewPage() {
@@ -44,20 +43,17 @@ export default function OverviewPage() {
 
   if (!isClient) return null;
 
-  const radarData = dynamicVectorScores.map(v => ({
-    vector: v.vector,
-    A: v.healthScore,
-    fullMark: 100,
-  }));
-
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-5 space-y-4 min-w-[200px]">
+        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-5 space-y-4 min-w-[220px]">
           <div className="flex flex-col gap-1 border-b border-slate-100 pb-3">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{data.name}</p>
-            <div className="bg-emerald-500 text-white text-[11px] font-black px-2.5 py-1 rounded-md self-start">
+            <div className={cn(
+              "text-white text-[11px] font-black px-2.5 py-1 rounded-md self-start uppercase tracking-tighter",
+              data.gap.includes('Lead') ? "bg-emerald-500" : "bg-red-500"
+            )}>
               {data.gap}
             </div>
           </div>
@@ -67,7 +63,7 @@ export default function OverviewPage() {
               <span className="tabular-nums">{data.pg_pos}</span>
             </div>
             <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
-              <span className="text-slate-400">MARKET POSITIVE</span>
+              <span className="text-slate-400 uppercase">Market Average</span>
               <span className="tabular-nums text-slate-400">{data.mkt_pos}</span>
             </div>
           </div>
@@ -84,42 +80,7 @@ export default function OverviewPage() {
         <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Strategic performance audit & market baseline comparative pulse</p>
       </div>
 
-      {/* 1. Daily Sentiment Pulse (Primary Time-Series Anchor) */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-        <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
-          <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="h-[500px] p-8">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart 
-              data={stats.timeline} 
-              margin={{ top: 20, right: 10, left: 0, bottom: 0 }} 
-              barGap={8}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} ticks={[0, 4, 8, 15]} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
-              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
-              
-              {/* P&G Stacked Bar (A) */}
-              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive} />
-              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
-              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
-
-              {/* Market Baseline Stacked Bar (B) */}
-              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.mkt_positive} stroke={COLORS.positive} strokeWidth={1} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.mkt_neutral} stroke={COLORS.neutral} strokeWidth={1} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* 2. KPI Row */}
+      {/* 1. KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { title: "Market positive", value: `${stats.posPct}%`, trend: "+2.4%", trendColor: "text-emerald-600", icon: TrendingUp },
@@ -145,28 +106,76 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 3. 5 Vectors Analysis centerpiece */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* 2. Daily Sentiment Pulse (Primary Time-Series Anchor) */}
+      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
+        <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
+          <div className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Daily sentiment pulse</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="h-[500px] p-8">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart 
+              data={stats.timeline} 
+              margin={{ top: 20, right: 10, left: 0, bottom: 0 }} 
+              barGap={12}
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} ticks={[0, 4, 8, 15]} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
+              
+              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive} />
+              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
+              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
+
+              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.mkt_positive} stroke={COLORS.positive} strokeWidth={1} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.mkt_neutral} stroke={COLORS.neutral} strokeWidth={1} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* 3. 5-Vector Superiority centerpiece */}
+      <div className="grid grid-cols-1 lg:col-span-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal">5 Vectors of superiority analysis</h3>
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal uppercase tracking-tight">5-Vector Superiority Spider Map</h3>
           
           <div className="w-full flex justify-center mb-10">
-            <div className="h-[350px] w-full max-w-[500px]">
+            <div className="h-[400px] w-full max-w-[600px]">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={dynamicVectorScores}>
                   <PolarGrid stroke="#e2e8f0" />
                   <PolarAngleAxis 
                     dataKey="vector" 
                     tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
                   />
+                  <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                   <Radar
-                    name="Health Score"
-                    dataKey="A"
-                    stroke="#003da5"
-                    strokeWidth={4}
-                    fill="#003da5"
-                    fillOpacity={0.1}
+                    name="P&G Internal"
+                    dataKey="pgScore"
+                    stroke={COLORS.positive}
+                    strokeWidth={3}
+                    fill={COLORS.positive}
+                    fillOpacity={0.2}
                   />
+                  <Radar
+                    name="Market Average"
+                    dataKey="mktScore"
+                    stroke={COLORS.mkt_grey}
+                    strokeWidth={2}
+                    fill={COLORS.mkt_grey}
+                    fillOpacity={0.1}
+                    strokeDasharray="4 4"
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                    itemStyle={{ fontWeight: 700, fontSize: '12px', textTransform: 'uppercase' }}
+                  />
+                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', paddingBottom: '20px' }} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -175,10 +184,13 @@ export default function OverviewPage() {
           <div className="grid grid-cols-5 w-full gap-4 pt-10 mt-6 border-t border-slate-100">
             {dynamicVectorScores.map((v) => (
               <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-4 py-1">
-                <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{v.healthScore}%</span>
-                <div className="space-y-0.5">
-                  <p className="text-xs font-bold text-slate-500 tracking-normal">{v.vector}</p>
-                  <p className="text-[10px] font-bold text-slate-300 tracking-normal uppercase">N={v.count.toLocaleString()}</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none">{v.pgScore}%</span>
+                  <span className="text-[10px] font-bold text-slate-400 tabular-nums">/ {v.mktScore}%</span>
+                </div>
+                <div className="space-y-0.5 mt-2">
+                  <p className="text-[11px] font-bold text-slate-500 tracking-normal uppercase">{v.vector}</p>
+                  <p className="text-[9px] font-bold text-slate-300 tracking-normal uppercase">Baseline N={v.mktCount}</p>
                 </div>
               </div>
             ))}
