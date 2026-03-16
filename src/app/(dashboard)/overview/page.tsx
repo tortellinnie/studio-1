@@ -156,7 +156,7 @@ export default function OverviewPage() {
                 />
                 <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
-                  name="P&G Internal"
+                  name="P&G INTERNAL"
                   dataKey="pgScore"
                   stroke={COLORS.positive}
                   strokeWidth={3}
@@ -164,7 +164,7 @@ export default function OverviewPage() {
                   fillOpacity={0.2}
                 />
                 <Radar
-                  name="Market Average"
+                  name="MARKET AVERAGE"
                   dataKey="mktScore"
                   stroke={COLORS.mkt_red}
                   strokeWidth={2}
@@ -175,7 +175,12 @@ export default function OverviewPage() {
                   contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                   itemStyle={{ fontWeight: 600, fontSize: '12px', textTransform: 'uppercase' }}
                 />
-                <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', paddingBottom: '20px' }} />
+                <Legend 
+                  verticalAlign="top" 
+                  align="center" 
+                  iconType="circle" 
+                  wrapperStyle={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', paddingBottom: '20px' }} 
+                />
               </RadarChart>
             </ResponsiveContainer>
           </div>
