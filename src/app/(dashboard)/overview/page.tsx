@@ -14,9 +14,6 @@ import {
   ResponsiveContainer, 
   LineChart, 
   Line,
-  PieChart, 
-  Pie, 
-  Cell, 
   Legend,
   RadarChart,
   PolarGrid,
@@ -26,7 +23,7 @@ import {
 } from 'recharts';
 import { getStatsForPeriod, dynamicVectorScores } from '@/data/mockData';
 import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Info, Activity } from "lucide-react";
+import { TrendingUp, TrendingDown, Info } from "lucide-react";
 
 const COLORS = {
   positive: "#10b981", // Emerald 500
@@ -46,12 +43,6 @@ export default function OverviewPage() {
   }, [period]);
 
   if (!isClient) return null;
-
-  const pieData = [
-    { name: 'Positive', value: stats.posPct, color: COLORS.positive },
-    { name: 'Neutral', value: stats.neutralPct, color: COLORS.neutral },
-    { name: 'Negative', value: stats.negPct, color: COLORS.negative },
-  ];
 
   const radarData = dynamicVectorScores.map(v => ({
     vector: v.vector,
@@ -76,7 +67,7 @@ export default function OverviewPage() {
                 <item.icon className={cn("h-5 w-5", item.trendColor)} />
               </div>
               <div className="space-y-2">
-                <h3 className="text-5xl font-extrabold text-slate-900 tabular-nums">{item.value}</h3>
+                <h3 className="text-5xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
                 <div className="flex items-center gap-2 pt-1">
                   <span className={cn("text-xs font-bold px-2 py-1 rounded bg-slate-50", item.trendColor)}>{item.trend}</span>
                   <p className="text-sm text-slate-400 font-semibold">{item.sub}</p>
@@ -87,32 +78,21 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. 5 Vectors of Superiority Analysis (The Piece) */}
+      {/* 2. 5 Vectors Analysis Centerpiece */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10">
-          <h3 className="text-xl font-bold text-slate-900 mb-12 text-center w-full">5 Vectors of superiority analysis</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 h-full items-center gap-12">
-            {/* Numeric side: vectors list */}
-            <div className="space-y-5">
-              <div className="mb-4">
-                <p className="text-xs font-bold text-slate-400">STRUCTURAL HEALTH DISTRIBUTION</p>
-              </div>
-              {dynamicVectorScores.map((v) => (
-                <div key={v.vector} className="flex flex-col border-l-[6px] pl-6 py-1" style={{ borderColor: v.healthScore > 75 ? COLORS.positive : v.healthScore > 50 ? COLORS.neutral : COLORS.negative }}>
-                  <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-1">{v.healthScore}%</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-500">{v.vector}</span>
-                    <span className="text-[10px] font-bold text-slate-300">N={v.count}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Visual side: Large Radar Chart */}
-            <div className="h-80 w-full flex items-center justify-center">
+          <div className="flex flex-col items-center">
+            <h3 className="text-2xl font-bold text-slate-900 mb-12">5 Vectors of superiority analysis</h3>
+            
+            {/* Centered Radar Chart */}
+            <div className="h-[450px] w-full max-w-2xl mb-16">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                   <PolarGrid stroke="#e2e8f0" strokeWidth={1} />
-                  <PolarAngleAxis dataKey="vector" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} />
+                  <PolarAngleAxis 
+                    dataKey="vector" 
+                    tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
+                  />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                   <Radar
                     name="Health Score"
@@ -120,15 +100,28 @@ export default function OverviewPage() {
                     stroke={COLORS.pg}
                     strokeWidth={4}
                     fill={COLORS.pg}
-                    fillOpacity={0.15}
+                    fillOpacity={0.1}
                   />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
+
+            {/* Values Grid Below - No color green, using P&G blue bars */}
+            <div className="grid grid-cols-2 md:grid-cols-5 w-full gap-8 border-t border-slate-100 pt-12">
+              {dynamicVectorScores.map((v) => (
+                <div key={v.vector} className="flex flex-col border-l-[6px] border-l-[#003da5] pl-6 py-1">
+                  <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-2 tracking-normal">{v.healthScore}%</span>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-slate-500">{v.vector}</p>
+                    <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wide">N={v.count}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </Card>
 
-        {/* Sidebar: Filters and Volume */}
+        {/* Sidebar Controls */}
         <div className="lg:col-span-3 flex flex-col gap-4">
           <div className="flex flex-col p-1 bg-slate-100 rounded-lg border border-slate-200">
             {[
@@ -152,27 +145,25 @@ export default function OverviewPage() {
           </div>
           
           <div className="flex-1 grid grid-rows-2 gap-4">
-            <Card className="border-l-[10px] border-l-[#f59e0b] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
+            <Card className="border-l-[10px] border-l-[#003da5] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900">{stats.total.toLocaleString()}</p>
+                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">{stats.total.toLocaleString()}</p>
                   <p className="text-sm font-bold text-slate-400 italic mt-3">Total data samples</p>
                 </div>
                 <div className="text-right text-emerald-600">
                   <p className="text-lg font-bold leading-none">+43.6%</p>
-                  <TrendingUp className="h-4 w-4 ml-auto mt-1" />
                 </div>
               </div>
             </Card>
             <Card className="border-l-[10px] border-l-[#003da5] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900">{stats.totalUsers.toLocaleString()}</p>
+                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">{stats.totalUsers.toLocaleString()}</p>
                   <p className="text-sm font-bold text-slate-400 italic mt-3">Unique consumers</p>
                 </div>
                 <div className="text-right text-emerald-600">
                   <p className="text-lg font-bold leading-none">+36.8%</p>
-                  <TrendingUp className="h-4 w-4 ml-auto mt-1" />
                 </div>
               </div>
             </Card>
@@ -228,45 +219,6 @@ export default function OverviewPage() {
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
-      </Card>
-
-      {/* 5. Sentiment Mix */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-10 max-w-4xl mx-auto w-full">
-        <div className="space-y-1 mb-10 text-center">
-          <CardTitle className="text-2xl font-bold text-slate-900">Market sentiment mix</CardTitle>
-          <CardDescription className="text-base text-slate-500 font-medium">Consolidated distribution across all monitored channels</CardDescription>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12">
-          <div className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={90}
-                  outerRadius={120}
-                  dataKey="value"
-                  stroke="#fff"
-                  strokeWidth={4}
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 600, fontSize: '14px' }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="space-y-6">
-            {pieData.map((item) => (
-              <div key={item.name} className="flex flex-col border-l-[6px] pl-8 py-1" style={{ borderColor: item.color }}>
-                <span className="text-5xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{item.value}%</span>
-                <span className="text-base font-bold text-slate-400">{item.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </Card>
     </div>
   );
