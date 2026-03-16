@@ -59,13 +59,6 @@ export default function OverviewPage() {
     fullMark: 100,
   }));
 
-  // Gauge Data calculation (0-180 degree pie chart)
-  const gaugeValue = (stats.correctedRating / 5) * 100;
-  const gaugeData = [
-    { name: 'Score', value: gaugeValue, color: gaugeValue > 66 ? COLORS.positive : gaugeValue > 33 ? COLORS.neutral : COLORS.negative },
-    { name: 'Remaining', value: 100 - gaugeValue, color: '#f1f5f9' },
-  ];
-
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
       {/* 1. Header & Context */}
@@ -135,53 +128,19 @@ export default function OverviewPage() {
 
       {/* 3. Visual Insight Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Overall customer sentiment level (Gauge) */}
-        <Card className="lg:col-span-4 border-slate-200 shadow-sm rounded-xl bg-white flex flex-col items-center p-8">
-          <h3 className="text-xl font-bold text-slate-900 mb-12 w-full text-center">Overall customer sentiment level</h3>
-          <div className="relative h-48 w-full max-w-[260px] flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={gaugeData}
-                  cx="50%"
-                  cy="100%"
-                  startAngle={180}
-                  endAngle={0}
-                  innerRadius={85}
-                  outerRadius={115}
-                  paddingAngle={0}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {gaugeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center w-full">
-              <p className="text-5xl font-extrabold text-slate-900 tracking-normal tabular-nums leading-none mb-2">{stats.correctedRating.toFixed(2)}</p>
-              <p className="text-sm font-bold text-slate-400 mb-3">Out of 5</p>
-              <p className={cn("text-xl font-bold", gaugeValue > 66 ? 'text-emerald-500' : gaugeValue > 33 ? 'text-amber-500' : 'text-red-500')}>
-                {gaugeValue > 66 ? 'Positive' : gaugeValue > 33 ? 'Neutral' : 'Critical'}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        {/* Comments on public posts (Breakdown Pie) */}
-        <Card className="lg:col-span-5 border-slate-200 shadow-sm rounded-xl bg-white p-8">
+        {/* Comments on public posts (Breakdown Pie) - Expanded */}
+        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-8">
           <h3 className="text-xl font-bold text-slate-900 mb-2 text-center w-full">Comments on public posts</h3>
           <div className="grid grid-cols-2 h-full items-center gap-10">
-            <div className="h-56 w-full">
+            <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={65}
-                    outerRadius={90}
+                    innerRadius={75}
+                    outerRadius={105}
                     dataKey="value"
                     stroke="#fff"
                     strokeWidth={3}
@@ -195,9 +154,9 @@ export default function OverviewPage() {
             </div>
             <div className="space-y-6">
               {pieData.map((item) => (
-                <div key={item.name} className="flex flex-col border-l-4 pl-4" style={{ borderColor: item.color }}>
-                  <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-1">{item.value}%</span>
-                  <span className="text-sm font-bold text-slate-400">{item.name}</span>
+                <div key={item.name} className="flex flex-col border-l-4 pl-6" style={{ borderColor: item.color }}>
+                  <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-1">{item.value}%</span>
+                  <span className="text-base font-bold text-slate-400 tracking-normal">{item.name}</span>
                 </div>
               ))}
             </div>
@@ -349,31 +308,51 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
 
+        {/* Vectors of superiority (Detailed Report) */}
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-8">
           <CardHeader className="px-0 pt-0 flex flex-row items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Vectors of superiority</CardTitle>
-              <CardDescription className="text-base text-slate-500 font-medium">Strategic health distribution</CardDescription>
+              <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Strategic health distribution</CardDescription>
             </div>
             <Activity className="h-6 w-6 text-slate-400" />
           </CardHeader>
-          <CardContent className="h-[480px] flex flex-col items-center justify-center mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                <PolarGrid stroke="#e2e8f0" strokeWidth={1} />
-                <PolarAngleAxis dataKey="vector" tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar
-                  name="Health Score"
-                  dataKey="A"
-                  stroke={COLORS.pg}
-                  strokeWidth={4}
-                  fill={COLORS.pg}
-                  fillOpacity={0.1}
-                />
-                <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', fontWeight: 700 }} />
-              </RadarChart>
-            </ResponsiveContainer>
+          <CardContent className="mt-8 flex flex-col md:flex-row items-center gap-10">
+            <div className="h-[350px] w-full md:w-1/2">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                  <PolarGrid stroke="#e2e8f0" strokeWidth={1} />
+                  <PolarAngleAxis dataKey="vector" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                  <Radar
+                    name="Health Score"
+                    dataKey="A"
+                    stroke={COLORS.pg}
+                    strokeWidth={4}
+                    fill={COLORS.pg}
+                    fillOpacity={0.15}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="w-full md:w-1/2 space-y-4">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Vector Health Report</div>
+              {dynamicVectorScores.map((v) => (
+                <div key={v.vector} className="flex items-center justify-between group">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{v.vector}</span>
+                    <span className="text-[10px] font-medium text-slate-400">N={v.count} mentions</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-xl font-extrabold text-slate-900 tabular-nums">{v.healthScore}%</div>
+                    <div className={cn(
+                      "h-2 w-2 rounded-full",
+                      v.healthScore > 75 ? "bg-emerald-500" : v.healthScore > 50 ? "bg-amber-500" : "bg-red-500"
+                    )} />
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
