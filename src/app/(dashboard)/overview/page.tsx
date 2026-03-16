@@ -15,9 +15,7 @@ import {
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
-  Radar,
-  Cell,
-  LabelList
+  Radar
 } from 'recharts';
 import { getStatsForPeriod, dynamicVectorScores, allIndustryProducts } from '@/data/mockData';
 import { cn } from "@/lib/utils";
@@ -36,6 +34,7 @@ export default function OverviewPage() {
   const [period, setPeriod] = useState(90);
   const [stats, setStats] = useState(getStatsForPeriod(90));
   const [isClient, setIsClient] = useState(false);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -50,38 +49,102 @@ export default function OverviewPage() {
     fullMark: 100,
   }));
 
-  const CustomGapLabel = (props: any) => {
-    const { x, y, width, value } = props;
-    if (!value || !value.includes('+')) return null;
-    
-    return (
-      <g>
-        <rect 
-          x={x + width / 2 - 28} 
-          y={y - 28} 
-          width={56} 
-          height={18} 
-          rx={4} 
-          fill="#10b981" 
-        />
-        <text 
-          x={x + width / 2} 
-          y={y - 16} 
-          fill="#fff" 
-          textAnchor="middle" 
-          dominantBaseline="middle" 
-          fontSize="9" 
-          fontWeight="900"
-        >
-          {value}
-        </text>
-      </g>
-    );
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-4 space-y-3">
+          <div className="flex flex-col gap-1 border-b border-slate-100 pb-2">
+            <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{data.name}</p>
+            <div className="bg-emerald-500 text-white text-[11px] font-black px-2.5 py-1 rounded-md self-start">
+              {data.gap}
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
+              <span className="text-[#003da5]">P&G POSITIVE</span>
+              <span className="tabular-nums">{data.pg_pos}</span>
+            </div>
+            <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
+              <span className="text-slate-400">MARKET POSITIVE</span>
+              <span className="tabular-nums text-slate-400">{data.mkt_pos}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
-      {/* 1. KPI Row */}
+      <div className="space-y-1">
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Executive overview</h1>
+        <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Strategic performance audit & market baseline comparative pulse</p>
+      </div>
+
+      {/* 1. Daily Sentiment Pulse (Primary Time-Series Anchor) */}
+      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
+        <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
+          <div className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-slate-900">Daily sentiment pulse</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="h-[550px] p-8 relative">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart 
+              data={stats.timeline} 
+              margin={{ top: 20, right: 10, left: 0, bottom: 0 }} 
+              barGap={8}
+              onMouseMove={(state) => {
+                if (state.activeTooltipIndex !== undefined) {
+                  setHoverIndex(state.activeTooltipIndex);
+                } else {
+                  setHoverIndex(null);
+                }
+              }}
+              onMouseLeave={() => setHoverIndex(null)}
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} ticks={[0, 4, 8, 15]} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
+              
+              {/* P&G Stacked Bar (A) */}
+              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive} />
+              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
+              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
+
+              {/* Market Baseline Stacked Bar (B) */}
+              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.mkt_positive} stroke={COLORS.positive} strokeWidth={1} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.mkt_neutral} stroke={COLORS.neutral} strokeWidth={1} strokeDasharray="2 2" />
+              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+          
+          {/* Dynamic Hover Badges (Sentiment Gap) */}
+          <div className="absolute inset-0 pointer-events-none p-8" style={{ top: '160px', height: '40px' }}>
+            <div className="relative w-full h-full flex justify-between px-10">
+              {stats.timeline.map((d, i) => (
+                <div key={`gap-${i}`} className="flex flex-col items-center flex-1">
+                  <div className={cn(
+                    "transition-all duration-300 transform scale-90",
+                    hoverIndex === i ? "opacity-100 -translate-y-2 scale-100" : "opacity-0"
+                  )}>
+                    <div className="bg-emerald-500 text-white text-[11px] font-black px-3 py-1 rounded-md shadow-lg whitespace-nowrap">
+                      {d.gap}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 2. KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { title: "Market positive", value: `${stats.posPct}%`, trend: "+2.4%", trendColor: "text-emerald-600", icon: TrendingUp },
@@ -107,46 +170,10 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 2. Daily Sentiment Pulse (Primary Time-Series Anchor) */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-        <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
-          <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-wider">P&G brands vs market baseline comparative audit</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="h-[550px] p-8">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={stats.timeline} margin={{ top: 40, right: 10, left: 0, bottom: 0 }} barGap={8}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} />
-              <Tooltip 
-                cursor={{ fill: 'transparent' }}
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '12px' }} 
-              />
-              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 900, paddingBottom: '40px', textTransform: 'uppercase' }} />
-              
-              {/* P&G Stacked Bar (A) */}
-              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive}>
-                <LabelList dataKey="gap" content={<CustomGapLabel />} />
-              </Bar>
-              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
-              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
-
-              {/* Market Baseline Stacked Bar (B) */}
-              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.mkt_positive} stroke={COLORS.positive} strokeWidth={1} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.mkt_neutral} stroke={COLORS.neutral} strokeWidth={1} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* 3. 5 Vectors Analysis */}
+      {/* 3. 5 Vectors Analysis centerpiece */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full">5 Vectors of superiority analysis</h3>
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-tight">5 Vectors of superiority analysis</h3>
           
           <div className="w-full flex justify-center mb-10">
             <div className="h-[350px] w-full max-w-[500px]">
@@ -176,7 +203,7 @@ export default function OverviewPage() {
                 <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{v.healthScore}%</span>
                 <div className="space-y-0.5">
                   <p className="text-xs font-bold text-slate-500">{v.vector}</p>
-                  <p className="text-[10px] font-bold text-slate-300">N={v.count.toLocaleString()}</p>
+                  <p className="text-[10px] font-bold text-slate-300 tracking-normal uppercase">N={v.count.toLocaleString()}</p>
                 </div>
               </div>
             ))}
@@ -195,7 +222,7 @@ export default function OverviewPage() {
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 className={cn(
-                  "w-full py-3 text-sm font-bold transition-all rounded-lg text-left px-4",
+                  "w-full py-3 text-sm font-bold transition-all rounded-lg text-left px-4 tracking-normal",
                   period === p.id 
                     ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
                     : "text-slate-500 hover:text-slate-700"
@@ -230,13 +257,13 @@ export default function OverviewPage() {
 
       {/* 4. Industry SKU Rankings Podium */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900">Industry SKU rankings</h2>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Industry SKU rankings</h2>
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     <th className="px-8 py-6">Rank</th>
                     <th className="px-8 py-6">Brand SKU</th>
                     <th className="px-8 py-6 text-center">Original rating</th>
@@ -257,8 +284,8 @@ export default function OverviewPage() {
                       </td>
                       <td className="px-8 py-8">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-lg font-bold text-slate-900">{item.name}</span>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{item.brand}</span>
+                          <span className="text-lg font-bold text-slate-900 tracking-tight">{item.name}</span>
+                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.brand}</span>
                         </div>
                       </td>
                       <td className="px-8 py-8 text-center">
