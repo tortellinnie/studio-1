@@ -89,7 +89,7 @@ export default function BrandHealthPage() {
                     <span className="text-base font-bold text-slate-900 tracking-normal group-hover:text-[#003da5] transition-colors">{sku.name}</span>
                     <div className="flex items-center gap-3 mt-1.5">
                       <span className="text-[12px] font-bold text-[#003da5] tabular-nums tracking-normal">
-                        {Math.round(sku.ratio * 100)}% Positive Sentiment
+                        {Math.round(sku.ratio * 100)}%
                       </span>
                     </div>
                   </div>
