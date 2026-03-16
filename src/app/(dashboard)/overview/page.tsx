@@ -77,7 +77,7 @@ export default function OverviewPage() {
         </p>
       </div>
 
-      {/* 2. Top Card Summaries (The 4 clinical KPI cards) */}
+      {/* 2. Top Card Summaries */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { 
@@ -133,7 +133,7 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 3. Image-Like Visual Row (Gauge, Breakdown Pie, Filters/Volume) */}
+      {/* 3. Image-Like Visual Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Overall customer sentiment level (Gauge) */}
         <Card className="lg:col-span-4 border-slate-200 shadow-sm rounded-xl bg-white flex flex-col items-center p-8">
@@ -230,10 +230,10 @@ export default function OverviewPage() {
           </div>
           
           <div className="flex-1 grid grid-rows-2 gap-4">
-            <Card className="bg-[#f59e0b] border-none flex flex-col justify-center p-6 text-white">
+            <Card className="bg-[#f59e0b] border-none flex flex-col justify-center p-6 text-white shadow-lg">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-4xl font-extrabold leading-none">{stats.total.toLocaleString()}</p>
+                  <p className="text-4xl font-extrabold leading-none tabular-nums">{stats.total.toLocaleString()}</p>
                   <p className="text-sm font-bold opacity-80 italic mt-1 text-white">Total Data Samples</p>
                 </div>
                 <div className="text-right">
@@ -242,10 +242,10 @@ export default function OverviewPage() {
                 </div>
               </div>
             </Card>
-            <Card className="bg-[#003da5] border-none flex flex-col justify-center p-6 text-white">
+            <Card className="bg-[#003da5] border-none flex flex-col justify-center p-6 text-white shadow-lg">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-4xl font-extrabold leading-none">{stats.totalUsers.toLocaleString()}</p>
+                  <p className="text-4xl font-extrabold leading-none tabular-nums">{stats.totalUsers.toLocaleString()}</p>
                   <p className="text-sm font-bold opacity-80 italic mt-1 text-white">Unique Consumers</p>
                 </div>
                 <div className="text-right">
@@ -258,7 +258,7 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* 4. Analysis Timeline (Large foundational chart) */}
+      {/* 4. Analysis Timeline */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between">
           <div className="space-y-1">
@@ -272,8 +272,8 @@ export default function OverviewPage() {
             <BarChart data={stats.timeline} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
-              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} />
+              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} label={{ value: 'Volume', angle: -90, position: 'insideLeft', offset: 10, fill: '#94a3b8', fontWeight: 700, fontSize: 10 }} />
+              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} label={{ value: 'Sentiment Score', angle: 90, position: 'insideRight', offset: 10, fill: '#94a3b8', fontWeight: 700, fontSize: 10 }} />
               <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '14px' }} />
               <Legend verticalAlign="top" align="center" height={40} iconType="square" iconSize={10} wrapperStyle={{ fontSize: '13px', fontWeight: 700, paddingBottom: '20px' }} />
               <Bar yAxisId="left" dataKey="Positive" stackId="a" fill={COLORS.positive} />
@@ -285,7 +285,7 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 5. Sentiment Velocity (Comparative line chart) */}
+      {/* 5. Sentiment Velocity */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-10 pt-8 px-8">
           <div className="space-y-1">
@@ -308,7 +308,7 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 6. Side-by-Side Boxes (Sentiment Mix & Vectors) */}
+      {/* 6. Side-by-Side Boxes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-8">
           <CardHeader className="px-0 pt-0">
@@ -362,7 +362,7 @@ export default function OverviewPage() {
           <CardContent className="h-[450px] flex flex-col items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                <PolarGrid stroke="#e2e8f0" />
+                <PolarGrid stroke="#e2e8f0" strokeWidth={1} />
                 <PolarAngleAxis dataKey="vector" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
