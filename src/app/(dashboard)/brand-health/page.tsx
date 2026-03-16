@@ -45,8 +45,8 @@ export default function BrandHealthPage() {
                 "flex flex-col items-center flex-1 relative group transition-all duration-500",
                 index === 1 ? "z-10" : "z-0"
               )}>
-                {/* Labeling above the column */}
-                <div className="absolute -top-36 flex flex-col items-center gap-2 w-full">
+                {/* Labeling above the column - Tightened spacing */}
+                <div className="absolute -top-24 flex flex-col items-center gap-1 w-full">
                   <span className={cn(
                     "font-black tabular-nums tracking-normal transition-all",
                     index === 1 ? "text-5xl text-[#003da5]" : "text-3xl text-slate-400"
