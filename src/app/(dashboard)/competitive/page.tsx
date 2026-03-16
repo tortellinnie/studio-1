@@ -17,14 +17,12 @@ import {
   competitiveBenchmark, 
   allIndustryProducts, 
   totalCacheCount, 
-  dynamicGlobalSentiment,
-  globalCorrectedRating,
   getSuperiorityMatrix
 } from '@/data/mockData';
 import { 
-  TrendingUp, 
   Star,
-  ShieldCheck
+  ShieldCheck,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -49,29 +47,12 @@ export default function CompetitiveAnalysisPage() {
         </p>
       </div>
 
-      {/* KPI Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          { title: "Market leader", value: "P&G", sub: "Volume dominance", color: "border-l-[#003da5]" },
-          { title: "Avg market positive", value: `${dynamicGlobalSentiment.positive}%`, sub: "Industry-wide benchmark", color: "border-l-emerald-500" },
-          { title: "Corrected rating", value: globalCorrectedRating, sub: "NLP sentiment adjusted", color: "border-l-violet-500" },
-        ].map((item, i) => (
-          <Card key={i} className={cn("border-l-4 rounded-xl bg-white shadow-sm border-slate-200", item.color)}>
-            <CardContent className="pt-8 p-8">
-              <h4 className="text-sm font-bold text-slate-400 mb-4 uppercase tracking-normal">{item.title}</h4>
-              <div className="text-5xl font-bold text-slate-900 tabular-nums tracking-normal">{item.value}</div>
-              <p className="text-sm text-muted-foreground mt-3 font-bold uppercase tracking-normal">{item.sub}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* NEW: Competitive Index Delta Table (Expanded War Room View) */}
+      {/* Competitive Index Delta Table (Expanded War Room View) */}
       <Card className="border-slate-200 shadow-sm rounded-xl overflow-hidden bg-white">
         <CardHeader className="p-8 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold text-slate-900 tracking-normal uppercase">Competitive superiority matrix</CardTitle>
-            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal">Superiority margin per SKU: (P&G Score - Market Baseline %)</CardDescription>
+            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal font-sans">Superiority margin per SKU: (P&G Score - Market Baseline %)</CardDescription>
           </div>
           <ShieldCheck className="h-6 w-6 text-[#003da5]" />
         </CardHeader>
