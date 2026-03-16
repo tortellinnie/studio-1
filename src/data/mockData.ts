@@ -39,6 +39,14 @@ export const dynamicVectorScores = vectorLabels.map(label => {
   };
 });
 
+export const competitiveBenchmark = [
+  { brand: 'P&G Portfolio', sentiment: Math.round((positiveCount / totalCacheCount) * 100), marketShare: 42, growth: 5.2 },
+  { brand: 'Surf', sentiment: 58, marketShare: 28, growth: -1.2 },
+  { brand: 'Breeze', sentiment: 62, marketShare: 15, growth: 2.4 },
+  { brand: 'Champion', sentiment: 55, marketShare: 8, growth: 0.8 },
+  { brand: 'Zonrox', sentiment: 68, marketShare: 12, growth: 3.1 },
+];
+
 export const pngProducts = [
   {
     id: 'p1',
