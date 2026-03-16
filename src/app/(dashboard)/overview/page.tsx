@@ -63,14 +63,14 @@ export default function OverviewPage() {
           <Card key={i} className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
             <CardContent className="p-8">
               <div className="flex items-center justify-between mb-6">
-                <p className="text-base font-bold text-slate-500">{item.title}</p>
-                <item.icon className={cn("h-5 w-5", item.trendColor)} />
+                <p className="text-sm font-bold text-slate-500">{item.title}</p>
+                <item.icon className={cn("h-4 w-4", item.trendColor)} />
               </div>
               <div className="space-y-2">
-                <h3 className="text-5xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
+                <h3 className="text-4xl font-extrabold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
                 <div className="flex items-center gap-2 pt-1">
-                  <span className={cn("text-xs font-bold px-2 py-1 rounded bg-slate-50", item.trendColor)}>{item.trend}</span>
-                  <p className="text-sm text-slate-400 font-semibold">{item.sub}</p>
+                  <span className={cn("text-xs font-bold px-2 py-0.5 rounded bg-slate-50", item.trendColor)}>{item.trend}</span>
+                  <p className="text-xs text-slate-400 font-semibold">{item.sub}</p>
                 </div>
               </div>
             </CardContent>
@@ -81,15 +81,15 @@ export default function OverviewPage() {
       {/* 2. Primary Strategic Visual (Radar + Sidebar) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-12">5 Vectors of superiority analysis</h3>
+          <h3 className="text-2xl font-bold text-slate-900 text-center mb-8">5 Vectors of superiority analysis</h3>
           
-          <div className="flex-1 flex items-center justify-center min-h-[450px]">
+          <div className="flex-1 flex items-center justify-center min-h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+              <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
                 <PolarGrid stroke="#e2e8f0" />
                 <PolarAngleAxis 
                   dataKey="vector" 
-                  tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} 
+                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} 
                 />
                 <Radar
                   name="Health Score"
@@ -103,13 +103,13 @@ export default function OverviewPage() {
             </ResponsiveContainer>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 w-full gap-8 border-t border-slate-100 pt-12 mt-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 w-full gap-6 border-t border-slate-100 pt-10 mt-6">
             {dynamicVectorScores.map((v) => (
-              <div key={v.vector} className="flex flex-col border-l-[6px] border-l-[#003da5] pl-6 py-1">
-                <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-2 tracking-normal">{v.healthScore}%</span>
+              <div key={v.vector} className="flex flex-col border-l-[6px] border-l-[#003da5] pl-5 py-1">
+                <span className="text-3xl font-extrabold text-slate-900 tabular-nums leading-none mb-2 tracking-normal">{v.healthScore}%</span>
                 <div className="space-y-1">
-                  <p className="text-sm font-bold text-slate-500">{v.vector}</p>
-                  <p className="text-[10px] font-bold text-slate-300 uppercase tracking-normal">N={v.count}</p>
+                  <p className="text-xs font-bold text-slate-500">{v.vector}</p>
+                  <p className="text-[10px] font-bold text-slate-300 tracking-normal">N={v.count}</p>
                 </div>
               </div>
             ))}
@@ -140,23 +140,23 @@ export default function OverviewPage() {
           </div>
           
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex justify-between items-start">
+            <div className="flex items-baseline gap-3">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
                 {stats.total.toLocaleString()}
               </p>
               <p className="text-lg font-bold text-emerald-600 leading-none">+43.6%</p>
             </div>
-            <p className="text-sm font-bold text-slate-400 italic mt-4">Total data samples</p>
+            <p className="text-sm font-semibold text-slate-400 italic mt-4">Total data samples</p>
           </Card>
 
           <Card className="border border-slate-200 bg-white p-8 shadow-sm rounded-xl">
-            <div className="flex justify-between items-start">
+            <div className="flex items-baseline gap-3">
               <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900 tracking-normal">
                 {stats.totalUsers.toLocaleString()}
               </p>
               <p className="text-lg font-bold text-emerald-600 leading-none">+36.8%</p>
             </div>
-            <p className="text-sm font-bold text-slate-400 italic mt-4">Unique consumers</p>
+            <p className="text-sm font-semibold text-slate-400 italic mt-4">Unique consumers</p>
           </Card>
         </div>
       </div>
@@ -165,24 +165,24 @@ export default function OverviewPage() {
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 flex flex-row items-center justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900">Analysis timeline</CardTitle>
-            <CardDescription className="text-base text-slate-500 font-medium">Daily sentiment volume vs. rating trend</CardDescription>
+            <CardTitle className="text-xl font-bold text-slate-900">Analysis timeline</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-medium">Daily sentiment volume vs. rating trend</CardDescription>
           </div>
-          <Badge variant="outline" className="text-xs font-bold py-1.5 px-3 text-slate-500 border-slate-200">Validated NLP inference</Badge>
+          <Badge variant="outline" className="text-[10px] font-bold py-1 px-3 text-slate-500 border-slate-200">Validated NLP inference</Badge>
         </CardHeader>
-        <CardContent className="h-[450px] px-8 pb-8">
+        <CardContent className="h-[400px] px-8 pb-8">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stats.timeline} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
-              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '14px' }} />
-              <Legend verticalAlign="top" align="center" height={40} iconType="square" iconSize={10} wrapperStyle={{ fontSize: '13px', fontWeight: 700, paddingBottom: '20px' }} />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
+              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
+              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} />
+              <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '13px' }} />
+              <Legend verticalAlign="top" align="center" height={40} iconType="square" iconSize={8} wrapperStyle={{ fontSize: '12px', fontWeight: 700, paddingBottom: '20px' }} />
               <Bar yAxisId="left" dataKey="Positive" stackId="a" fill={COLORS.positive} />
               <Bar yAxisId="left" dataKey="Neutral" stackId="a" fill={COLORS.neutral} />
               <Bar yAxisId="left" dataKey="Negative" stackId="a" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" name="Sentiment Score" dataKey="Sentiment Score" stroke="#1e293b" strokeWidth={4} dot={{ r: 4, fill: '#1e293b', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6, strokeWidth: 0 }} />
+              <Line yAxisId="right" type="monotone" name="Sentiment Score" dataKey="Sentiment Score" stroke="#1e293b" strokeWidth={3} dot={{ r: 3, fill: '#1e293b', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 5, strokeWidth: 0 }} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -192,20 +192,20 @@ export default function OverviewPage() {
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-slate-900">Sentiment velocity</CardTitle>
-            <CardDescription className="text-base text-slate-500 font-medium">Comparative brand performance metrics</CardDescription>
+            <CardTitle className="text-xl font-bold text-slate-900">Sentiment velocity</CardTitle>
+            <CardDescription className="text-sm text-slate-500 font-medium">Comparative brand performance metrics</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="h-[450px] px-8 py-8">
+        <CardContent className="h-[400px] px-8 py-8">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={stats.timeline}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} unit="%" domain={[0, 100]} dx={-10} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', fontSize: '14px', fontWeight: '600', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
-              <Legend verticalAlign="top" align="right" height={40} iconType="circle" iconSize={10} wrapperStyle={{ fontSize: '13px', fontWeight: 700, paddingBottom: '20px' }} />
-              <Line type="monotone" name="P&G Portfolio" dataKey="P&G" stroke={COLORS.pg} strokeWidth={4} dot={{ r: 5, fill: COLORS.pg, strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 7, strokeWidth: 0 }} />
-              <Line type="monotone" name="Industry Competitors" dataKey="Competitors" stroke="#cbd5e1" strokeWidth={3} strokeDasharray="5 5" dot={false} />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} unit="%" domain={[0, 100]} dx={-10} />
+              <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', fontSize: '13px', fontWeight: '600', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+              <Legend verticalAlign="top" align="right" height={40} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', fontWeight: 700, paddingBottom: '20px' }} />
+              <Line type="monotone" name="P&G Portfolio" dataKey="P&G" stroke={COLORS.pg} strokeWidth={3} dot={{ r: 4, fill: COLORS.pg, strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6, strokeWidth: 0 }} />
+              <Line type="monotone" name="Industry Competitors" dataKey="Competitors" stroke="#cbd5e1" strokeWidth={2} strokeDasharray="5 5" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
