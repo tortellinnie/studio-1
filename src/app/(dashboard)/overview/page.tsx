@@ -65,12 +65,12 @@ export default function OverviewPage() {
       <div className="flex flex-col gap-2">
         <h1 className="text-4xl font-bold text-slate-900 tracking-normal">Dashboard to track sentiment analysis process</h1>
         <p className="text-slate-500 text-base font-medium max-w-4xl leading-relaxed">
-          This hub highlights the strategic dashboard used to showcase NLP sentiment analysis across business processes. 
-          The engine determines consumer sentiments and opinions regarding product superiority through tracking various validated KPIs.
+          This hub highlights the strategic dashboard used to showcase NLP sentiment analysis across Lazada e-commerce channels. 
+          The engine determines consumer sentiments regarding product superiority through tracking various validated KPIs.
         </p>
       </div>
 
-      {/* 2. Top Card Summaries */}
+      {/* 2. Top Card Summaries (KPIs) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { 
@@ -126,44 +126,49 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* 3. Visual Insight Row */}
+      {/* 3. Lazada Sentiment Breakdown Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Comments on public posts (Breakdown Pie) - Expanded */}
         <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-8">
-          <h3 className="text-xl font-bold text-slate-900 mb-2 text-center w-full">Comments on public posts</h3>
-          <div className="grid grid-cols-2 h-full items-center gap-10">
-            <div className="h-64 w-full">
+          <h3 className="text-xl font-bold text-slate-900 mb-10 text-center w-full">Sentiments breakdown on Lazada e commerce portal</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 h-full items-center gap-16">
+            {/* Numeric side: p&g products sentiment breakdown */}
+            <div className="space-y-8">
+              <div className="mb-4">
+                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">P&G products sentiment breakdown</p>
+              </div>
+              {pieData.map((item) => (
+                <div key={item.name} className="flex flex-col border-l-[6px] pl-8 py-1" style={{ borderColor: item.color }}>
+                  <span className="text-5xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{item.value}%</span>
+                  <span className="text-lg font-bold text-slate-400 tracking-normal">{item.name}</span>
+                </div>
+              ))}
+            </div>
+            {/* Visual side: the breakdown pie graph */}
+            <div className="h-80 w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={75}
-                    outerRadius={105}
+                    innerRadius={90}
+                    outerRadius={125}
                     dataKey="value"
                     stroke="#fff"
-                    strokeWidth={3}
+                    strokeWidth={4}
                   >
                     {pieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 600, fontSize: '14px' }} />
                 </PieChart>
               </ResponsiveContainer>
-            </div>
-            <div className="space-y-6">
-              {pieData.map((item) => (
-                <div key={item.name} className="flex flex-col border-l-4 pl-6" style={{ borderColor: item.color }}>
-                  <span className="text-4xl font-extrabold text-slate-900 tabular-nums leading-none mb-1">{item.value}%</span>
-                  <span className="text-base font-bold text-slate-400 tracking-normal">{item.name}</span>
-                </div>
-              ))}
             </div>
           </div>
         </Card>
 
-        {/* Filters and Volume Cards */}
+        {/* Sidebar: Filters and Volume */}
         <div className="lg:col-span-3 flex flex-col gap-4">
           <div className="flex flex-col p-1 bg-slate-100 rounded-lg border border-slate-200">
             {[
@@ -187,26 +192,26 @@ export default function OverviewPage() {
           </div>
           
           <div className="flex-1 grid grid-rows-2 gap-4">
-            <Card className="border-l-8 border-l-[#f59e0b] border border-slate-200 bg-white flex flex-col justify-center p-6 shadow-sm">
+            <Card className="border-l-[10px] border-l-[#f59e0b] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-4xl font-extrabold leading-none tabular-nums text-slate-900">{stats.total.toLocaleString()}</p>
-                  <p className="text-sm font-bold text-slate-400 italic mt-2">Total data samples</p>
+                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900">{stats.total.toLocaleString()}</p>
+                  <p className="text-sm font-bold text-slate-400 italic mt-3 tracking-normal">Total data samples</p>
                 </div>
                 <div className="text-right text-emerald-600">
-                  <p className="text-xl font-bold leading-none">+43.6%</p>
+                  <p className="text-lg font-bold leading-none">+43.6%</p>
                   <TrendingUp className="h-4 w-4 ml-auto mt-1" />
                 </div>
               </div>
             </Card>
-            <Card className="border-l-8 border-l-[#003da5] border border-slate-200 bg-white flex flex-col justify-center p-6 shadow-sm">
+            <Card className="border-l-[10px] border-l-[#003da5] border border-slate-200 bg-white flex flex-col justify-center p-8 shadow-sm">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-4xl font-extrabold leading-none tabular-nums text-slate-900">{stats.totalUsers.toLocaleString()}</p>
-                  <p className="text-sm font-bold text-slate-400 italic mt-2">Unique consumers</p>
+                  <p className="text-5xl font-extrabold leading-none tabular-nums text-slate-900">{stats.totalUsers.toLocaleString()}</p>
+                  <p className="text-sm font-bold text-slate-400 italic mt-3 tracking-normal">Unique consumers</p>
                 </div>
                 <div className="text-right text-emerald-600">
-                  <p className="text-xl font-bold leading-none">+36.8%</p>
+                  <p className="text-lg font-bold leading-none">+36.8%</p>
                   <TrendingUp className="h-4 w-4 ml-auto mt-1" />
                 </div>
               </div>
@@ -229,8 +234,8 @@ export default function OverviewPage() {
             <BarChart data={stats.timeline} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} label={{ value: 'Volume', angle: -90, position: 'insideLeft', offset: 10, fill: '#94a3b8', fontWeight: 700, fontSize: 10 }} />
-              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} label={{ value: 'Sentiment Score', angle: 90, position: 'insideRight', offset: 10, fill: '#94a3b8', fontWeight: 700, fontSize: 10 }} />
+              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dx={-10} />
+              <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} domain={[0, 5]} dx={10} />
               <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700, fontSize: '14px' }} />
               <Legend verticalAlign="top" align="center" height={40} iconType="square" iconSize={10} wrapperStyle={{ fontSize: '13px', fontWeight: 700, paddingBottom: '20px' }} />
               <Bar yAxisId="left" dataKey="Positive" stackId="a" fill={COLORS.positive} />
@@ -242,7 +247,7 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 5. Sentiment Velocity */}
+      {/* 5. Sentiment Velocity (Comparative) */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1">
@@ -265,12 +270,12 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 6. Deep Drill-down Boxes */}
+      {/* 6. Drill-down Boxes (Sentiment Mix & Vector Health Report) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-8">
           <CardHeader className="px-0 pt-0">
             <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Sentiment mix</CardTitle>
-            <CardDescription className="text-base text-slate-500 font-medium">Market distribution benchmark</CardDescription>
+            <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Market distribution benchmark</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center pt-10">
             <div className="h-[320px] w-full">
@@ -308,12 +313,12 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
 
-        {/* Vectors of superiority (Detailed Report) */}
+        {/* Vectors of superiority (High-Fidelity Health Report) */}
         <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-8">
           <CardHeader className="px-0 pt-0 flex flex-row items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Vectors of superiority</CardTitle>
-              <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Strategic health distribution</CardDescription>
+              <CardDescription className="text-base text-slate-500 font-medium tracking-normal">Structural health distribution</CardDescription>
             </div>
             <Activity className="h-6 w-6 text-slate-400" />
           </CardHeader>
@@ -335,8 +340,9 @@ export default function OverviewPage() {
                 </RadarChart>
               </ResponsiveContainer>
             </div>
+            {/* The Report Table: No hover needed */}
             <div className="w-full md:w-1/2 space-y-4">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Vector Health Report</div>
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Vector health report</div>
               {dynamicVectorScores.map((v) => (
                 <div key={v.vector} className="flex items-center justify-between group">
                   <div className="flex flex-col gap-0.5">
