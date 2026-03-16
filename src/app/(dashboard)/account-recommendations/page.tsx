@@ -13,91 +13,91 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
-
-const matrixData = [
-  { product: "Downy Garden Bloom", account: "Lazada", sentiment: 78, rating: 4.6, price: 82, delivery: 95 },
-  { product: "Ariel Sunrise Fresh", account: "Shopee", sentiment: 72, rating: 4.3, price: 45, delivery: 88 },
-  { product: "Tide Perfect Clean", account: "Lazada", sentiment: 65, rating: 4.2, price: 60, delivery: 70 },
-  { product: "Safeguard White", account: "Shopee", sentiment: 62, rating: 3.9, price: 85, delivery: 92 },
-];
-
-const accountsData = [
-  {
-    account: "Lazada Philippines",
-    status: "Improving",
-    priorityScore: 92,
-    topProducts: [
-      { rank: 1, name: "Downy Fabric Conditioner", sentiment: "78% positive", reviews: "4521 reviews", isHighest: true },
-      { rank: 2, name: "Ariel Liquid Detergent", sentiment: "72% positive", reviews: "3124 reviews", isHighest: false },
-      { rank: 3, name: "Tide Powder Detergent", sentiment: "68% positive", reviews: "2847 reviews", isHighest: false }
-    ],
-    recommendations: [
-      "Increase inventory for Downy - high demand vector score detected",
-      "Feature Ariel in upcoming promotional campaigns",
-      "Monitor Safeguard reviews - potential packaging concern"
-    ]
-  }
-];
+import { 
+  pngProducts, 
+  dynamicVectorScores, 
+  dynamicGlobalSentiment,
+  accountRecommendations 
+} from "@/data/mockData";
 
 export default function AccountRecommendationsPage() {
+  const lazada = accountRecommendations[0];
+
   return (
     <div className="space-y-12 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Account-Level Recommendations</h1>
-        <p className="text-base text-muted-foreground">Strategic SKU performance and retail execution matrix</p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline uppercase tracking-tighter">Account-Level Recommendations</h1>
+        <p className="text-base text-muted-foreground font-medium">Strategic SKU performance and retail execution matrix powered by GenAI</p>
       </div>
 
       {/* Product-Account Performance Matrix */}
-      <Card className="shadow-sm border-slate-200 overflow-hidden">
-        <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-6 px-8">
-          <div className="flex items-center gap-3">
-            <TableIcon className="h-6 w-6 text-[#003da5]" />
-            <CardTitle className="text-lg font-bold">Product-Account Performance Matrix</CardTitle>
+      <Card className="shadow-sm border-slate-200 overflow-hidden bg-white">
+        <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-8 px-10">
+          <div className="flex items-center gap-4">
+            <div className="p-2.5 bg-[#003da5] rounded-xl shadow-lg shadow-[#003da5]/20">
+              <TableIcon className="h-6 w-6 text-white" />
+            </div>
+            <CardTitle className="text-xl font-black text-slate-900 uppercase tracking-tight">Product-Account Performance Matrix</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  <th className="p-8">Product SKU</th>
-                  <th className="p-8 text-center">Account</th>
-                  <th className="p-8">Sentiment Index</th>
-                  <th className="p-8 text-center">Corrected Rating</th>
-                  <th className="p-8">Price Perception</th>
-                  <th className="p-8">Retail Execution</th>
+                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] uppercase font-black text-slate-400 tracking-widest">
+                  <th className="p-10">Product SKU</th>
+                  <th className="p-10 text-center">Account</th>
+                  <th className="p-10">Sentiment Index</th>
+                  <th className="p-10 text-center">Corrected Rating</th>
+                  <th className="p-10">Price Perception</th>
+                  <th className="p-10">Retail Execution</th>
                 </tr>
               </thead>
               <tbody>
-                {matrixData.map((row, i) => (
-                  <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                    <td className="p-8 font-bold text-slate-900 text-base">{row.product}</td>
-                    <td className="p-8 text-center">
-                      <Badge variant="outline" className="text-xs font-bold uppercase border-slate-200">{row.account}</Badge>
+                {pngProducts.map((row, i) => (
+                  <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
+                    <td className="p-10 font-black text-slate-900 text-lg group-hover:text-[#003da5] transition-colors tracking-tight">{row.name}</td>
+                    <td className="p-10 text-center">
+                      <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-200 bg-white px-4 py-1 tracking-widest text-slate-500">LAZADA</Badge>
                     </td>
-                    <td className="p-8">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-bold text-slate-900">
-                          <span>{row.sentiment}%</span>
+                    <td className="p-10 min-w-[180px]">
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                          <span>{row.sentimentScore.toFixed(0)}% Corrected</span>
                         </div>
-                        <Progress value={row.sentiment} className="h-2 bg-slate-100" />
+                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
+                          <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${row.sentimentScore}%` }} />
+                        </div>
                       </div>
                     </td>
-                    <td className="p-8 text-center font-extrabold text-[#003da5] text-2xl">{row.rating.toFixed(1)}</td>
-                    <td className="p-8">
-                       <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-bold text-slate-900">
-                          <span>{row.price}%</span>
+                    <td className="p-10 text-center">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="font-black text-[#003da5] text-4xl tabular-nums leading-none tracking-tighter">{row.correctedRating}</span>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <div key={s} className={cn("h-1 w-3 rounded-full", s <= Math.round(parseFloat(row.correctedRating)) ? "bg-[#003da5]" : "bg-slate-200")} />
+                          ))}
                         </div>
-                        <Progress value={row.price} className="h-2 bg-slate-100" />
                       </div>
                     </td>
-                    <td className="p-8">
-                       <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-bold text-slate-900">
-                          <span>{row.delivery}%</span>
+                    <td className="p-10 min-w-[180px]">
+                       <div className="space-y-3">
+                        <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                          <span>{dynamicVectorScores.find(v => v.vector === "Value")?.healthScore}% Pos</span>
                         </div>
-                        <Progress value={row.delivery} className="h-2 bg-slate-100" />
+                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
+                          <div className="h-full bg-[#003da5] rounded-full" style={{ width: `${dynamicVectorScores.find(v => v.vector === "Value")?.healthScore}%` }} />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-10 min-w-[180px]">
+                       <div className="space-y-3">
+                        <div className="flex justify-between text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                          <span>{dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore}% Pos</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden shadow-inner">
+                          <div className="h-full bg-[#003da5] rounded-full" style={{ width: `${dynamicVectorScores.find(v => v.vector === "Retail Execution")?.healthScore}%` }} />
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -109,70 +109,89 @@ export default function AccountRecommendationsPage() {
       </Card>
 
       <div className="space-y-8">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-          <ShieldCheck className="h-7 w-7 text-[#003da5]" />
-          Strategic Priorities
+        <h2 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-4 font-headline uppercase tracking-tighter">
+          <ShieldCheck className="h-8 w-8 text-[#003da5]" />
+          Strategic Account Priorities
         </h2>
-        {accountsData.map((data) => (
-          <Card key={data.account} className="shadow-sm border-slate-200 overflow-hidden bg-white">
-            <CardHeader className="flex flex-row items-center justify-between py-10 px-12 border-b border-slate-50">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <ShoppingCart className="h-8 w-8 text-slate-900" />
-                  <CardTitle className="text-3xl font-extrabold text-slate-900">{data.account}</CardTitle>
+        
+        <Card className="shadow-sm border-slate-200 overflow-hidden bg-white">
+          <CardHeader className="flex flex-row items-center justify-between py-12 px-14 border-b border-slate-50 bg-slate-50/20">
+            <div className="space-y-6">
+              <div className="flex items-center gap-5">
+                <div className="h-14 w-14 rounded-2xl bg-[#003da5] flex items-center justify-center shadow-lg shadow-[#003da5]/20">
+                  <ShoppingCart className="h-8 w-8 text-white" />
                 </div>
-                <Badge className="bg-emerald-500 text-white font-bold h-7 px-4 uppercase tracking-widest text-[10px]">{data.status}</Badge>
+                <CardTitle className="text-4xl font-black text-slate-900 tracking-tighter">{lazada.account}</CardTitle>
               </div>
-              <div className="text-right">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Priority Score</p>
-                <p className="text-7xl font-extrabold text-[#003da5] leading-none">{data.priorityScore}</p>
+              <div className="flex gap-3">
+                <Badge className="bg-emerald-500 text-white font-black h-8 px-6 uppercase tracking-[0.2em] text-[10px] rounded-lg shadow-sm shadow-emerald-500/20">IMPROVING</Badge>
+                <Badge variant="outline" className="border-slate-200 text-slate-400 font-black h-8 px-6 uppercase tracking-[0.2em] text-[10px] rounded-lg bg-white">TIER 1 ACCOUNT</Badge>
               </div>
-            </CardHeader>
-            <CardContent className="p-12 space-y-12">
-              <div className="space-y-8">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Top Performing Products</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {data.topProducts.map((product) => (
-                    <div key={product.rank} className="relative p-10 rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-lg transition-all">
-                      <div className="flex items-center justify-between mb-8">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ebf2ff] text-[#003da5] font-extrabold text-base">
-                          {product.rank}
-                        </div>
-                        {product.isHighest && (
-                          <Badge className="bg-[#22c55e] text-white text-[10px] font-bold h-7 px-4">HIGHEST PRIORITY</Badge>
-                        )}
+            </div>
+            <div className="text-right flex flex-col items-end">
+              <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-2 leading-none">Priority Score</p>
+              <p className="text-9xl font-black text-[#003da5] leading-none tracking-tighter tabular-nums drop-shadow-sm">{lazada.priorityScore}</p>
+            </div>
+          </CardHeader>
+          <CardContent className="p-14 space-y-16">
+            <div className="space-y-10">
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em] border-l-4 border-[#003da5] pl-4">Top Performing Products (Inference Validated)</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                {pngProducts.slice(0, 3).map((product, idx) => (
+                  <div key={product.id} className="relative p-12 rounded-[2rem] border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:border-[#003da5]/20 transition-all group overflow-hidden">
+                    <div className="absolute top-0 right-0 h-32 w-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:bg-[#ebf2ff] transition-colors" />
+                    <div className="relative z-10 flex items-center justify-between mb-10">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ebf2ff] text-[#003da5] font-black text-xl shadow-inner group-hover:scale-110 transition-transform">
+                        {idx + 1}
                       </div>
-                      <div className="space-y-2">
-                        <p className="text-xl font-extrabold text-slate-900 leading-tight">{product.name}</p>
-                        <p className="text-sm text-slate-400 font-bold uppercase tracking-tight">
-                          {product.sentiment} • {product.reviews}
-                        </p>
-                      </div>
+                      {idx === 0 && (
+                        <Badge className="bg-[#22c55e] text-white text-[9px] font-black h-8 px-5 uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-500/20">HIGHEST PRIORITY</Badge>
+                      )}
                     </div>
-                  ))}
-                </div>
+                    <div className="relative z-10 space-y-3">
+                      <p className="text-2xl font-black text-slate-900 leading-none tracking-tight group-hover:text-[#003da5] transition-colors">{product.name}</p>
+                      <p className="text-xs text-slate-400 font-extrabold uppercase tracking-widest flex items-center gap-2">
+                        <Smile className="h-3 w-3 text-emerald-500" />
+                        {product.sentimentScore.toFixed(0)}% Corrected Sentiment
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              <div className="space-y-8 pt-10 border-t border-slate-100">
-                <div className="flex items-center gap-4">
+            <div className="space-y-10 pt-14 border-t border-slate-100">
+              <div className="flex items-center gap-5">
+                <div className="h-14 w-14 rounded-2xl bg-orange-100 flex items-center justify-center shadow-sm">
                   <Lightbulb className="h-8 w-8 text-orange-500" />
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Recommended Actions</h4>
                 </div>
-                <ul className="space-y-6">
-                  {data.recommendations.map((action, i) => (
-                    <li key={i} className="flex items-start gap-6 group">
-                      <div className="mt-3 h-2 w-2 rounded-full bg-[#003da5] shrink-0" />
-                      <span className="text-lg font-bold text-slate-600 group-hover:text-[#003da5] transition-colors leading-relaxed">
-                        {action}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="space-y-1">
+                  <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Recommended Strategic Actions</h4>
+                  <p className="text-sm font-bold text-slate-400">GenAI Inference Rationale: {lazada.rationale}</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 pl-4">
+                {lazada.recommendedActions.map((action, i) => (
+                  <li key={i} className="flex items-start gap-8 group bg-slate-50/50 p-8 rounded-3xl border border-transparent hover:border-[#003da5]/10 hover:bg-white transition-all shadow-sm group">
+                    <div className="mt-3 h-3 w-3 rounded-full bg-[#003da5] shrink-0 group-hover:scale-150 transition-transform" />
+                    <span className="text-xl font-bold text-slate-600 group-hover:text-slate-900 transition-colors leading-relaxed tracking-tight">
+                      {action}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
+  );
+}
+
+function Smile({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/>
+    </svg>
   );
 }
