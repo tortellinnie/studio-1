@@ -128,18 +128,18 @@ export default function OverviewPage() {
 
       {/* 3. Lazada Sentiment Breakdown Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-8">
-          <h3 className="text-xl font-bold text-slate-900 mb-10 text-center w-full">Sentiments breakdown on Lazada e commerce portal</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 h-full items-center gap-16">
+        <Card className="lg:col-span-9 border-slate-200 shadow-sm rounded-xl bg-white p-10">
+          <h3 className="text-xl font-bold text-slate-900 mb-12 text-center w-full">Sentiments breakdown on Lazada e commerce portal</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 h-full items-center gap-12 lg:gap-20">
             {/* Numeric side: p&g products sentiment breakdown */}
-            <div className="space-y-8">
-              <div className="mb-4">
-                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">P&G products sentiment breakdown</p>
+            <div className="space-y-6">
+              <div className="mb-6">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">P&G products sentiment breakdown</p>
               </div>
               {pieData.map((item) => (
-                <div key={item.name} className="flex flex-col border-l-[6px] pl-8 py-1" style={{ borderColor: item.color }}>
+                <div key={item.name} className="flex flex-col border-l-[6px] pl-8 py-1 transition-all" style={{ borderColor: item.color }}>
                   <span className="text-5xl font-extrabold text-slate-900 tabular-nums leading-none mb-2">{item.value}%</span>
-                  <span className="text-lg font-bold text-slate-400 tracking-normal">{item.name}</span>
+                  <span className="text-base font-bold text-slate-400 tracking-normal">{item.name}</span>
                 </div>
               ))}
             </div>
@@ -152,7 +152,7 @@ export default function OverviewPage() {
                     cx="50%"
                     cy="50%"
                     innerRadius={90}
-                    outerRadius={125}
+                    outerRadius={120}
                     dataKey="value"
                     stroke="#fff"
                     strokeWidth={4}
@@ -340,7 +340,6 @@ export default function OverviewPage() {
                 </RadarChart>
               </ResponsiveContainer>
             </div>
-            {/* The Report Table: No hover needed */}
             <div className="w-full md:w-1/2 space-y-4">
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Vector health report</div>
               {dynamicVectorScores.map((v) => (
