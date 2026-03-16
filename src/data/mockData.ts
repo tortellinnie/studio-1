@@ -165,15 +165,16 @@ export function getRankedHeroSkus() {
   const ranked = pgPortfolio.map((sku, idx) => {
     // Map existing cache entries to P&G SKUs deterministically for the simulation
     const skuEntries = cacheEntries.filter(e => e.isPNG).filter((_, i) => i % pgPortfolio.length === idx);
-    const total = skuEntries.length || 1;
-    const positive = skuEntries.filter(e => e.sentimentLabel === 'positive').length;
-    const ratio = positive / total;
+    const totalCount = skuEntries.length || 1;
+    const positiveCount = skuEntries.filter(e => e.sentimentLabel === 'positive').length;
+    const ratio = positiveCount / totalCount;
     
     return {
       ...sku,
       ratio,
-      points: Math.round(ratio * 10000),
-      avatar: `https://picsum.photos/seed/${sku.name}/200`
+      positiveCount,
+      totalCount,
+      points: Math.round(ratio * 10000)
     };
   }).sort((a, b) => b.ratio - a.ratio);
 

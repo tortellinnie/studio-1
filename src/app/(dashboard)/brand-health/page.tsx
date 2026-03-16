@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -50,8 +49,13 @@ export default function BrandHealthPage() {
               )}>
                 {/* Labeling above the column */}
                 <div className="absolute -top-32 flex flex-col items-center gap-3 w-full">
-                  <div className="flex items-center gap-2 bg-slate-900 text-white shadow-xl px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-normal">
-                    <span className="tabular-nums">{sku.points.toLocaleString()} pts</span>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="flex items-center gap-2 bg-slate-900 text-white shadow-xl px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-normal">
+                      <span className="tabular-nums">{Math.round(sku.ratio * 100)}% Win-rate</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-normal tabular-nums">
+                      {sku.positiveCount}/{sku.totalCount} Positive
+                    </span>
                   </div>
                   {index === 1 && (
                     <div className="animate-bounce mb-1">
@@ -96,7 +100,12 @@ export default function BrandHealthPage() {
                       <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-normal text-slate-400 border-slate-200 px-2 py-0">
                         {sku.brand}
                       </Badge>
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tabular-nums tracking-normal">{sku.points.toLocaleString()} points</span>
+                      <span className="text-[11px] font-bold text-[#003da5] uppercase tabular-nums tracking-normal">
+                        {Math.round(sku.ratio * 100)}% Win-rate
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-300 uppercase tabular-nums tracking-normal">
+                        ({sku.positiveCount}/{sku.totalCount})
+                      </span>
                     </div>
                   </div>
                 </div>
