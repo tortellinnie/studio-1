@@ -15,14 +15,11 @@ import {
 } from 'recharts';
 import { 
   competitiveBenchmark, 
-  allIndustryProducts, 
   totalCacheCount, 
   getSuperiorityMatrix
 } from '@/data/mockData';
 import { 
-  Star,
-  ShieldCheck,
-  TrendingUp
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -124,73 +121,6 @@ export default function CompetitiveAnalysisPage() {
           </div>
         </CardContent>
       </Card>
-
-      {/* Product Table */}
-      <div className="space-y-8">
-        <h2 className="text-3xl font-bold text-slate-900 tracking-normal uppercase">Industry SKU rankings</h2>
-        <Card className="overflow-hidden rounded-xl bg-white shadow-sm border-slate-200">
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    <th className="p-8">Rank</th>
-                    <th className="p-8">Brand SKU</th>
-                    <th className="p-8 text-center">Original rating</th>
-                    <th className="p-8 text-center">Corrected rating</th>
-                    <th className="p-8">Sentiment score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allIndustryProducts.map((item, idx) => (
-                    <tr key={item.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
-                      <td className="p-8">
-                        <div className={cn(
-                          "flex h-12 w-12 items-center justify-center font-bold text-base rounded-lg",
-                          item.isPNG ? "bg-[#ebf2ff] text-[#003da5]" : "bg-slate-100 text-slate-400"
-                        )}>
-                          {idx + 1}
-                        </div>
-                      </td>
-                      <td className="p-8">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-lg font-bold text-slate-900 group-hover:text-[#003da5] transition-colors tracking-normal">{item.name}</span>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.brand}</span>
-                        </div>
-                      </td>
-                      <td className="p-8 text-center">
-                        <span className="text-base font-bold text-slate-300 tabular-nums">
-                          {item.originalRating.toFixed(1)}
-                        </span>
-                      </td>
-                      <td className="p-8 text-center">
-                        <div className="flex items-center justify-center gap-2 font-bold text-[#003da5] text-3xl tabular-nums tracking-normal">
-                          <Star className="h-5 w-5 fill-[#003da5] stroke-none" />
-                          {item.correctedRating}
-                        </div>
-                      </td>
-                      <td className="p-8">
-                         <div className="flex flex-col gap-3 min-w-[220px]">
-                            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                              <span className="text-emerald-600">{item.sentimentScore}% Positive</span>
-                              <TrendingUp className="h-4 w-4 text-emerald-500" />
-                            </div>
-                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                               <div 
-                                 className="h-full bg-emerald-500 transition-all duration-1000 ease-out" 
-                                 style={{ width: `${item.sentimentScore}%` }} 
-                               />
-                            </div>
-                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
