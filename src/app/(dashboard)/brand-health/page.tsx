@@ -46,12 +46,13 @@ export default function BrandHealthPage() {
                 index === 1 ? "z-10" : "z-0"
               )}>
                 {/* Labeling above the column */}
-                <div className="absolute -top-32 flex flex-col items-center gap-4 w-full">
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="flex items-center gap-2 bg-slate-900 text-white shadow-xl px-4 py-1.5 rounded-full text-[12px] font-bold tracking-normal">
-                      <span className="tabular-nums">{Math.round(sku.ratio * 100)}%</span>
-                    </div>
-                  </div>
+                <div className="absolute -top-36 flex flex-col items-center gap-2 w-full">
+                  <span className={cn(
+                    "font-black tabular-nums tracking-normal transition-all",
+                    index === 1 ? "text-5xl text-[#003da5]" : "text-3xl text-slate-400"
+                  )}>
+                    {Math.round(sku.ratio * 100)}%
+                  </span>
                   <span className={cn(
                     "font-bold text-center px-4 transition-colors tracking-normal leading-tight",
                     index === 1 ? "text-2xl text-slate-900" : "text-base text-slate-500"
@@ -87,11 +88,8 @@ export default function BrandHealthPage() {
                   <div className="flex flex-col">
                     <span className="text-base font-bold text-slate-900 tracking-normal group-hover:text-[#003da5] transition-colors">{sku.name}</span>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                        {sku.brand}
-                      </span>
                       <span className="text-[12px] font-bold text-[#003da5] tabular-nums tracking-normal">
-                        {Math.round(sku.ratio * 100)}%
+                        {Math.round(sku.ratio * 100)}% Positive Sentiment
                       </span>
                     </div>
                   </div>
