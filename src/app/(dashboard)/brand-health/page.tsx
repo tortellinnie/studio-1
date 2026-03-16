@@ -1,10 +1,9 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
-import { Badge } from "@/components/ui/badge";
 import { 
-  Crown,
-  ChevronUp,
+  ChevronUp, 
   ChevronDown
 } from "lucide-react";
 import { 
@@ -46,18 +45,13 @@ export default function BrandHealthPage() {
                 "flex flex-col items-center flex-1 relative group transition-all duration-500",
                 index === 1 ? "z-10" : "z-0"
               )}>
-                {/* Labeling above the column - Lifted higher to prevent overlap */}
-                <div className="absolute -top-40 flex flex-col items-center gap-4 w-full">
+                {/* Labeling above the column */}
+                <div className="absolute -top-32 flex flex-col items-center gap-4 w-full">
                   <div className="flex flex-col items-center gap-1.5">
                     <div className="flex items-center gap-2 bg-slate-900 text-white shadow-xl px-4 py-1.5 rounded-full text-[12px] font-bold tracking-normal">
                       <span className="tabular-nums">{Math.round(sku.ratio * 100)}%</span>
                     </div>
                   </div>
-                  {index === 1 && (
-                    <div className="animate-bounce mb-1">
-                      <Crown className="h-10 w-10 text-amber-400 fill-amber-400 drop-shadow-md" />
-                    </div>
-                  )}
                   <span className={cn(
                     "font-bold text-center px-4 transition-colors tracking-normal leading-tight",
                     index === 1 ? "text-2xl text-slate-900" : "text-base text-slate-500"
@@ -93,9 +87,9 @@ export default function BrandHealthPage() {
                   <div className="flex flex-col">
                     <span className="text-base font-bold text-slate-900 tracking-normal group-hover:text-[#003da5] transition-colors">{sku.name}</span>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-normal text-slate-400 border-slate-200 px-2.5 py-0.5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
                         {sku.brand}
-                      </Badge>
+                      </span>
                       <span className="text-[12px] font-bold text-[#003da5] tabular-nums tracking-normal">
                         {Math.round(sku.ratio * 100)}%
                       </span>
