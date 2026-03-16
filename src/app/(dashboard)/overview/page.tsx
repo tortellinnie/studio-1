@@ -25,8 +25,8 @@ import {
   Meh, 
   Frown,
   Activity,
-  ArrowUpRight,
-  Target
+  Target,
+  Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
@@ -40,7 +40,6 @@ import {
   negativeCount,
   neutralCount,
   criticalVector,
-  bestVector,
   globalCorrectedRating
 } from "@/data/mockData";
 
@@ -60,11 +59,11 @@ export default function OverviewPage() {
   if (!isClient) return null;
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10 px-4">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-headline uppercase">Market Intelligence Dashboard</h1>
-          <p className="text-base text-muted-foreground font-medium">PH Fabric Care Industry analysis powered by {totalCacheCount.toLocaleString()} Taglish NLP samples</p>
+          <h1 className="text-3xl font-black tracking-tighter text-slate-900 font-headline uppercase">Market Intelligence Dashboard</h1>
+          <p className="text-base text-muted-foreground font-bold uppercase tracking-widest leading-none">Industry analysis powered by {totalCacheCount.toLocaleString()} Taglish NLP samples</p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-[#003da5] rounded-lg shadow-lg">
           <Activity className="h-4 w-4 text-white" />
@@ -74,34 +73,17 @@ export default function OverviewPage() {
 
       <NotificationBanner />
 
-      {/* CORE CAPABILITIES CHECKLIST */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { text: "Taglish-Aware AI Sentiment", checked: true },
-          { text: "5 Vectors of Superiority Mapping", checked: true },
-          { text: "Competitive Intelligence Engine", checked: true },
-          { text: "Promo Recommendations", checked: true },
-        ].map((item, i) => (
-          <div key={i} className="flex items-center gap-3 p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
-            <div className="h-5 w-5 rounded-full bg-emerald-500 flex items-center justify-center">
-              <CheckCircle2 className="h-3 w-3 text-white" />
-            </div>
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-tight">{item.text}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Global Market KPIs */}
+      {/* Strategic KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { title: "Market Samples", value: totalCacheCount.toLocaleString(), sub: "Industry-Wide Inference", icon: Target, iconColor: "text-[#003da5]" },
-          { title: "Corrected Rating", value: globalCorrectedRating, sub: "NLP Sentiment Adjusted", icon: StarIcon, iconColor: "text-orange-400" },
+          { title: "Market Samples", value: totalCacheCount.toLocaleString(), sub: "Inference-Validated", icon: Target, iconColor: "text-[#003da5]" },
+          { title: "Corrected Rating", value: globalCorrectedRating, sub: "NLP Sentiment Adjusted", icon: Star, iconColor: "text-orange-400" },
           { title: "Portfolio Health", value: `${dynamicGlobalSentiment.positive}%`, sub: "Positive Consensus", icon: TrendingUp, iconColor: "text-emerald-500" },
-          { title: "Worst Vector", value: criticalVector.vector, sub: `${criticalVector.healthScore}% Health Score`, icon: AlertCircle, iconColor: "text-red-500" },
+          { title: "Worst Vector", value: criticalVector.vector, sub: `${criticalVector.healthScore}% Index Score`, icon: AlertCircle, iconColor: "text-red-500" },
         ].map((item, i) => (
-          <Card key={i} className="shadow-sm border-slate-200 bg-white group hover:border-[#003da5]/30 transition-all">
+          <Card key={i} className="shadow-sm border-slate-200 bg-white group hover:border-[#003da5]/30 transition-all overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
-              <CardTitle className="text-[10px] font-black uppercase tracking-wider text-slate-400">{item.title}</CardTitle>
+              <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{item.title}</CardTitle>
               <item.icon className={cn("h-4 w-4", item.iconColor)} />
             </CardHeader>
             <CardContent>
@@ -112,7 +94,7 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* Taglish-Aware Sentiment Analysis */}
+      {/* Taglish Sentiment Analysis Module */}
       <div className="space-y-6">
         <h2 className="text-2xl font-black tracking-tight text-slate-900 font-headline uppercase tracking-tighter flex items-center gap-3">
           <Smile className="h-6 w-6 text-[#003da5]" />
@@ -124,7 +106,7 @@ export default function OverviewPage() {
             <CardContent className="pt-8 space-y-2">
               <div className="flex items-center gap-2 text-[#22c55e]">
                 <Smile className="h-4 w-4" />
-                <span className="text-xs font-black uppercase tracking-widest">Positive</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Positive</span>
               </div>
               <div className="text-5xl font-black text-slate-900 tabular-nums">{dynamicGlobalSentiment.positive}%</div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">{positiveCount.toLocaleString()} Validated Signals</p>
@@ -134,7 +116,7 @@ export default function OverviewPage() {
             <CardContent className="pt-8 space-y-2">
               <div className="flex items-center gap-2 text-[#f59e0b]">
                 <Meh className="h-4 w-4" />
-                <span className="text-xs font-black uppercase tracking-widest">Neutral</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Neutral</span>
               </div>
               <div className="text-5xl font-black text-slate-900 tabular-nums">{dynamicGlobalSentiment.neutral}%</div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">{neutralCount.toLocaleString()} Mixed Signals</p>
@@ -144,7 +126,7 @@ export default function OverviewPage() {
             <CardContent className="pt-8 space-y-2">
               <div className="flex items-center gap-2 text-[#ef4444]">
                 <Frown className="h-4 w-4" />
-                <span className="text-xs font-black uppercase tracking-widest">Negative</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Negative</span>
               </div>
               <div className="text-5xl font-black text-slate-900 tabular-nums">{dynamicGlobalSentiment.negative}%</div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">{negativeCount.toLocaleString()} Friction Points</p>
@@ -154,7 +136,7 @@ export default function OverviewPage() {
 
         <Card className="shadow-sm border-slate-200 bg-white">
           <CardHeader className="border-b border-slate-50 py-6 px-8">
-            <CardTitle className="text-[10px] font-black uppercase tracking-widest text-slate-400">Industry-Wide Product Sentiment Distribution</CardTitle>
+            <CardTitle className="text-[10px] font-black uppercase tracking-widest text-slate-400">Industry-Wide Product Sentiment Distribution (Top 5)</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-slate-50">
@@ -163,7 +145,7 @@ export default function OverviewPage() {
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                        <h4 className="text-xl font-black text-slate-900 tracking-tighter group-hover:text-[#003da5] transition-colors">{item.name}</h4>
+                        <h4 className="text-xl font-black text-slate-900 tracking-tighter group-hover:text-[#003da5] transition-colors uppercase">{item.name}</h4>
                         {item.isPNG && <Badge className="bg-[#003da5] text-white text-[8px] font-black h-5 uppercase px-2 rounded-md">P&G CORE</Badge>}
                       </div>
                       <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{item.brand} • {item.reviewCount.toLocaleString()} reviews processed</p>
@@ -203,10 +185,10 @@ export default function OverviewPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="shadow-sm border-slate-200 bg-white">
-          <CardHeader className="p-8 pb-4">
+          <CardHeader className="p-8 pb-4 border-b border-slate-50 bg-slate-50/20">
             <CardTitle className="text-lg font-black text-slate-900 uppercase tracking-tight">Market Sentiment Pulse</CardTitle>
           </CardHeader>
-          <CardContent className="h-[400px] p-8 pt-0">
+          <CardContent className="h-[400px] p-8 pt-8">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={sentimentTrends}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -222,10 +204,10 @@ export default function OverviewPage() {
         </Card>
 
         <Card className="shadow-sm border-slate-200 bg-white">
-          <CardHeader className="p-8 pb-4">
+          <CardHeader className="p-8 pb-4 border-b border-slate-50 bg-slate-50/20">
             <CardTitle className="text-lg font-black text-slate-900 uppercase tracking-tight">Global Market Health</CardTitle>
           </CardHeader>
-          <CardContent className="h-[400px] p-8 pt-0 relative flex items-center justify-center">
+          <CardContent className="h-[400px] p-8 pt-8 relative flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -252,21 +234,5 @@ export default function OverviewPage() {
         </Card>
       </div>
     </div>
-  );
-}
-
-function StarIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      stroke="none"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
   );
 }

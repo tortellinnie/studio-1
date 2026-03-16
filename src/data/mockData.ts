@@ -23,7 +23,7 @@ export const dynamicGlobalSentiment = {
   neutral: Math.round((neutralCount / totalCacheCount) * 100),
 };
 
-// 2. 5 VECTORS OF SUPERIORITY MAPPING
+// 2. 5 VECTORS OF SUPERIORITY MAPPING (Strictly Data-Driven)
 const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
 export const dynamicVectorScores = vectorLabels.map(label => {
   const mentionedEntries = cacheEntries.filter(e => e.vectors.includes(label));
@@ -42,7 +42,7 @@ export const dynamicVectorScores = vectorLabels.map(label => {
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.healthScore - b.healthScore)[0];
 export const bestVector = [...dynamicVectorScores].sort((a, b) => b.healthScore - a.healthScore)[0];
 
-// 3. COMPETITIVE INTELLIGENCE ENGINE (P&G vs Competitors)
+// 3. COMPETITIVE INTELLIGENCE ENGINE (Industry-Wide SKU Assessment)
 const jitter = (base: number, amount: number) => Math.max(0, Math.min(100, base + (Math.random() * amount * 2 - amount)));
 
 const rawSkus = [
@@ -96,7 +96,7 @@ export const promoRecommendations = allIndustryProducts
   .map(p => ({
     sku: p.name,
     priority: p.promoPriority,
-    currentSentiment: `${p.sentimentScore}%`,
+    currentSentiment: `${p.sentimentScore.toFixed(0)}%`,
     targetVector: p.vectors.value < 70 ? 'Value (Price Perception)' : 'Trial (Conversion)',
     recommendedPromo: p.vectors.value < 70 ? 'Flash Deal (Buy 1 Take 1)' : 'Voucher Bundle'
   }));

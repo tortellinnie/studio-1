@@ -7,7 +7,6 @@ import {
   LayoutDashboard, 
   Target,
   Activity,
-  ShoppingBag,
   LogOut,
   Settings
 } from "lucide-react";
@@ -40,11 +39,6 @@ const navItems = [
     url: "/brand-health",
     icon: Activity,
   },
-  {
-    title: "Account Recommendations",
-    url: "/account-recommendations",
-    icon: ShoppingBag,
-  },
 ];
 
 export function NavMain() {
@@ -54,14 +48,14 @@ export function NavMain() {
     <>
       <SidebarHeader className="border-b border-white/10 p-4 bg-[#003da5]">
         <div className="flex flex-col">
-          <span className="text-lg font-bold tracking-tight text-white">P&G HUB</span>
-          <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider">Enterprise Intelligence</span>
+          <span className="text-lg font-bold tracking-tight text-white uppercase tracking-tighter">P&G HUB</span>
+          <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Market Intelligence</span>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="bg-[#003da5]">
         <SidebarGroup>
-          <SidebarGroupLabel className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white/30">
+          <SidebarGroupLabel className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white/30">
             STRATEGIC TOOLS
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -72,7 +66,7 @@ export function NavMain() {
                     asChild 
                     isActive={pathname === item.url}
                     className={cn(
-                      "transition-all duration-200 h-11",
+                      "transition-all duration-200 h-11 rounded-lg",
                       pathname === item.url 
                         ? "bg-white/15 text-white shadow-sm" 
                         : "hover:bg-white/10 text-white/60 hover:text-white"
@@ -80,7 +74,7 @@ export function NavMain() {
                   >
                     <Link href={item.url}>
                       <item.icon className={cn("h-5 w-5", pathname === item.url ? "text-white" : "text-white/40")} />
-                      <span className="font-semibold text-base">{item.title}</span>
+                      <span className="font-bold text-base tracking-tight">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -96,14 +90,14 @@ export function NavMain() {
             <SidebarMenuButton asChild className="text-white/60 hover:text-white hover:bg-white/5 transition-colors h-10">
               <Link href="/settings">
                 <Settings className="h-4 w-4" />
-                <span className="text-sm font-medium">System Logs</span>
+                <span className="text-sm font-bold tracking-tight">System Logs</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton className="text-white/30 hover:text-white hover:bg-white/5 transition-colors h-10">
               <LogOut className="h-4 w-4" />
-              <span className="text-sm font-medium">Sign Out</span>
+              <span className="text-sm font-bold tracking-tight">Sign Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
