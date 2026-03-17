@@ -79,8 +79,8 @@ export default function BrandHealthPage() {
               "flex flex-col items-center flex-1 relative group transition-all duration-500",
               index === 1 ? "z-10" : "z-0"
             )}>
-              {/* Labeling above the column */}
-              <div className="absolute -top-24 flex flex-col items-center gap-1 w-full">
+              {/* Labeling above the column - Offset adjusted to avoid overlap with large digits */}
+              <div className="absolute -top-32 flex flex-col items-center gap-1 w-full">
                 <span className={cn(
                   "font-black tabular-nums tracking-normal transition-all leading-none",
                   index === 1 ? "text-7xl text-[#003da5]" : "text-4xl text-slate-400"
