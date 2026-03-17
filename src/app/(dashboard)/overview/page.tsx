@@ -80,7 +80,7 @@ export default function OverviewPage() {
             <h2 className="text-[6rem] font-black leading-[0.8] tracking-tighter tabular-nums">{stats.posPct}%</h2>
             <div className="space-y-3">
               <p className="text-2xl font-black uppercase tracking-[0.15em] text-white">
-                Net Positive Sentiments across the P&P Portfolio
+                Net Positive Sentiments across the P&G Portfolio
               </p>
             </div>
           </div>
