@@ -19,8 +19,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
 
 const radarData = [
   { subject: 'Product', A: 91, B: 80, fullMark: 100 },
@@ -112,9 +111,9 @@ export default function CompetitiveAnalysisPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="w-full">
         {/* MAIN ANALYSIS CARD */}
-        <Card className="lg:col-span-3 border-slate-200 shadow-none rounded-[2rem] overflow-hidden">
+        <Card className="border-slate-200 shadow-none rounded-[2rem] overflow-hidden">
           <CardHeader className="p-10 pb-0">
             <CardTitle className="text-3xl font-black text-slate-900 tracking-normal">5 Vectors of superiority analysis</CardTitle>
             <CardDescription className="text-base font-medium text-slate-400 tracking-normal">Comparative product analysis across the 5 superiority vectors</CardDescription>
@@ -183,53 +182,6 @@ export default function CompetitiveAnalysisPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* SIDE COLUMN */}
-        <div className="space-y-6">
-          {/* TIME PERIOD SELECTOR */}
-          <Card className="border-slate-200 shadow-none rounded-[1.5rem] bg-slate-50/50 p-4">
-            <div className="space-y-1">
-              {['Past 7 days', 'Past 30 days', 'Past 3 months'].map((period) => (
-                <button
-                  key={period}
-                  className={cn(
-                    "w-full text-left px-6 py-4 rounded-xl text-sm font-bold transition-all",
-                    period === 'Past 30 days' 
-                      ? "bg-white text-slate-900 shadow-sm border border-slate-100" 
-                      : "text-slate-400 hover:text-slate-600"
-                  )}
-                >
-                  {period}
-                </button>
-              ))}
-            </div>
-          </Card>
-
-          {/* KPI CARDS */}
-          <Card className="border-slate-200 shadow-none rounded-[1.5rem] p-10 relative overflow-hidden group hover:border-[#003da5]/30 transition-all">
-            <div className="space-y-4">
-              <div className="flex items-baseline justify-between">
-                <h3 className="text-6xl font-black text-slate-900 tabular-nums leading-none">4,514</h3>
-                <div className="flex items-center gap-1 text-emerald-500 font-black text-xl">
-                  +43.6%
-                </div>
-              </div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest italic">Total data samples</p>
-            </div>
-          </Card>
-
-          <Card className="border-slate-200 shadow-none rounded-[1.5rem] p-10 relative overflow-hidden group hover:border-[#003da5]/30 transition-all">
-            <div className="space-y-4">
-              <div className="flex items-baseline justify-between">
-                <h3 className="text-6xl font-black text-slate-900 tabular-nums leading-none">4,511</h3>
-                <div className="flex items-center gap-1 text-emerald-500 font-black text-xl">
-                  +36.8%
-                </div>
-              </div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest italic">Unique consumers</p>
-            </div>
-          </Card>
-        </div>
       </div>
     </div>
   );
