@@ -4,6 +4,8 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,10 +15,18 @@ import { cn } from "@/lib/utils";
 export default function OverviewPage() {
   const [isClient, setIsClient] = useState(false);
   const [activePeriod, setActivePeriod] = useState("90d");
+  const [expandedPriorities, setExpandedPriorities] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const togglePriority = (id: string) => {
+    setExpandedPriorities(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   if (!isClient) return null;
 
@@ -133,13 +143,13 @@ export default function OverviewPage() {
       </div>
 
       {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) */}
-      <div className="w-full lg:w-[30%] p-12 bg-slate-50/50">
+      <div className="w-full lg:w-[30%] p-12 bg-slate-50/50 overflow-y-auto">
         <div className="space-y-16">
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Strategic Priorities</span>
           
-          <div className="space-y-20">
+          <div className="space-y-12">
             {/* Priority 01 */}
-            <div className="space-y-6">
+            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500">
               <div className="flex items-center gap-4">
                 <span className="text-lg font-black text-slate-300 tabular-nums">01</span>
                 <Badge className="bg-orange-100 text-orange-600 border-none font-black text-[10px] uppercase tracking-widest">Near-Term</Badge>
@@ -150,14 +160,27 @@ export default function OverviewPage() {
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">scent over-promise<br/>reviews</span>
                 </div>
                 <h4 className="text-lg font-black text-slate-900 leading-tight">Product Claim Recalibration</h4>
-                <p className="text-[13px] font-medium text-slate-500 leading-relaxed">
+                <p className={cn(
+                  "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
+                  expandedPriorities["01"] ? "block" : "line-clamp-1"
+                )}>
                   182 reviews flag scent intensity below listing expectations — yet 409 reviews strongly praise fragrance when experienced directly. The gap signals over-promise in copy. Recommend a claim audit across all active Lazada A+ content and product descriptions.
                 </p>
+                <button 
+                  onClick={() => togglePriority("01")}
+                  className="text-[10px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity"
+                >
+                  {expandedPriorities["01"] ? (
+                    <>COLLAPSE ANALYSIS <ChevronUp className="h-3 w-3" /></>
+                  ) : (
+                    <>VIEW FULL ANALYSIS <ChevronDown className="h-3 w-3" /></>
+                  )}
+                </button>
               </div>
             </div>
 
             {/* Priority 02 */}
-            <div className="space-y-6">
+            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500 delay-100">
               <div className="flex items-center gap-4">
                 <span className="text-lg font-black text-slate-300 tabular-nums">02</span>
                 <Badge className="bg-blue-100 text-[#003da5] border-none font-black text-[10px] uppercase tracking-widest">Sustain</Badge>
@@ -168,14 +191,27 @@ export default function OverviewPage() {
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">fragrance mentions</span>
                 </div>
                 <h4 className="text-lg font-black text-slate-900 leading-tight">Amplify Fragrance Superiority</h4>
-                <p className="text-[13px] font-medium text-slate-500 leading-relaxed">
+                <p className={cn(
+                  "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
+                  expandedPriorities["02"] ? "block" : "line-clamp-1"
+                )}>
                   2,922 reviews cite scent as the lead purchase trigger and 545 express explicit reorder intent — the highest loyalty signal in the dataset. Fragrance and fabric gentleness are the portfolio's strongest consumer anchors. Recommend amplifying both in A+ content and campaign creative.
                 </p>
+                <button 
+                  onClick={() => togglePriority("02")}
+                  className="text-[10px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity"
+                >
+                  {expandedPriorities["02"] ? (
+                    <>COLLAPSE ANALYSIS <ChevronUp className="h-3 w-3" /></>
+                  ) : (
+                    <>VIEW FULL ANALYSIS <ChevronDown className="h-3 w-3" /></>
+                  )}
+                </button>
               </div>
             </div>
 
             {/* Priority 03 */}
-            <div className="space-y-6">
+            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500 delay-200">
               <div className="flex items-center gap-4">
                 <span className="text-lg font-black text-slate-300 tabular-nums">03</span>
                 <Badge className="bg-slate-200 text-slate-600 border-none font-black text-[10px] uppercase tracking-widest">High Priority</Badge>
@@ -186,9 +222,22 @@ export default function OverviewPage() {
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">price-vs-offline<br/>complaints</span>
                 </div>
                 <h4 className="text-lg font-black text-slate-900 leading-tight">Value Perception Intervention</h4>
-                <p className="text-[13px] font-medium text-slate-500 leading-relaxed">
+                <p className={cn(
+                  "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
+                  expandedPriorities["03"] ? "block" : "line-clamp-1"
+                )}>
                   35 reviews explicitly compare Lazada prices as higher than supermarket alternatives, with 71 linking price to unmet quality expectations. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative, timed to Lazada coins events.
                 </p>
+                <button 
+                  onClick={() => togglePriority("03")}
+                  className="text-[10px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity"
+                >
+                  {expandedPriorities["03"] ? (
+                    <>COLLAPSE ANALYSIS <ChevronUp className="h-3 w-3" /></>
+                  ) : (
+                    <>VIEW FULL ANALYSIS <ChevronDown className="h-3 w-3" /></>
+                  )}
+                </button>
               </div>
             </div>
           </div>
