@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * @fileOverview Strategic Overview page matching the 3-column executive report format.
- * Expanded to full-screen architecture to provide a professional dashboard experience.
+ * Recalibrated column widths and typographic scale for a more balanced executive view.
  */
 export default function OverviewPage() {
   const [isClient, setIsClient] = useState(false);
@@ -33,18 +33,18 @@ export default function OverviewPage() {
   return (
     <div className="flex flex-col lg:flex-row h-full min-h-[calc(100vh-4rem)] bg-white animate-in fade-in duration-700">
       
-      {/* 1. BRAND HEALTH STATUS (BLUE COLUMN) */}
-      <div className="w-full lg:w-[35%] bg-[#003da5] p-12 text-white flex flex-col justify-between border-r border-white/5">
-        <div className="space-y-16">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-black uppercase tracking-widest opacity-60">Brand Health Status</span>
-            <div className="flex gap-4">
+      {/* 1. BRAND HEALTH STATUS (BLUE COLUMN) - RECALIBRATED TO 25% */}
+      <div className="w-full lg:w-[25%] bg-[#003da5] p-10 text-white flex flex-col justify-between border-r border-white/5">
+        <div className="space-y-12">
+          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Brand Health Status</span>
+            <div className="flex gap-2">
               {['7d', '30d', '90d'].map((p) => (
                 <button 
                   key={p}
                   onClick={() => setActivePeriod(p)}
                   className={cn(
-                    "text-[11px] font-black uppercase tracking-widest px-4 py-1.5 rounded-lg transition-all",
+                    "text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-md transition-all",
                     activePeriod === p ? "bg-cyan-400 text-[#003da5]" : "bg-white/5 opacity-40 hover:opacity-100"
                   )}
                 >
@@ -54,37 +54,37 @@ export default function OverviewPage() {
             </div>
           </div>
 
-          <div className="space-y-6 pt-12">
-            <h2 className="text-[9rem] font-black leading-[0.8] tracking-tighter tabular-nums">87%</h2>
-            <div className="space-y-3">
-              <p className="text-3xl font-black uppercase tracking-widest text-cyan-400">Strong</p>
-              <p className="text-base font-bold opacity-60">— 0.0pp vs prior period</p>
+          <div className="space-y-4 pt-8">
+            <h2 className="text-[6rem] font-black leading-[0.8] tracking-tighter tabular-nums">87%</h2>
+            <div className="space-y-2">
+              <p className="text-xl font-black uppercase tracking-widest text-cyan-400">Strong</p>
+              <p className="text-xs font-bold opacity-60">— 0.0pp vs prior period</p>
             </div>
           </div>
         </div>
 
-        <div className="space-y-10 mt-auto pt-20">
-          <span className="text-[11px] font-black uppercase tracking-widest opacity-60">Competitive Benchmark</span>
-          <div className="space-y-8">
+        <div className="space-y-8 mt-auto pt-16">
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Competitive Benchmark</span>
+          <div className="space-y-6">
             {[
               { label: "P&G Portfolio", value: 87, color: "bg-cyan-400" },
               { label: "Unilever", value: 72, color: "bg-white/20" },
               { label: "Local brands", value: 62, color: "bg-white/20" }
             ].map((item) => (
-              <div key={item.label} className="space-y-3">
-                <div className="flex justify-between text-[12px] font-bold uppercase tracking-wider">
+              <div key={item.label} className="space-y-2">
+                <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
                   <span>{item.label}</span>
                   <span className="tabular-nums">{item.value}%</span>
                 </div>
-                <Progress value={item.value} className="h-2 bg-white/10" indicatorClassName={item.color} />
+                <Progress value={item.value} className="h-1.5 bg-white/10" indicatorClassName={item.color} />
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* 2. PERFORMANCE DRIVERS (CENTER COLUMN) */}
-      <div className="w-full lg:w-[35%] p-12 border-r border-slate-100 flex flex-col bg-white">
+      {/* 2. PERFORMANCE DRIVERS (CENTER COLUMN) - EXPANDED TO 45% */}
+      <div className="w-full lg:w-[45%] p-12 border-r border-slate-100 flex flex-col bg-white">
         <div className="space-y-10 flex-1">
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Performance Drivers</span>
           
@@ -142,7 +142,7 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) */}
+      {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) - 30% */}
       <div className="w-full lg:w-[30%] p-12 bg-slate-50/50 overflow-y-auto">
         <div className="space-y-16">
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Strategic Priorities</span>
