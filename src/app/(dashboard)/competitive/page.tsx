@@ -133,9 +133,9 @@ export default function CompetitiveAnalysisPage() {
                   </ResponsiveContainer>
                 </div>
 
-                {/* HORIZONTAL GRID BREAKDOWN - HIGH FIDELITY SIDE-BY-SIDE */}
+                {/* HORIZONTAL COMPARISON GRID */}
                 <div className="mt-4 pt-4 border-t border-slate-100 shrink-0">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mb-6 block">Vector Breakdown</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mb-6 block">Vector Comparison Breakdown</span>
                   <div className="grid grid-cols-2 gap-x-24 gap-y-10">
                     {radarData.map((item) => (
                       <div key={item.subject} className="space-y-2">
@@ -145,7 +145,7 @@ export default function CompetitiveAnalysisPage() {
                             "text-5xl font-black tabular-nums tracking-tighter transition-colors",
                             item.A > item.B ? "text-[#003da5]" : "text-slate-200"
                           )}>{item.A}%</span>
-                          <div className="h-8 w-px bg-slate-100" />
+                          <span className="text-slate-100 font-light text-4xl">|</span>
                           <span className={cn(
                             "text-5xl font-black tabular-nums tracking-tighter transition-colors",
                             item.B > item.A ? "text-[#ef4444]" : "text-slate-200"
@@ -157,26 +157,26 @@ export default function CompetitiveAnalysisPage() {
                 </div>
               </div>
 
-              {/* RIGHT: COMPACT AI INSIGHTS */}
+              {/* RIGHT: ENLARGED COMPETITIVE INTELLIGENCE */}
               <div className="lg:col-span-5 flex flex-col min-h-0">
                 <div className="flex flex-col h-full space-y-4">
-                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Competitive Intelligence</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competitive Intelligence</span>
                   
-                  <div className="flex-1 border border-slate-200 rounded-[2rem] bg-white p-6 flex flex-col space-y-6 overflow-y-auto scrollbar-hide">
+                  <div className="flex-1 border border-slate-200 rounded-[2.5rem] bg-white p-10 flex flex-col space-y-10 overflow-y-auto scrollbar-hide shadow-sm">
                     <div className="space-y-2">
-                      <span className="text-[9px] font-black uppercase tracking-[0.15em] text-[#003da5]">Executive Status</span>
-                      <p className="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+                      <span className="text-[11px] font-black uppercase tracking-[0.15em] text-[#003da5]">Executive Status</span>
+                      <p className="text-4xl font-black text-slate-900 leading-[1.1] tracking-tight">
                         Competitor leads detected in {edgedOutVectors.length} strategic vectors.
                       </p>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-10">
                       {edgedOutVectors.map((vector) => (
-                        <div key={vector.subject} className="flex items-start gap-4 group">
-                          <div className="w-1.5 h-12 bg-[#ef4444] rounded-full shrink-0" />
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-[10px] font-black text-[#ef4444] uppercase tracking-wider leading-none">Primary Laggard: {vector.subject}</span>
-                            <span className="text-base font-bold text-slate-600 tracking-tight leading-snug">
+                        <div key={vector.subject} className="flex items-start gap-6">
+                          <div className="w-2 h-14 bg-[#ef4444] rounded-full shrink-0" />
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[11px] font-black text-[#ef4444] uppercase tracking-wider leading-none">Primary Laggard: {vector.subject}</span>
+                            <span className="text-xl font-bold text-slate-600 tracking-tight leading-snug">
                               Surf holds a <span className="text-[#ef4444] font-black">+{vector.B - vector.A}pp</span> lead. 
                               Audit pricing index and {vector.subject.toLowerCase()} claims.
                             </span>
@@ -185,11 +185,11 @@ export default function CompetitiveAnalysisPage() {
                       ))}
 
                       {pgLeads.length > 0 && (
-                        <div className="flex items-start gap-4 pt-4 border-t border-slate-100">
-                          <div className="w-1.5 h-12 bg-emerald-500 rounded-full shrink-0" />
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-wider leading-none">Portfolio Strength: {pgLeads[0].subject}</span>
-                            <span className="text-base font-bold text-slate-600 tracking-tight leading-snug">
+                        <div className="flex items-start gap-6 pt-6 border-t border-slate-100">
+                          <div className="w-2 h-14 bg-emerald-500 rounded-full shrink-0" />
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[11px] font-black text-emerald-600 uppercase tracking-wider leading-none">Portfolio Strength: {pgLeads[0].subject}</span>
+                            <span className="text-xl font-bold text-slate-600 tracking-tight leading-snug">
                               Downy maintains a <span className="text-emerald-600 font-black">+{pgLeads[0].A - pgLeads[0].B}pp</span> dominant gap. Amplify in Q2.
                             </span>
                           </div>
