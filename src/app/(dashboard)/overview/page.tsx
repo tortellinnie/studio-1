@@ -142,8 +142,8 @@ export default function OverviewPage() {
         <div className="space-y-12">
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Strategic Priorities</span>
           
-          {/* Dynamic Portfolio Insights Section */}
-          <div className="p-6 bg-white border border-slate-200 rounded-[1.5rem] space-y-4">
+          {/* Condensed Portfolio Insight */}
+          <div className="p-6 bg-white border border-slate-200 rounded-[1.5rem] space-y-3">
             <div className="flex items-center gap-2 text-[#003da5]">
               <Sparkles className="h-4 w-4" />
               <span className="text-[10px] font-black uppercase tracking-widest">Portfolio Pulse</span>
@@ -151,20 +151,6 @@ export default function OverviewPage() {
             <p className="text-sm font-bold text-slate-900 leading-snug">
               {getPulseInsight(stats.posPct)}
             </p>
-            <div className="pt-2 flex flex-col gap-3">
-              <div className="flex gap-3">
-                <div className="w-1 bg-emerald-500 rounded-full" />
-                <p className="text-[11px] font-bold text-slate-500 leading-tight">
-                  <span className="text-emerald-600 uppercase">Core Strength:</span> Amplify {topDriver.label} in A+ Content.
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <div className="w-1 bg-orange-500 rounded-full" />
-                <p className="text-[11px] font-bold text-slate-500 leading-tight">
-                  <span className="text-orange-600 uppercase">Primary Gap:</span> Calibrate expectations for {bottomDriver.label}.
-                </p>
-              </div>
-            </div>
           </div>
 
           <div className="space-y-10">
