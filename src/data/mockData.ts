@@ -83,7 +83,7 @@ export const dynamicGlobalSentiment = {
 export const globalCorrectedRating = globalStats.correctedRating;
 
 // VECTOR ANALYSIS
-const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
+export const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
 export const dynamicVectorScores = vectorLabels.map(label => {
   const mentioned = cacheEntries.filter(e => e.vectors.includes(label));
   const pos = mentioned.filter(e => e.sentimentLabel === 'positive').length;
@@ -190,12 +190,143 @@ export const competitiveBenchmark = [
 // sentimentScore = % positive from analyzed sample
 // correctedRating = NLP-adjusted: 1 + (sentimentScore/100) * 4
 export const allIndustryProducts = [
-  { id: 'pg-1',  name: 'Downy Sunrise Fresh Garden Bloom',   brand: 'Downy / P&G',    originalRating: 4.98, correctedRating: 4.52, sentimentScore: 88.1, isPNG: true,  reviewCount: 16917, samplesAnalyzed: 320 },
-  { id: 'pg-2',  name: 'Ariel Liquid Sunrise Fresh Floral',  brand: 'Ariel / P&G',    originalRating: 4.97, correctedRating: 4.62, sentimentScore: 90.6, isPNG: true,  reviewCount: 11059, samplesAnalyzed: 180 },
-  { id: 'uni-1', name: 'Surf Cherry Blossom Liquid',         brand: 'Surf / Unilever', originalRating: 4.98, correctedRating: 4.77, sentimentScore: 94.3, isPNG: false, reviewCount:  9731, samplesAnalyzed: 105 },
-  { id: 'pg-3',  name: 'Ariel Liquid Floral Passion',        brand: 'Ariel / P&G',    originalRating: 4.96, correctedRating: 4.65, sentimentScore: 91.3, isPNG: true,  reviewCount:  9758, samplesAnalyzed: 115 },
-  { id: 'uni-2', name: 'Surf Rose Fresh Liquid',             brand: 'Surf / Unilever', originalRating: 4.98, correctedRating: 4.76, sentimentScore: 94.1, isPNG: false, reviewCount:  8603, samplesAnalyzed: 170 },
-  { id: 'loc-1', name: 'BritePH Fabric Conditioner Kit',     brand: 'BritePH / Local', originalRating: 4.95, correctedRating: 4.39, sentimentScore: 84.8, isPNG: false, reviewCount:  9077, samplesAnalyzed: 105 },
-  { id: 'uni-3', name: 'Surf Blossom Fresh Conditioner',     brand: 'Surf / Unilever', originalRating: 4.97, correctedRating: 4.47, sentimentScore: 86.7, isPNG: false, reviewCount:  7478, samplesAnalyzed: 128 },
-  { id: 'uni-4', name: 'Breeze Powermachine Ultraclean',     brand: 'Breeze / Unilever', originalRating: 4.96, correctedRating: 4.72, sentimentScore: 93.0, isPNG: false, reviewCount: 6421, samplesAnalyzed:  43 },
+  { id: 'pg-1',  name: 'Downy Sunrise Fresh Garden Bloom',   brand: 'Downy / P&G',       company: 'P&G',     category: 'Fabric Conditioner', subcategory: 'Liquid Conditioner', originalRating: 4.98, correctedRating: 4.52, sentimentScore: 88.1, isPNG: true,  reviewCount: 16917, samplesAnalyzed: 320 },
+  { id: 'pg-2',  name: 'Ariel Liquid Sunrise Fresh Floral',  brand: 'Ariel / P&G',       company: 'P&G',     category: 'Detergent',           subcategory: 'Liquid Detergent',   originalRating: 4.97, correctedRating: 4.62, sentimentScore: 90.6, isPNG: true,  reviewCount: 11059, samplesAnalyzed: 180 },
+  { id: 'uni-1', name: 'Surf Cherry Blossom Liquid',         brand: 'Surf / Unilever',   company: 'Unilever',category: 'Detergent',           subcategory: 'Liquid Detergent',   originalRating: 4.98, correctedRating: 4.77, sentimentScore: 94.3, isPNG: false, reviewCount:  9731, samplesAnalyzed: 105 },
+  { id: 'pg-3',  name: 'Ariel Liquid Floral Passion',        brand: 'Ariel / P&G',       company: 'P&G',     category: 'Detergent',           subcategory: 'Liquid Detergent',   originalRating: 4.96, correctedRating: 4.65, sentimentScore: 91.3, isPNG: true,  reviewCount:  9758, samplesAnalyzed: 115 },
+  { id: 'uni-2', name: 'Surf Rose Fresh Liquid',             brand: 'Surf / Unilever',   company: 'Unilever',category: 'Detergent',           subcategory: 'Liquid Detergent',   originalRating: 4.98, correctedRating: 4.76, sentimentScore: 94.1, isPNG: false, reviewCount:  8603, samplesAnalyzed: 170 },
+  { id: 'loc-1', name: 'BritePH Fabric Conditioner Kit',     brand: 'BritePH / Local',   company: 'Local',   category: 'Fabric Conditioner',  subcategory: 'Conditioner Kit',    originalRating: 4.95, correctedRating: 4.39, sentimentScore: 84.8, isPNG: false, reviewCount:  9077, samplesAnalyzed: 105 },
+  { id: 'uni-3', name: 'Surf Blossom Fresh Conditioner',     brand: 'Surf / Unilever',   company: 'Unilever',category: 'Fabric Conditioner',  subcategory: 'Liquid Conditioner', originalRating: 4.97, correctedRating: 4.47, sentimentScore: 86.7, isPNG: false, reviewCount:  7478, samplesAnalyzed: 128 },
+  { id: 'uni-4', name: 'Breeze Powermachine Ultraclean',     brand: 'Breeze / Unilever', company: 'Unilever',category: 'Detergent',           subcategory: 'Powder Detergent',   originalRating: 4.96, correctedRating: 4.72, sentimentScore: 93.0, isPNG: false, reviewCount:  6421, samplesAnalyzed:  43 },
 ];
+
+// Deterministic per-product vector scores (seeded from product id + vector name)
+function seededScore(seed: string, base: number): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
+  }
+  const offset = ((Math.abs(h) % 37) - 18); // ±18 variance
+  return Math.min(99, Math.max(25, Math.round(base + offset)));
+}
+
+export function getProductVectorScores(productId: string): Record<string, number> {
+  const product = allIndustryProducts.find(p => p.id === productId);
+  if (!product) return {};
+  return Object.fromEntries(
+    vectorLabels.map(v => [v, seededScore(`${productId}-${v}`, product.sentimentScore)])
+  );
+}
+
+export const allBrands = [...new Set(allIndustryProducts.map(p => p.company))];
+
+// Multi-brand or multi-product daily sentiment score for Sentiment Velocity
+export function getVelocityTimeline(mode: 'brand' | 'product', ids: string[], days: number) {
+  const cutoff = new Date('2024-03-15T00:00:00Z');
+  cutoff.setDate(cutoff.getDate() - days);
+  const filtered = cacheEntries.filter(e => e.timestamp >= cutoff);
+
+  const dateSet = new Set<string>();
+  filtered.forEach(e => dateSet.add(e.timestamp.toISOString().split('T')[0]));
+
+  return Array.from(dateSet).sort().map(date => {
+    const point: Record<string, string | number> = {
+      name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    };
+    if (mode === 'brand') {
+      for (const company of ids) {
+        const products = allIndustryProducts.filter(p => p.company === company);
+        if (!products.length) continue;
+        const avg = products.reduce((sum, p) => sum + seededScore(`${p.id}-${date}`, p.sentimentScore), 0) / products.length;
+        point[company] = Math.round(avg);
+      }
+    } else {
+      for (const id of ids) {
+        const product = allIndustryProducts.find(p => p.id === id);
+        if (!product) continue;
+        point[id] = seededScore(`${id}-${date}`, product.sentimentScore);
+      }
+    }
+    return point;
+  });
+}
+
+export function getComparativeRadarData(productIds: string[]) {
+  return vectorLabels.map(vector => {
+    const point: Record<string, string | number> = { vector, fullMark: 100 };
+    for (const id of productIds) {
+      const scores = getProductVectorScores(id);
+      point[id] = scores[vector] ?? 0;
+    }
+    return point;
+  });
+}
+
+// Single-product daily breakdown for the Analysis Timeline
+export function getSingleProductTimeline(productId: string, days: number) {
+  const product = allIndustryProducts.find(p => p.id === productId);
+  if (!product) return [];
+
+  const cutoff = new Date('2024-03-15T00:00:00Z');
+  cutoff.setDate(cutoff.getDate() - days);
+  const filtered = cacheEntries.filter(e => e.timestamp >= cutoff);
+
+  const dateSet = new Set<string>();
+  filtered.forEach(e => dateSet.add(e.timestamp.toISOString().split('T')[0]));
+
+  return Array.from(dateSet).sort().map(date => {
+    const sentScore = seededScore(`${productId}-${date}`, product.sentimentScore);
+    const total = seededScore(`${productId}-vol-${date}`, 60);
+    const pos = Math.round((sentScore / 100) * total);
+    const neg = Math.round(((100 - sentScore) / 100) * total * 0.5);
+    const neu = Math.max(0, total - pos - neg);
+    return {
+      name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      Positive: pos,
+      Neutral: neu,
+      Negative: neg,
+      'Sentiment Score': sentScore,
+    };
+  });
+}
+
+// Per-product daily sentiment score timeline (deterministic seeded scores)
+export function getProductTimeline(productIds: string[], days: number) {
+  const cutoff = new Date('2024-03-15T00:00:00Z');
+  cutoff.setDate(cutoff.getDate() - days);
+  const filtered = cacheEntries.filter(e => e.timestamp >= cutoff);
+
+  type DayBucket = { date: string; positive: number; neutral: number; negative: number; totalScore: number; count: number };
+  const timelineMap = new Map<string, DayBucket>();
+  filtered.forEach(e => {
+    const dStr = e.timestamp.toISOString().split('T')[0];
+    if (!timelineMap.has(dStr)) {
+      timelineMap.set(dStr, { date: dStr, positive: 0, neutral: 0, negative: 0, totalScore: 0, count: 0 });
+    }
+    const day = timelineMap.get(dStr)!;
+    (day as any)[e.sentimentLabel]++;
+    day.totalScore += e.score;
+    day.count++;
+  });
+
+  return Array.from(timelineMap.keys()).sort().map(date => {
+    const d = timelineMap.get(date)!;
+    const point: Record<string, string | number> = {
+      name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      Positive: d.positive,
+      Neutral: d.neutral,
+      Negative: d.negative,
+    };
+    for (const id of productIds) {
+      const product = allIndustryProducts.find(p => p.id === id);
+      if (!product) continue;
+      // Seeded daily score: base sentiment + daily variation
+      point[id] = seededScore(`${id}-${date}`, product.sentimentScore);
+    }
+    // Fallback aggregate score when no products selected
+    if (productIds.length === 0) {
+      point['Sentiment Score'] = parseFloat((1 + (d.totalScore / d.count) * 4).toFixed(1));
+    }
+    return point;
+  });
+}
