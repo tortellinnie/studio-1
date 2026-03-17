@@ -133,7 +133,7 @@ export default function CompetitiveAnalysisPage() {
                   </ResponsiveContainer>
                 </div>
 
-                {/* HORIZONTAL GRID BREAKDOWN - EXPANDED */}
+                {/* HORIZONTAL GRID BREAKDOWN - HIGH FIDELITY SIDE-BY-SIDE */}
                 <div className="mt-4 pt-4 border-t border-slate-100 shrink-0">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mb-6 block">Vector Breakdown</span>
                   <div className="grid grid-cols-2 gap-x-24 gap-y-10">
