@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  */
 export default function BrandHealthPage() {
   const [isClient, setIsClient] = useState(false);
-  const heroSkus = getRankedHeroSkus();
+  const heroSkusRaw = getRankedHeroSkus();
   const matrixData = getSuperiorityMatrix();
 
   useEffect(() => {
@@ -27,11 +27,25 @@ export default function BrandHealthPage() {
 
   if (!isClient) return null;
 
-  // Podium data
-  const podium = [heroSkus[1], heroSkus[0], heroSkus[2]]; // Rank 2, 1, 3
-  const secondaryLeaders = heroSkus.slice(3, 7); // Ranks 4, 5, 6, 7
+  // REARRANGE LOGIC: Rank P&G SKUs by Superiority (Average Delta) instead of just raw Ratio
+  const pgMatrixItems = matrixData
+    .filter(m => m.isPNG)
+    .map(m => ({
+      name: m.brand, // This is the SKU name in Matrix data
+      avgDelta: m.deltas.reduce((acc, d) => acc + d.delta, 0) / m.deltas.length
+    }))
+    .sort((a, b) => b.avgDelta - a.avgDelta);
 
-  // Rank Matrix by Market Strength (Average Delta)
+  // Map back to heroSkus to get the 'ratio' and other display data for the UI
+  const sortedHeroSkus = pgMatrixItems.map(mItem => 
+    heroSkusRaw.find(h => h.name === mItem.name)
+  ).filter(Boolean) as any[];
+
+  // Podium data: Rank 2, Rank 1, Rank 3
+  const podium = [sortedHeroSkus[1], sortedHeroSkus[0], sortedHeroSkus[2]];
+  const secondaryLeaders = sortedHeroSkus.slice(3, 7);
+
+  // Rank Matrix for the table by Market Strength (Average Delta)
   const rankedMatrix = [...matrixData].sort((a, b) => {
     const avgA = a.deltas.reduce((acc, d) => acc + d.delta, 0) / a.deltas.length;
     const avgB = b.deltas.reduce((acc, d) => acc + d.delta, 0) / b.deltas.length;
