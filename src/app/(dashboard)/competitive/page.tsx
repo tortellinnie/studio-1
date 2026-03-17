@@ -47,45 +47,45 @@ export default function CompetitiveAnalysisPage() {
       {/* HORIZONTAL FILTERS BAR - ENLARGED FOR READABILITY */}
       <div className="w-full bg-white border border-slate-200 rounded-xl p-5 flex flex-row items-center gap-10 shadow-sm shrink-0">
         <div className="flex flex-col gap-1 min-w-fit">
-          <span className="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
-          <span className="text-[10px] text-slate-400 font-bold tracking-tight">Synchronized cross-platform analysis</span>
+          <span className="text-base font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
+          <span className="text-sm text-slate-400 font-bold tracking-tight">Synchronized cross-platform analysis</span>
         </div>
         
         <div className="flex flex-1 items-center gap-8">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Primary Brand</span>
+            <span className="text-xs font-black text-slate-400 uppercase tracking-tight">Primary Brand</span>
             <Select defaultValue="pg">
-              <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 text-xs font-bold rounded-md">
+              <SelectTrigger className="w-[200px] h-10 bg-slate-50 border-slate-200 text-sm font-bold rounded-md">
                 <SelectValue placeholder="Select Brand" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pg" className="font-bold text-xs">P&G (Portfolio)</SelectItem>
-                <SelectItem value="unilever" className="font-bold text-xs">Unilever</SelectItem>
+                <SelectItem value="pg" className="font-bold text-sm">P&G (Portfolio)</SelectItem>
+                <SelectItem value="unilever" className="font-bold text-sm">Unilever</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Category Segment</span>
+            <span className="text-xs font-black text-slate-400 uppercase tracking-tight">Category Segment</span>
             <Select defaultValue="fabric">
-              <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 text-xs font-bold rounded-md">
+              <SelectTrigger className="w-[200px] h-10 bg-slate-50 border-slate-200 text-sm font-bold rounded-md">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="fabric" className="font-bold text-xs">Fabric Care</SelectItem>
-                <SelectItem value="oral" className="font-bold text-xs">Oral Care</SelectItem>
+                <SelectItem value="fabric" className="font-bold text-sm">Fabric Care</SelectItem>
+                <SelectItem value="oral" className="font-bold text-sm">Oral Care</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="flex-1 flex flex-col gap-1.5">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Comparative Baseline</span>
-            <div className="flex items-center gap-3 h-9 bg-slate-50 border border-slate-200 px-4 rounded-md w-full">
-              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[10px] py-1 px-3 rounded font-bold uppercase tracking-tight">
+            <span className="text-xs font-black text-slate-400 uppercase tracking-tight">Comparative Baseline</span>
+            <div className="flex items-center gap-3 h-10 bg-slate-50 border border-slate-200 px-4 rounded-md w-full">
+              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[11px] py-1.5 px-4 rounded font-bold uppercase tracking-tight">
                 Downy Sunrise Fresh
               </Badge>
-              <span className="text-slate-300 font-black text-[10px]">VS</span>
-              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[10px] py-1 px-3 rounded font-bold uppercase tracking-tight">
+              <span className="text-slate-300 font-black text-xs">VS</span>
+              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[11px] py-1.5 px-4 rounded font-bold uppercase tracking-tight">
                 Surf Cherry Blossom
               </Badge>
             </div>
@@ -102,7 +102,7 @@ export default function CompetitiveAnalysisPage() {
           <CardContent className="p-8 pt-4 flex-1 min-h-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
               
-              {/* LEFT: SPIDER GRAPH & GRID BREAKDOWN */}
+              {/* LEFT: SPIDER GRAPH & COMPARISON GRID */}
               <div className="lg:col-span-7 flex flex-col min-h-0">
                 <div className="flex-1 min-h-[300px] relative">
                   <ResponsiveContainer width="100%" height="100%">
@@ -157,7 +157,7 @@ export default function CompetitiveAnalysisPage() {
                 </div>
               </div>
 
-              {/* RIGHT: ENLARGED COMPETITIVE INTELLIGENCE - ALIGNED TOP */}
+              {/* RIGHT: COMPETITIVE INTELLIGENCE */}
               <div className="lg:col-span-5 flex flex-col min-h-0">
                 <div className="flex flex-col h-full">
                   <div className="flex-1 border border-slate-200 rounded-[2.5rem] bg-white p-10 flex flex-col space-y-10 overflow-y-auto scrollbar-hide shadow-sm">
