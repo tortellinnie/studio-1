@@ -19,7 +19,6 @@ import {
 } from 'recharts';
 import { getStatsForPeriod, dynamicVectorScores } from '@/data/mockData';
 import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Info } from "lucide-react";
 import { useFilters } from "@/context/FilterContext";
 
 const COLORS = {
@@ -34,14 +33,14 @@ const COLORS = {
 };
 
 export default function OverviewPage() {
-  const { measure, timeline: filterTimeline, sector, period } = useFilters();
+  const { measure, sector, period } = useFilters();
   const [stats, setStats] = useState(getStatsForPeriod(period));
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
     setStats(getStatsForPeriod(period));
-  }, [period, measure, filterTimeline, sector]);
+  }, [period, measure, sector]);
 
   if (!isClient) return null;
 
@@ -82,33 +81,7 @@ export default function OverviewPage() {
         <p className="text-sm text-slate-500 font-bold uppercase tracking-normal">Strategic performance audit & market baseline comparative pulse | Sector: {sector.replace('-', ' ').toUpperCase()}</p>
       </div>
 
-      {/* 1. KPI Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { title: "Market positive", value: `${stats.posPct}%`, trend: "+2.4%", trendColor: "text-emerald-600", icon: TrendingUp },
-          { title: "Corrected rating", value: stats.correctedRating.toFixed(2), trend: "-0.12", trendColor: "text-red-600", icon: TrendingDown },
-          { title: "Rating inflation", value: `${stats.ratingInflation}%`, trend: "+1.1%", trendColor: "text-amber-600", icon: Info },
-          { title: "Negative friction", value: `${stats.negPct}%`, trend: "-0.8%", trendColor: "text-red-600", icon: TrendingDown },
-        ].map((item, i) => (
-          <Card key={i} className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-bold text-slate-500 tracking-normal">{item.title}</p>
-                <item.icon className={cn("h-4 w-4", item.trendColor)} />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-3xl font-bold text-slate-900 tabular-nums tracking-normal">{item.value}</h3>
-                <div className="flex items-center gap-2">
-                  <span className={cn("text-xs font-bold", item.trendColor)}>{item.trend}</span>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-normal">vs Previous</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* 2. Daily Sentiment Pulse */}
+      {/* 1. Daily Sentiment Pulse */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
         <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
           <div className="space-y-1 text-center">
@@ -141,7 +114,7 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
 
-      {/* 3. 5-Vector Superiority centerpiece - EXPANDED */}
+      {/* 2. 5-Vector Superiority centerpiece */}
       <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
         <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal uppercase">5-Vector Superiority Spider Map</h3>
         
