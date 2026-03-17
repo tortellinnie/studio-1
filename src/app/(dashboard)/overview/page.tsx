@@ -42,6 +42,10 @@ export default function OverviewPage() {
     color: v.pgScore >= 90 ? "bg-emerald-500" : v.pgScore < 85 ? "bg-orange-500" : "bg-slate-200"
   })).sort((a, b) => b.value - a.value);
 
+  // Identify top and bottom performers for AI Insights
+  const topDriver = performanceDrivers[0];
+  const bottomDriver = performanceDrivers[performanceDrivers.length - 1];
+
   return (
     <div className="flex flex-col lg:flex-row h-full min-h-[calc(100vh-4rem)] bg-white animate-in fade-in duration-700">
       
@@ -128,22 +132,23 @@ export default function OverviewPage() {
           </div>
         </div>
 
+        {/* Dynamic AI Insights Section */}
         <div className="mt-16 space-y-8 pt-12 border-t border-slate-50">
-          <div className="flex gap-6">
+          <div className="flex gap-6 animate-in fade-in slide-in-from-left-4 duration-500">
             <div className="w-1.5 bg-emerald-500 rounded-full" />
             <div className="space-y-2">
-              <span className="text-[11px] font-black text-emerald-500 uppercase tracking-widest leading-none">Value Signal</span>
+              <span className="text-[11px] font-black text-emerald-500 uppercase tracking-widest leading-none">Strength Signal</span>
               <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
-                {Math.round(stats.total * 0.3).toLocaleString()} "sulit" (value-for-money) mentions — primarily driven by Lazada coins and discount events
+                Since {topDriver.label} is our highest performing vector at {topDriver.value}%, we should double down on these claims in high-reach A+ content to maintain competitive distance.
               </p>
             </div>
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
             <div className="w-1.5 bg-orange-500 rounded-full" />
             <div className="space-y-2">
-              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest leading-none">Communication Gap</span>
+              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest leading-none">Critical Gap</span>
               <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
-                {Math.round(stats.total * 0.02).toLocaleString()} reviews cite scent intensity below what was advertised — a listing over-promise problem
+                Since {bottomDriver.label} is currently low at {bottomDriver.value}%, prioritize a tactical recalibration of our listings to align consumer expectations with actual delivery.
               </p>
             </div>
           </div>
