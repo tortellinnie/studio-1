@@ -42,50 +42,50 @@ export default function CompetitiveAnalysisPage() {
   const pgLeads = radarData.filter(d => d.A > d.B);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-20 p-10">
+    <div className="h-full flex flex-col space-y-4 animate-in fade-in duration-500 p-6 overflow-hidden">
       
-      {/* HORIZONTAL FILTERS BAR */}
-      <div className="w-full bg-white border border-slate-200 rounded-2xl p-6 flex flex-row items-center gap-12 shadow-sm">
-        <div className="flex flex-col gap-1 min-w-fit">
-          <span className="text-[11px] font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
-          <span className="text-[10px] text-slate-400 font-bold">Synchronized cross-platform analysis</span>
+      {/* HORIZONTAL FILTERS BAR - COMPACT */}
+      <div className="w-full bg-white border border-slate-200 rounded-xl p-4 flex flex-row items-center gap-8 shadow-sm shrink-0">
+        <div className="flex flex-col gap-0.5 min-w-fit">
+          <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
+          <span className="text-[9px] text-slate-400 font-bold tracking-tight">Synchronized cross-platform analysis</span>
         </div>
         
-        <div className="flex flex-1 items-center gap-8">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[9px] font-black text-slate-400 uppercase">Primary Brand</span>
+        <div className="flex flex-1 items-center gap-6">
+          <div className="flex flex-col gap-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tight">Primary Brand</span>
             <Select defaultValue="pg">
-              <SelectTrigger className="w-[180px] h-10 bg-slate-50 border-slate-200 text-xs font-bold rounded-lg">
+              <SelectTrigger className="w-[160px] h-8 bg-slate-50 border-slate-200 text-[11px] font-bold rounded-md">
                 <SelectValue placeholder="Select Brand" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pg" className="font-bold">P&G (Portfolio)</SelectItem>
-                <SelectItem value="unilever" className="font-bold">Unilever</SelectItem>
+                <SelectItem value="pg" className="font-bold text-xs">P&G (Portfolio)</SelectItem>
+                <SelectItem value="unilever" className="font-bold text-xs">Unilever</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[9px] font-black text-slate-400 uppercase">Category Segment</span>
+          <div className="flex flex-col gap-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tight">Category Segment</span>
             <Select defaultValue="fabric">
-              <SelectTrigger className="w-[180px] h-10 bg-slate-50 border-slate-200 text-xs font-bold rounded-lg">
+              <SelectTrigger className="w-[160px] h-8 bg-slate-50 border-slate-200 text-[11px] font-bold rounded-md">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="fabric" className="font-bold">Fabric Care</SelectItem>
-                <SelectItem value="oral" className="font-bold">Oral Care</SelectItem>
+                <SelectItem value="fabric" className="font-bold text-xs">Fabric Care</SelectItem>
+                <SelectItem value="oral" className="font-bold text-xs">Oral Care</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex-1 flex flex-col gap-1.5">
-            <span className="text-[9px] font-black text-slate-400 uppercase">Comparative Baseline</span>
-            <div className="flex items-center gap-2 h-10 bg-slate-50 border border-slate-200 px-4 rounded-lg w-full">
-              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[10px] py-1 px-3 rounded-md font-bold">
+          <div className="flex-1 flex flex-col gap-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tight">Comparative Baseline</span>
+            <div className="flex items-center gap-2 h-8 bg-slate-50 border border-slate-200 px-3 rounded-md w-full">
+              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[9px] py-0.5 px-2 rounded font-bold">
                 Downy Sunrise Fresh
               </Badge>
-              <span className="text-slate-300 font-black text-xs">vs</span>
-              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[10px] py-1 px-3 rounded-md font-bold">
+              <span className="text-slate-300 font-black text-[9px]">vs</span>
+              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[9px] py-0.5 px-2 rounded font-bold">
                 Surf Cherry Blossom
               </Badge>
             </div>
@@ -93,31 +93,31 @@ export default function CompetitiveAnalysisPage() {
         </div>
       </div>
 
-      <div className="w-full">
-        <Card className="border-slate-200 shadow-none rounded-[2.5rem] overflow-hidden">
-          <CardHeader className="p-12 pb-0">
-            <CardTitle className="text-4xl font-black text-slate-900 tracking-normal">5 Vectors of Superiority Analysis</CardTitle>
-            <CardDescription className="text-lg font-medium text-slate-400 tracking-normal mt-2">P&G Portfolio vs Unilever Market Baseline</CardDescription>
+      <div className="flex-1 min-h-0">
+        <Card className="h-full border-slate-200 shadow-none rounded-[2rem] overflow-hidden flex flex-col">
+          <CardHeader className="p-8 pb-0 shrink-0">
+            <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">5 Vectors of Superiority Analysis</CardTitle>
+            <CardDescription className="text-sm font-medium text-slate-400 tracking-tight mt-1">P&G Portfolio vs Unilever Market Baseline</CardDescription>
           </CardHeader>
-          <CardContent className="p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
+          <CardContent className="p-8 pt-4 flex-1 min-h-0">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
               
               {/* LEFT: SPIDER GRAPH & GRID BREAKDOWN */}
-              <div className="lg:col-span-7 space-y-20">
-                <div className="h-[500px] w-full relative">
+              <div className="lg:col-span-7 flex flex-col min-h-0">
+                <div className="flex-1 min-h-[300px] relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                       <PolarGrid stroke="#e2e8f0" />
                       <PolarAngleAxis 
                         dataKey="subject" 
-                        tick={{ fill: '#64748b', fontSize: 13, fontWeight: 800 }}
+                        tick={{ fill: '#64748b', fontSize: 11, fontWeight: 800 }}
                       />
                       <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                       <Radar
                         name="Downy Sunrise Fresh"
                         dataKey="A"
                         stroke="#003da5"
-                        strokeWidth={4}
+                        strokeWidth={3}
                         fill="#003da5"
                         fillOpacity={0.08}
                       />
@@ -125,7 +125,7 @@ export default function CompetitiveAnalysisPage() {
                         name="Surf Cherry Blossom"
                         dataKey="B"
                         stroke="#ef4444"
-                        strokeWidth={4}
+                        strokeWidth={3}
                         fill="#ef4444"
                         fillOpacity={0.08}
                       />
@@ -133,21 +133,21 @@ export default function CompetitiveAnalysisPage() {
                   </ResponsiveContainer>
                 </div>
 
-                {/* HORIZONTAL GRID BREAKDOWN */}
-                <div className="space-y-10 pt-10 border-t border-slate-100">
-                  <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Vector Breakdown</span>
-                  <div className="grid grid-cols-2 gap-x-20 gap-y-12">
+                {/* HORIZONTAL GRID BREAKDOWN - COMPACT */}
+                <div className="mt-4 pt-4 border-t border-slate-100 shrink-0">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">Vector Breakdown</span>
+                  <div className="grid grid-cols-2 gap-x-12 gap-y-6">
                     {radarData.map((item) => (
-                      <div key={item.subject} className="space-y-3">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
-                        <div className="flex items-center gap-6">
+                      <div key={item.subject} className="space-y-1">
+                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
+                        <div className="flex items-center gap-4">
                           <span className={cn(
-                            "text-5xl font-black tabular-nums tracking-tighter",
+                            "text-3xl font-black tabular-nums tracking-tighter",
                             item.A > item.B ? "text-[#003da5]" : "text-slate-200"
                           )}>{item.A}%</span>
-                          <div className="h-10 w-px bg-slate-100" />
+                          <div className="h-6 w-px bg-slate-100" />
                           <span className={cn(
-                            "text-5xl font-black tabular-nums tracking-tighter",
+                            "text-3xl font-black tabular-nums tracking-tighter",
                             item.B > item.A ? "text-[#ef4444]" : "text-slate-200"
                           )}>{item.B}%</span>
                         </div>
@@ -157,40 +157,40 @@ export default function CompetitiveAnalysisPage() {
                 </div>
               </div>
 
-              {/* RIGHT: ENLARGED AI INSIGHTS */}
-              <div className="lg:col-span-5 space-y-12">
-                <div className="space-y-4">
-                  <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Competitive Intelligence</span>
+              {/* RIGHT: COMPACT AI INSIGHTS */}
+              <div className="lg:col-span-5 flex flex-col min-h-0">
+                <div className="flex flex-col h-full space-y-4">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Competitive Intelligence</span>
                   
-                  <div className="p-10 border border-slate-200 rounded-[3rem] bg-white space-y-12">
-                    <div className="space-y-4">
-                      <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#003da5]">Executive Status</span>
-                      <p className="text-5xl font-black text-slate-900 leading-[1.1] tracking-normal">
+                  <div className="flex-1 border border-slate-200 rounded-[2rem] bg-white p-6 flex flex-col space-y-6 overflow-y-auto scrollbar-hide">
+                    <div className="space-y-2">
+                      <span className="text-[9px] font-black uppercase tracking-[0.15em] text-[#003da5]">Executive Status</span>
+                      <p className="text-2xl font-black text-slate-900 leading-tight tracking-tight">
                         Competitor leads detected in {edgedOutVectors.length} strategic vectors.
                       </p>
                     </div>
 
-                    <div className="space-y-12">
+                    <div className="space-y-6">
                       {edgedOutVectors.map((vector) => (
-                        <div key={vector.subject} className="flex items-start gap-6 group">
-                          <div className="w-2 h-20 bg-[#ef4444] rounded-full shrink-0 mt-1" />
-                          <div className="flex flex-col gap-2">
-                            <span className="text-xs font-black text-[#ef4444] uppercase tracking-[0.2em] leading-none">Primary Laggard: {vector.subject}</span>
-                            <span className="text-2xl font-bold text-slate-600 tracking-normal leading-tight">
+                        <div key={vector.subject} className="flex items-start gap-4 group">
+                          <div className="w-1.5 h-12 bg-[#ef4444] rounded-full shrink-0" />
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] font-black text-[#ef4444] uppercase tracking-wider leading-none">Primary Laggard: {vector.subject}</span>
+                            <span className="text-base font-bold text-slate-600 tracking-tight leading-snug">
                               Surf holds a <span className="text-[#ef4444] font-black">+{vector.B - vector.A}pp</span> lead. 
-                              Audit pricing index and {vector.subject.toLowerCase()} claims immediately.
+                              Audit pricing index and {vector.subject.toLowerCase()} claims.
                             </span>
                           </div>
                         </div>
                       ))}
 
                       {pgLeads.length > 0 && (
-                        <div className="flex items-start gap-6 pt-8 border-t border-slate-100">
-                          <div className="w-2 h-20 bg-emerald-500 rounded-full shrink-0 mt-1" />
-                          <div className="flex flex-col gap-2">
-                            <span className="text-xs font-black text-emerald-600 uppercase tracking-[0.2em] leading-none">Portfolio Strength: {pgLeads[0].subject}</span>
-                            <span className="text-2xl font-bold text-slate-600 tracking-normal leading-tight">
-                              Downy maintains a <span className="text-emerald-600 font-black">+{pgLeads[0].A - pgLeads[0].B}pp</span> dominant gap. Amplify this in Q2 messaging.
+                        <div className="flex items-start gap-4 pt-4 border-t border-slate-100">
+                          <div className="w-1.5 h-12 bg-emerald-500 rounded-full shrink-0" />
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-wider leading-none">Portfolio Strength: {pgLeads[0].subject}</span>
+                            <span className="text-base font-bold text-slate-600 tracking-tight leading-snug">
+                              Downy maintains a <span className="text-emerald-600 font-black">+{pgLeads[0].A - pgLeads[0].B}pp</span> dominant gap. Amplify in Q2.
                             </span>
                           </div>
                         </div>
