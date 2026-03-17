@@ -1,179 +1,198 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  Legend,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  Radar,
-  PolarRadiusAxis
-} from 'recharts';
-import { getStatsForPeriod, dynamicVectorScores } from '@/data/mockData';
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { useFilters } from "@/context/FilterContext";
 
-const COLORS = {
-  positive: "#003da5",
-  neutral: "#64748b",
-  negative: "#ef4444",
-  mkt_positive: "#003da533",
-  mkt_neutral: "#64748b33",
-  mkt_negative: "#ef444433",
-  mkt_grey: "#94a3b8",
-  mkt_red: "#ef4444"
-};
-
+/**
+ * @fileOverview Strategic Overview page matching the 3-column executive report format.
+ */
 export default function OverviewPage() {
-  const { measure, sector, period } = useFilters();
-  const [stats, setStats] = useState(getStatsForPeriod(period));
   const [isClient, setIsClient] = useState(false);
+  const [activePeriod, setActivePeriod] = useState("90d");
 
   useEffect(() => {
     setIsClient(true);
-    setStats(getStatsForPeriod(period));
-  }, [period, measure, sector]);
+  }, []);
 
   if (!isClient) return null;
 
-  const CustomTimelineTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white border border-slate-200 shadow-xl rounded-xl p-5 space-y-4 min-w-[240px]">
-          <div className="flex flex-col gap-1 border-b border-slate-100 pb-3">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-normal">{data.name}</p>
-            <div className={cn(
-              "text-white text-[11px] font-bold px-2.5 py-1 rounded-md self-start uppercase tracking-normal",
-              data.gap.includes('Lead') ? "bg-emerald-500" : "bg-red-500"
-            )}>
-              {data.gap}
+  return (
+    <div className="flex flex-col lg:flex-row h-full min-h-[800px] gap-0 rounded-[2rem] overflow-hidden border border-slate-200 bg-white shadow-2xl animate-in fade-in duration-700">
+      
+      {/* 1. BRAND HEALTH STATUS (BLUE COLUMN) */}
+      <div className="w-full lg:w-[35%] bg-[#003da5] p-10 text-white flex flex-col justify-between">
+        <div className="space-y-12">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Brand Health Status</span>
+            <div className="flex gap-4">
+              {['7d', '30d', '90d'].map((p) => (
+                <button 
+                  key={p}
+                  onClick={() => setActivePeriod(p)}
+                  className={cn(
+                    "text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-md transition-all",
+                    activePeriod === p ? "bg-cyan-400 text-[#003da5]" : "opacity-40 hover:opacity-100"
+                  )}
+                >
+                  {p}
+                </button>
+              ))}
             </div>
           </div>
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
-              <span className="text-[#003da5]">P&G POSITIVE</span>
-              <span className="tabular-nums">{data.pg_pos}</span>
-            </div>
-            <div className="flex items-center justify-between gap-8 text-[11px] font-bold">
-              <span className="text-slate-400 uppercase text-[9px]">Market Average</span>
-              <span className="tabular-nums text-slate-400">{data.mkt_pos}</span>
+
+          <div className="space-y-4 pt-20 pb-20">
+            <h2 className="text-[10rem] font-black leading-none tracking-tighter tabular-nums">87%</h2>
+            <div className="space-y-2">
+              <p className="text-2xl font-black uppercase tracking-widest text-cyan-400">Strong</p>
+              <p className="text-sm font-bold opacity-60">— 0.0pp vs prior period</p>
             </div>
           </div>
         </div>
-      );
-    }
-    return null;
-  };
 
-  return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-20">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-normal">Executive overview ({measure.toUpperCase()})</h1>
-        <p className="text-sm text-slate-500 font-bold uppercase tracking-normal">Strategic performance audit & market baseline comparative pulse | Sector: {sector.replace('-', ' ').toUpperCase()}</p>
+        <div className="space-y-8">
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Competitive Benchmark</span>
+          <div className="space-y-6">
+            {[
+              { label: "P&G Portfolio", value: 87, color: "bg-cyan-400" },
+              { label: "Unilever", value: 72, color: "bg-white/20" },
+              { label: "Local brands", value: 62, color: "bg-white/20" }
+            ].map((item) => (
+              <div key={item.label} className="space-y-2">
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider">
+                  <span>{item.label}</span>
+                  <span className="tabular-nums">{item.value}%</span>
+                </div>
+                <Progress value={item.value} className="h-1.5 bg-white/10" indicatorClassName={item.color} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* 1. Daily Sentiment Pulse */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white overflow-hidden">
-        <CardHeader className="pb-10 pt-8 px-8 border-b border-slate-50">
-          <div className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold text-slate-900 tracking-normal">Daily sentiment pulse</CardTitle>
-            <CardDescription className="text-sm text-slate-500 font-bold uppercase tracking-normal">P&G brands vs market baseline comparative audit</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="h-[500px] p-8">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart 
-              data={stats.timeline} 
-              margin={{ top: 20, right: 10, left: 0, bottom: 0 }} 
-              barGap={12}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dy={10} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 700 }} dx={-10} domain={[0, 15]} ticks={[0, 4, 8, 15]} />
-              <Tooltip content={<CustomTimelineTooltip />} cursor={{ fill: 'transparent' }} />
-              <Legend verticalAlign="top" align="center" height={60} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '10px', fontWeight: 700, paddingBottom: '40px', textTransform: 'uppercase' }} />
-              
-              <Bar dataKey="pg_pos" name="P&G Positive" stackId="pg" fill={COLORS.positive} />
-              <Bar dataKey="pg_neu" name="P&G Neutral" stackId="pg" fill={COLORS.neutral} />
-              <Bar dataKey="pg_neg" name="P&G Negative" stackId="pg" fill={COLORS.negative} radius={[4, 4, 0, 0]} />
-
-              <Bar dataKey="mkt_pos" name="Market Positive" stackId="mkt" fill={COLORS.mkt_positive} stroke={COLORS.positive} strokeWidth={1} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neu" name="Market Neutral" stackId="mkt" fill={COLORS.mkt_neutral} stroke={COLORS.neutral} strokeWidth={1} strokeDasharray="2 2" />
-              <Bar dataKey="mkt_neg" name="Market Negative" stackId="mkt" fill={COLORS.mkt_negative} stroke={COLORS.negative} strokeWidth={1} strokeDasharray="2 2" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* 2. 5-Vector Superiority centerpiece */}
-      <Card className="border-slate-200 shadow-sm rounded-xl bg-white p-10 flex flex-col items-center">
-        <h3 className="text-2xl font-bold text-slate-900 text-center mb-10 w-full tracking-normal uppercase">5-Vector Superiority Spider Map</h3>
-        
-        <div className="w-full flex justify-center mb-10">
-          <div className="h-[550px] w-full max-w-[800px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="75%" data={dynamicVectorScores}>
-                <PolarGrid stroke="#e2e8f0" />
-                <PolarAngleAxis 
-                  dataKey="vector" 
-                  tick={{ fill: '#64748b', fontSize: 14, fontWeight: 600 }} 
-                />
-                <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar
-                  name="P&G INTERNAL"
-                  dataKey="pgScore"
-                  stroke={COLORS.positive}
-                  strokeWidth={3}
-                  fill={COLORS.positive}
-                  fillOpacity={0.2}
-                />
-                <Radar
-                  name="MARKET AVERAGE"
-                  dataKey="mktScore"
-                  stroke={COLORS.mkt_red}
-                  strokeWidth={2}
-                  fill="transparent"
-                  strokeDasharray="4 4"
-                />
-                <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                  itemStyle={{ fontWeight: 600, fontSize: '12px', textTransform: 'uppercase' }}
-                />
-                <Legend 
-                  verticalAlign="top" 
-                  align="center" 
-                  iconType="circle" 
-                  wrapperStyle={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', paddingBottom: '20px' }} 
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+      {/* 2. PERFORMANCE DRIVERS (CENTER COLUMN) */}
+      <div className="w-full lg:w-[35%] p-10 border-r border-slate-100 flex flex-col">
+        <div className="space-y-8 flex-1">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Performance Drivers</span>
+          
+          <div className="space-y-8">
+            {[
+              { label: "Value", value: 96, status: "STRENGTH", color: "bg-emerald-500", mentions: "9,248" },
+              { label: "Retail Execution", value: 93, status: "STRENGTH", color: "bg-emerald-500", mentions: "4,187" },
+              { label: "Product", value: 92, status: null, color: "bg-slate-200", mentions: "10,772" },
+              { label: "Packaging", value: 92, status: "RISK", color: "bg-orange-500", mentions: "3,883" },
+              { label: "Communication", value: 84, status: "RISK", color: "bg-orange-500", mentions: "6,279" }
+            ].map((item) => (
+              <div key={item.label} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black text-slate-900">{item.label}</span>
+                    {item.status && (
+                      <Badge variant="ghost" className={cn(
+                        "text-[9px] font-black px-1.5 py-0 rounded-sm",
+                        item.status === "STRENGTH" ? "text-emerald-500 bg-emerald-50" : "text-orange-500 bg-orange-50"
+                      )}>
+                        {item.status}
+                      </Badge>
+                    )}
+                  </div>
+                  <span className={cn("text-sm font-black tabular-nums", item.status === "STRENGTH" ? "text-emerald-500" : item.status === "RISK" ? "text-orange-500" : "text-slate-400")}>
+                    {item.value}%
+                  </span>
+                </div>
+                <Progress value={item.value} className="h-2 bg-slate-100" indicatorClassName={item.color} />
+                <p className="text-[9px] font-bold text-slate-300 uppercase tracking-tighter">N={item.mentions} mentions</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-5 w-full gap-12 pt-10 mt-6 border-t border-slate-100">
-          {dynamicVectorScores.map((v) => (
-            <div key={v.vector} className="flex flex-col border-l-4 border-l-[#003da5] pl-6 py-1">
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-slate-900 tabular-nums leading-none tracking-normal">{v.pgScore}%</span>
-                <span className="text-sm font-bold text-slate-300 tabular-nums">/ {v.mktScore}%</span>
+        <div className="mt-12 space-y-6 pt-10 border-t border-slate-50">
+          <div className="flex gap-4">
+            <div className="w-1 bg-emerald-500 rounded-full" />
+            <div className="space-y-1">
+              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none">Value</span>
+              <p className="text-xs font-bold text-slate-600 leading-relaxed italic">
+                3,053 "sulit" (value-for-money) mentions — primarily driven by Lazada coins and discount events
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="w-1 bg-orange-500 rounded-full" />
+            <div className="space-y-1">
+              <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest leading-none">Communication</span>
+              <p className="text-xs font-bold text-slate-600 leading-relaxed italic">
+                182 reviews cite scent intensity below what was advertised — a listing over-promise problem
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) */}
+      <div className="w-full lg:w-[30%] p-10 bg-slate-50/30">
+        <div className="space-y-12">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Strategic Priorities</span>
+          
+          <div className="space-y-16">
+            {/* Priority 01 */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-black text-slate-300 tabular-nums">01</span>
+                <Badge className="bg-orange-100 text-orange-600 border-none font-black text-[9px] uppercase tracking-widest">Near-Term</Badge>
               </div>
-              <div className="space-y-1 mt-4">
-                <p className="text-xs font-bold text-slate-500 tracking-normal uppercase">{v.vector}</p>
-                <p className="text-[10px] font-bold text-slate-300 tracking-normal uppercase">Baseline N={v.mktCount}</p>
+              <div className="space-y-3">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-black text-slate-900 tabular-nums">182</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight leading-none">scent over-promise<br/>reviews</span>
+                </div>
+                <h4 className="text-sm font-black text-slate-900">Product Claim Recalibration</h4>
+                <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                  182 reviews flag scent intensity below listing expectations — yet 409 reviews strongly praise fragrance when experienced directly. The gap signals over-promise in copy. Recommend a claim audit across all active Lazada A+ content and product descriptions.
+                </p>
               </div>
             </div>
-          ))}
+
+            {/* Priority 02 */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-black text-slate-300 tabular-nums">02</span>
+                <Badge className="bg-blue-100 text-[#003da5] border-none font-black text-[9px] uppercase tracking-widest">Sustain</Badge>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-black text-slate-900 tabular-nums text-[#003da5]">2,922</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight leading-none">fragrance mentions</span>
+                </div>
+                <h4 className="text-sm font-black text-slate-900">Amplify Fragrance Superiority</h4>
+                <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                  2,922 reviews cite scent as the lead purchase trigger and 545 express explicit reorder intent — the highest loyalty signal in the dataset. Fragrance and fabric gentleness are the portfolio's strongest consumer anchors. Recommend amplifying both in A+ content and campaign creative.
+                </p>
+              </div>
+            </div>
+
+            {/* Priority 03 */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-black text-slate-300 tabular-nums">03</span>
+                <Badge className="bg-slate-200 text-slate-600 border-none font-black text-[9px] uppercase tracking-widest">High Priority</Badge>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-black text-slate-900 tabular-nums text-red-900">35</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight leading-none">price-vs-offline<br/>complaints</span>
+                </div>
+                <h4 className="text-sm font-black text-slate-900">Value Perception Intervention</h4>
+                <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                  35 reviews explicitly compare Lazada prices as higher than supermarket alternatives, with 71 linking price to unmet quality expectations. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative, timed to Lazada coins events.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
