@@ -7,17 +7,19 @@ import {
   ChevronDown
 } from "lucide-react";
 import { 
-  getRankedHeroSkus
+  getRankedHeroSkus,
+  getSuperiorityMatrix
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 
 /**
- * @fileOverview Brand Health page featuring the Hero SKU Podium.
- * Ranks P&G products by Positive Sentiment Ratio (Positive Reviews / Total Reviews).
+ * @fileOverview Brand Health page featuring the Hero SKU Podium and Competitive Superiority Matrix.
+ * Ranks P&G products and competitors by sentiment metrics and superiority margins.
  */
 export default function BrandHealthPage() {
   const [isClient, setIsClient] = useState(false);
   const heroSkus = getRankedHeroSkus();
+  const matrixData = getSuperiorityMatrix();
 
   useEffect(() => {
     setIsClient(true);
@@ -25,14 +27,21 @@ export default function BrandHealthPage() {
 
   if (!isClient) return null;
 
-  // Leaderboard data
+  // Podium data
   const podium = [heroSkus[1], heroSkus[0], heroSkus[2]]; // Rank 2, 1, 3
   const secondaryLeaders = heroSkus.slice(3, 7); // Ranks 4, 5, 6, 7
 
+  // Rank Matrix by Market Strength (Average Delta)
+  const rankedMatrix = [...matrixData].sort((a, b) => {
+    const avgA = a.deltas.reduce((acc, d) => acc + d.delta, 0) / a.deltas.length;
+    const avgB = b.deltas.reduce((acc, d) => acc + d.delta, 0) / b.deltas.length;
+    return avgB - avgA;
+  });
+
   return (
-    <div className="space-y-16 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-24 animate-in fade-in duration-500 pb-32">
       {/* Centered Header with Metric Definition */}
-      <div className="text-center space-y-6 max-w-4xl mx-auto">
+      <div className="text-center space-y-6 max-w-4xl mx-auto pt-16">
         <div className="space-y-3">
           <h1 className="text-6xl font-extrabold text-slate-900 tracking-normal leading-tight">Hero SKU Podium</h1>
           <div className="flex items-center justify-center gap-3">
@@ -48,9 +57,9 @@ export default function BrandHealthPage() {
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto w-full space-y-24">
+      <div className="max-w-6xl mx-auto w-full space-y-32 px-8">
         {/* Visual Podium Section */}
-        <div className="flex items-end justify-center px-4 pt-40 h-[500px] relative max-w-5xl mx-auto">
+        <div className="flex items-end justify-center pt-24 h-[400px] relative max-w-5xl mx-auto">
           {podium.map((sku, index) => (
             <div key={sku.name} className={cn(
               "flex flex-col items-center flex-1 relative group transition-all duration-500",
@@ -108,6 +117,53 @@ export default function BrandHealthPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* COMPETITIVE SUPERIORITY MATRIX TABLE */}
+        <div className="space-y-10">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-black text-slate-900 tracking-normal">Competitive Superiority Matrix</h2>
+            <p className="text-slate-400 font-bold text-sm">Performance margins versus category baseline average</p>
+          </div>
+
+          <div className="w-full overflow-hidden">
+            <table className="w-full border-separate border-spacing-y-4">
+              <thead>
+                <tr>
+                  <th className="text-left px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-[25%]">Product SKU</th>
+                  <th className="text-center px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Product</th>
+                  <th className="text-center px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Packaging</th>
+                  <th className="text-center px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Value</th>
+                  <th className="text-center px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Communication</th>
+                  <th className="text-center px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Retail Execution</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rankedMatrix.map((item) => (
+                  <tr key={item.brand} className="group">
+                    <td className="py-2">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-bold text-slate-900 tracking-normal leading-tight group-hover:text-[#003da5] transition-colors">{item.brand}</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-normal">{item.producer}</span>
+                      </div>
+                    </td>
+                    {item.deltas.map((d, idx) => (
+                      <td key={idx} className="px-2">
+                        <div className={cn(
+                          "h-12 flex items-center justify-center rounded-xl font-black text-xs tabular-nums transition-all border border-transparent group-hover:border-opacity-10",
+                          d.delta > 0 ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                          d.delta < 0 ? "bg-red-50 text-red-600 border-red-100" :
+                          "bg-slate-50 text-slate-400"
+                        )}>
+                          {d.delta > 0 ? `+${d.delta}%` : d.delta === 0 ? '0%' : `${d.delta}%`}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
