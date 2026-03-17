@@ -1,31 +1,37 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  ZAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   ResponsiveContainer,
 } from 'recharts';
 import { 
-  competitiveBenchmark, 
-  totalCacheCount, 
-  getSuperiorityMatrix
-} from '@/data/mockData';
-import { 
-  ShieldCheck
-} from 'lucide-react';
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const radarData = [
+  { subject: 'Product', A: 91, B: 80, fullMark: 100 },
+  { subject: 'Packaging', A: 98, B: 77, fullMark: 100 },
+  { subject: 'Value', A: 86, B: 98, fullMark: 100 },
+  { subject: 'Communication', A: 78, B: 99, fullMark: 100 },
+  { subject: 'Retail Execution', A: 99, B: 79, fullMark: 100 },
+];
 
 export default function CompetitiveAnalysisPage() {
   const [isClient, setIsClient] = useState(false);
-  const matrix = getSuperiorityMatrix();
 
   useEffect(() => {
     setIsClient(true);
@@ -33,94 +39,198 @@ export default function CompetitiveAnalysisPage() {
 
   if (!isClient) return null;
 
-  const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
-
   return (
-    <div className="space-y-10 animate-in fade-in duration-200 pb-20">
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold text-slate-900 tracking-normal">Industry benchmark</h1>
-        <p className="text-sm text-slate-500 font-bold uppercase tracking-normal">
-          Relative performance positioning across {totalCacheCount.toLocaleString()} samples.
-        </p>
+    <div className="space-y-6 animate-in fade-in duration-500 pb-20 p-8">
+      
+      {/* SHARED FILTERS BAR */}
+      <div className="w-full bg-[#f8fafc] border border-slate-200 rounded-xl p-6 flex flex-col md:flex-row items-center gap-8 shadow-sm">
+        <div className="flex items-center gap-4">
+          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Shared Filters</span>
+          <span className="text-[10px] text-slate-400">Selections apply to both analyses below</span>
+        </div>
+        
+        <div className="flex-1 flex flex-wrap items-center gap-4">
+          <div className="space-y-1.5">
+            <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Brand</span>
+            <Select defaultValue="all">
+              <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 text-xs font-bold rounded-lg">
+                <SelectValue placeholder="All brands" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All brands</SelectItem>
+                <SelectItem value="pg">P&G</SelectItem>
+                <SelectItem value="unilever">Unilever</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1.5">
+            <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Category</span>
+            <Select defaultValue="all">
+              <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 text-xs font-bold rounded-lg">
+                <SelectValue placeholder="All categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                <SelectItem value="fabric">Fabric Care</SelectItem>
+                <SelectItem value="oral">Oral Care</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1.5">
+            <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Subcategory</span>
+            <Select disabled>
+              <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 text-xs font-bold rounded-lg opacity-50">
+                <SelectValue placeholder="Select category first" />
+              </SelectTrigger>
+              <SelectContent />
+            </Select>
+          </div>
+
+          <div className="flex-1 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Products — <span className="lowercase font-medium">max 4</span></span>
+            </div>
+            <div className="flex items-center gap-2 h-10 bg-white border border-slate-200 px-3 rounded-lg w-full">
+              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[10px] py-1 px-3 rounded-md font-bold tracking-normal">
+                Downy Sunrise Fresh
+              </Badge>
+              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[10px] py-1 px-3 rounded-md font-bold tracking-normal">
+                Surf Cherry Blossom
+              </Badge>
+              <div className="ml-auto">
+                <ChevronRight className="h-4 w-4 text-slate-300" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 hover:bg-slate-50">5 Vectors of Superiority</button>
+          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 hover:bg-slate-50">Analysis Timeline</button>
+        </div>
       </div>
 
-      {/* Competitive Index Delta Table (Expanded War Room View) */}
-      <Card className="border-slate-200 shadow-sm rounded-xl overflow-hidden bg-white">
-        <CardHeader className="p-8 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
-          <div className="space-y-1">
-            <CardTitle className="text-xl font-bold text-slate-900 tracking-normal uppercase">Competitive superiority matrix</CardTitle>
-            <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-normal font-sans">Superiority margin per SKU: (Brand Score - Market Baseline %)</CardDescription>
-          </div>
-          <ShieldCheck className="h-6 w-6 text-[#003da5]" />
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-slate-50/50">
-                  <th className="p-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">Product SKU</th>
-                  {vectorLabels.map(v => (
-                    <th key={v} className="p-6 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">{v}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {matrix.map((row) => (
-                  <tr key={row.brand} className="border-b border-slate-50 hover:bg-slate-50/30 transition-colors last:border-0">
-                    <td className="p-6">
-                      <div className="flex flex-col gap-0.5">
-                        <span className={cn(
-                          "text-sm font-bold tracking-normal",
-                          row.isPNG ? "text-slate-900" : "text-slate-600"
-                        )}>{row.brand}</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase">{row.producer}</span>
-                      </div>
-                    </td>
-                    {row.deltas.map((d, i) => (
-                      <td key={i} className="p-2">
-                        <div className={cn(
-                          "h-14 flex items-center justify-center rounded-lg text-sm font-bold tabular-nums tracking-normal transition-all",
-                          d.delta > 0 ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : 
-                          d.delta < 0 ? "bg-red-50 text-red-700 border border-red-100" : 
-                          "bg-slate-50 text-slate-400 border border-slate-100"
-                        )}>
-                          {d.delta > 0 ? `+${d.delta}%` : `${d.delta}%`}
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* MAIN ANALYSIS CARD */}
+        <Card className="lg:col-span-3 border-slate-200 shadow-none rounded-[2rem] overflow-hidden">
+          <CardHeader className="p-10 pb-0">
+            <CardTitle className="text-3xl font-black text-slate-900 tracking-normal">5 Vectors of superiority analysis</CardTitle>
+            <CardDescription className="text-base font-medium text-slate-400 tracking-normal">Comparative product analysis across the 5 superiority vectors</CardDescription>
+          </CardHeader>
+          <CardContent className="p-10 space-y-12">
+            <div className="h-[500px] w-full relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                  <PolarGrid stroke="#e2e8f0" />
+                  <PolarAngleAxis 
+                    dataKey="subject" 
+                    tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }}
+                  />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                  <Radar
+                    name="Downy Sunrise Fresh"
+                    dataKey="A"
+                    stroke="#003da5"
+                    strokeWidth={3}
+                    fill="#003da5"
+                    fillOpacity={0.1}
+                  />
+                  <Radar
+                    name="Surf Cherry Blossom"
+                    dataKey="B"
+                    stroke="#ef4444"
+                    strokeWidth={3}
+                    fill="#ef4444"
+                    fillOpacity={0.1}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
 
-      {/* Positioning Chart */}
-      <Card className="overflow-hidden rounded-xl bg-white shadow-sm border-slate-200">
-        <CardHeader className="py-8 px-8 border-b border-slate-100 bg-slate-50/30">
-          <CardTitle className="text-xl font-bold text-slate-900 tracking-normal uppercase">Market positioning matrix (Share vs Sentiment)</CardTitle>
-        </CardHeader>
-        <CardContent className="p-8">
-          <div className="h-[500px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis type="number" dataKey="sentiment" name="Sentiment" unit="%" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} />
-                <YAxis type="number" dataKey="marketShare" name="Share" unit="%" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} />
-                <ZAxis type="number" dataKey="growth" range={[100, 1000]} />
-                <Tooltip 
-                  cursor={{ strokeDasharray: '3 3' }}
-                  contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', fontWeight: 600, fontSize: '14px', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', textTransform: 'uppercase' }}
-                />
-                <Legend verticalAlign="top" align="right" height={40} iconType="circle" wrapperStyle={{ fontWeight: 700, fontSize: '10px', paddingBottom: '20px', textTransform: 'uppercase' }} />
-                <Scatter name="P&G Portfolio" data={competitiveBenchmark.filter(d => d.brand === 'P&G')} fill="#003da5" />
-                <Scatter name="Competitors" data={competitiveBenchmark.filter(d => d.brand !== 'P&G')} fill="#cbd5e1" />
-              </ScatterChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+            {/* CHART LEGEND */}
+            <div className="flex items-center justify-center gap-10">
+              <div className="flex items-center gap-3">
+                <div className="h-3 w-3 rounded-full bg-[#003da5]" />
+                <span className="text-sm font-black text-[#003da5] tracking-normal">Downy Sunrise Fresh Garden Bloom</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-3 w-3 rounded-full bg-[#ef4444]" />
+                <span className="text-sm font-black text-[#ef4444] tracking-normal">Surf Cherry Blossom Liquid</span>
+              </div>
+            </div>
+
+            <div className="h-px bg-slate-100 w-full" />
+
+            {/* VECTOR DATA GRID */}
+            <div className="grid grid-cols-5 gap-4">
+              {radarData.map((item) => (
+                <div key={item.subject} className="space-y-4">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#003da5]" />
+                      <span className="text-2xl font-black text-[#003da5] tabular-nums">{item.A}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#ef4444]" />
+                      <span className="text-2xl font-black text-[#ef4444] tabular-nums">{item.B}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SIDE COLUMN */}
+        <div className="space-y-6">
+          {/* TIME PERIOD SELECTOR */}
+          <Card className="border-slate-200 shadow-none rounded-[1.5rem] bg-slate-50/50 p-4">
+            <div className="space-y-1">
+              {['Past 7 days', 'Past 30 days', 'Past 3 months'].map((period) => (
+                <button
+                  key={period}
+                  className={cn(
+                    "w-full text-left px-6 py-4 rounded-xl text-sm font-bold transition-all",
+                    period === 'Past 30 days' 
+                      ? "bg-white text-slate-900 shadow-sm border border-slate-100" 
+                      : "text-slate-400 hover:text-slate-600"
+                  )}
+                >
+                  {period}
+                </button>
+              ))}
+            </div>
+          </Card>
+
+          {/* KPI CARDS */}
+          <Card className="border-slate-200 shadow-none rounded-[1.5rem] p-10 relative overflow-hidden group hover:border-[#003da5]/30 transition-all">
+            <div className="space-y-4">
+              <div className="flex items-baseline justify-between">
+                <h3 className="text-6xl font-black text-slate-900 tabular-nums leading-none">4,514</h3>
+                <div className="flex items-center gap-1 text-emerald-500 font-black text-xl">
+                  +43.6%
+                </div>
+              </div>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest italic">Total data samples</p>
+            </div>
+          </Card>
+
+          <Card className="border-slate-200 shadow-none rounded-[1.5rem] p-10 relative overflow-hidden group hover:border-[#003da5]/30 transition-all">
+            <div className="space-y-4">
+              <div className="flex items-baseline justify-between">
+                <h3 className="text-6xl font-black text-slate-900 tabular-nums leading-none">4,511</h3>
+                <div className="flex items-center gap-1 text-emerald-500 font-black text-xl">
+                  +36.8%
+                </div>
+              </div>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest italic">Unique consumers</p>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
