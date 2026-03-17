@@ -10,6 +10,7 @@ import {
   getSuperiorityMatrix
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 /**
  * @fileOverview Brand Health page featuring the Industry Leaders Podium and Competitive Superiority Matrix.
