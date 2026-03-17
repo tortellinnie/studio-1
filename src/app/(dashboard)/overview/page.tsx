@@ -82,7 +82,6 @@ export default function OverviewPage() {
               <p className="text-2xl font-black uppercase tracking-[0.15em] text-white">
                 {stats.posPct >= 85 ? "Strategic Strength" : stats.posPct >= 75 ? "Stable Growth" : "Market Pressure"}
               </p>
-              <p className="text-sm font-bold opacity-50 tracking-wider">0.0pp variance vs prior period</p>
             </div>
           </div>
         </div>
