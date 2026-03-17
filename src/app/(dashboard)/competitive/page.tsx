@@ -19,7 +19,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, AlertCircle, ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const radarData = [
@@ -113,8 +113,8 @@ export default function CompetitiveAnalysisPage() {
           <CardContent className="p-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
               
-              {/* LEFT: SPIDER GRAPH */}
-              <div className="lg:col-span-7 space-y-12">
+              {/* LEFT: SPIDER GRAPH & VECTOR BREAKDOWN */}
+              <div className="lg:col-span-7 space-y-16">
                 <div className="h-[500px] w-full relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
@@ -144,7 +144,7 @@ export default function CompetitiveAnalysisPage() {
                   </ResponsiveContainer>
                 </div>
 
-                <div className="flex items-center justify-center gap-10 border-t border-slate-100 pt-8">
+                <div className="flex items-center justify-center gap-10 pb-8 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="h-3 w-3 rounded-full bg-[#003da5]" />
                     <span className="text-sm font-black text-[#003da5] tracking-normal">Downy Sunrise Fresh</span>
@@ -154,13 +154,36 @@ export default function CompetitiveAnalysisPage() {
                     <span className="text-sm font-black text-[#ef4444] tracking-normal">Surf Cherry Blossom</span>
                   </div>
                 </div>
+
+                {/* HIGH-FIDELITY VECTOR BREAKDOWN GRID */}
+                <div className="space-y-10">
+                  <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em]">Vector Breakdown</span>
+                  <div className="grid grid-cols-2 gap-x-16 gap-y-12">
+                    {radarData.map((item) => (
+                      <div key={item.subject} className="space-y-3">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
+                        <div className="flex items-center gap-6">
+                          <span className={cn(
+                            "text-4xl font-black tabular-nums tracking-tighter",
+                            item.A > item.B ? "text-[#003da5]" : "text-slate-200"
+                          )}>{item.A}%</span>
+                          <div className="h-8 w-px bg-slate-100" />
+                          <span className={cn(
+                            "text-4xl font-black tabular-nums tracking-tighter",
+                            item.B > item.A ? "text-[#ef4444]" : "text-slate-200"
+                          )}>{item.B}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* RIGHT: AI INSIGHTS SIDEBAR */}
               <div className="lg:col-span-5 space-y-10 border-l border-slate-100 pl-10">
                 <div className="space-y-2">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competitive Insights</span>
-                  <div className="p-8 border border-slate-200 rounded-[2rem] shadow-sm space-y-8">
+                  <div className="p-8 border border-slate-200 rounded-[2.5rem] shadow-sm space-y-8">
                     <div className="space-y-3">
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#003da5]">Status Analysis</span>
                       <p className="text-2xl font-black text-slate-900 leading-tight">
@@ -171,11 +194,11 @@ export default function CompetitiveAnalysisPage() {
                     <div className="space-y-8">
                       {edgedOutVectors.map((vector) => (
                         <div key={vector.subject} className="flex items-start gap-4">
-                          <div className="w-1.5 h-12 bg-orange-500 rounded-full shrink-0" />
+                          <div className="w-1.5 h-12 bg-[#ef4444] rounded-full shrink-0" />
                           <div className="flex flex-col gap-1">
-                            <span className="text-[10px] font-black text-orange-600 uppercase tracking-[0.15em] leading-none">Primary Laggard: {vector.subject}</span>
+                            <span className="text-[10px] font-black text-[#ef4444] uppercase tracking-[0.15em] leading-none">Primary Laggard: {vector.subject}</span>
                             <span className="text-sm font-bold text-slate-500 tracking-normal leading-tight">
-                              Competitor lead: <span className="text-orange-600">+{vector.B - vector.A}pp</span>. 
+                              Competitor lead: <span className="text-[#ef4444]">+{vector.B - vector.A}pp</span>. 
                               Audit {vector.subject.toLowerCase()} claims and price index immediately to reclaim portfolio lead.
                             </span>
                           </div>
@@ -194,32 +217,6 @@ export default function CompetitiveAnalysisPage() {
                         </div>
                       )}
                     </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6 pt-4">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Vector Breakdown</span>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                    {radarData.map((item) => (
-                      <div key={item.subject} className="space-y-2">
-                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
-                        <div className="flex items-center gap-4">
-                          <div className="flex flex-col">
-                            <span className={cn(
-                              "text-lg font-black tabular-nums",
-                              item.A > item.B ? "text-[#003da5]" : "text-slate-300"
-                            )}>{item.A}%</span>
-                          </div>
-                          <div className="h-4 w-px bg-slate-100" />
-                          <div className="flex flex-col">
-                            <span className={cn(
-                              "text-lg font-black tabular-nums",
-                              item.B > item.A ? "text-[#ef4444]" : "text-slate-300"
-                            )}>{item.B}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </div>
               </div>
