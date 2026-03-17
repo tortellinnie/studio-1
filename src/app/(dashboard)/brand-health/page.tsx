@@ -60,9 +60,9 @@ export default function BrandHealthPage() {
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto w-full space-y-12 px-8">
+      <div className="w-full space-y-12 px-8 lg:px-12">
         {/* Visual Podium Section */}
-        <div className="flex items-end justify-center pt-8 h-[320px] relative max-w-5xl mx-auto">
+        <div className="flex items-end justify-center pt-8 h-[320px] relative w-full mx-auto">
           {podium.map((sku, index) => (
             <div key={sku.name} className={cn(
               "flex flex-col items-center flex-1 relative group transition-all duration-500",
@@ -107,12 +107,12 @@ export default function BrandHealthPage() {
           ))}
         </div>
 
-        {/* Secondary Leaderboard Grid - MATCHING IMAGE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {/* Secondary Leaderboard Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mx-auto">
           {secondaryLeaders.map((sku, i) => (
             <div key={sku.name} className="flex items-center justify-between p-6 bg-slate-50/50 hover:bg-white hover:shadow-lg hover:border-slate-200 rounded-[2rem] transition-all border border-transparent group">
               <div className="flex items-center gap-6">
-                <span className="text-5xl font-black text-slate-100 tabular-nums w-16 tracking-tight">0{i + 4}</span>
+                <span className="text-5xl font-black text-slate-200 tabular-nums w-16 tracking-tight">0{i + 4}</span>
                 <div className="flex flex-col gap-0.5">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-lg font-black text-slate-900 tracking-tight group-hover:text-[#003da5] transition-colors">{sku.name}</span>
@@ -136,7 +136,7 @@ export default function BrandHealthPage() {
         </div>
 
         {/* COMPETITIVE SUPERIORITY MATRIX TABLE */}
-        <div className="space-y-8 pt-8">
+        <div className="space-y-8 pt-8 w-full">
           <div className="space-y-1">
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">Competitive Superiority Matrix</h2>
             <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Performance margins vs category baseline average (N={rankedMatrix.length} Products)</p>
@@ -146,7 +146,7 @@ export default function BrandHealthPage() {
             <table className="w-full border-separate border-spacing-y-3">
               <thead>
                 <tr>
-                  <th className="text-left px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[25%]">Product SKU</th>
+                  <th className="text-left px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-[20%]">Product SKU</th>
                   <th className="text-center px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Product</th>
                   <th className="text-center px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Packaging</th>
                   <th className="text-center px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Value</th>
@@ -157,7 +157,7 @@ export default function BrandHealthPage() {
               <tbody>
                 {rankedMatrix.map((item) => (
                   <tr key={item.brand} className="group">
-                    <td className="py-1">
+                    <td className="py-1 pr-4">
                       <div className="flex flex-col gap-0">
                         <span className={cn(
                           "text-sm font-black tracking-tight leading-none transition-colors",
