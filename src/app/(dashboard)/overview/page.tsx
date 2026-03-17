@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getStatsForPeriod, getDynamicVectorScores } from "@/data/mockData";
 
 /**
  * @fileOverview Strategic Overview page matching the 3-column executive report format.
- * Linked to dynamic mock data for timeframe-based updates.
+ * Relocates dynamic vector insights to the right sidebar and condenses the action plan.
  */
 export default function OverviewPage() {
   const [isClient, setIsClient] = useState(false);
@@ -46,10 +46,17 @@ export default function OverviewPage() {
   const topDriver = performanceDrivers[0];
   const bottomDriver = performanceDrivers[performanceDrivers.length - 1];
 
+  // Logic for Portfolio Pulse insight
+  const getPulseInsight = (score: number) => {
+    if (score >= 85) return "Maintaining dominant market lead. Prioritize high-margin SKU cross-selling over aggressive acquisition.";
+    if (score >= 75) return "Steady performance. Monitor local brand growth in sub-tier regions.";
+    return "Market pressure detected. Audit value-packs and promotional frequency immediately.";
+  };
+
   return (
     <div className="flex flex-col lg:flex-row h-full min-h-[calc(100vh-4rem)] bg-white animate-in fade-in duration-700">
       
-      {/* 1. BRAND HEALTH STATUS (BLUE COLUMN) - RECALIBRATED TO 25% */}
+      {/* 1. BRAND HEALTH STATUS (BLUE COLUMN) */}
       <div className="w-full lg:w-[25%] bg-[#003da5] p-10 text-white flex flex-col justify-between border-r border-white/5">
         <div className="space-y-12">
           <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
@@ -59,10 +66,7 @@ export default function OverviewPage() {
                 <button 
                   key={p}
                   onClick={() => setActivePeriod(p)}
-                  className={cn(
-                    "text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-md transition-all",
-                    activePeriod === p ? "bg-cyan-400 text-[#003da5]" : "bg-white/5 opacity-40 hover:opacity-100"
-                  )}
+                  className={cn(ActivePeriodButtonStyles, activePeriod === p ? "bg-cyan-400 text-[#003da5]" : "bg-white/5 opacity-40 hover:opacity-100")}
                 >
                   {p}D
                 </button>
@@ -101,8 +105,8 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* 2. PERFORMANCE DRIVERS (CENTER COLUMN) - EXPANDED TO 45% */}
-      <div className="w-full lg:w-[45%] p-12 border-r border-slate-100 flex flex-col bg-white">
+      {/* 2. PERFORMANCE DRIVERS (CENTER COLUMN) */}
+      <div className="w-full lg:w-[40%] p-12 border-r border-slate-100 flex flex-col bg-white">
         <div className="space-y-10 flex-1">
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Performance Drivers</span>
           
@@ -131,131 +135,86 @@ export default function OverviewPage() {
             ))}
           </div>
         </div>
-
-        {/* Dynamic AI Insights Section */}
-        <div className="mt-16 space-y-8 pt-12 border-t border-slate-50">
-          <div className="flex gap-6 animate-in fade-in slide-in-from-left-4 duration-500">
-            <div className="w-1.5 bg-emerald-500 rounded-full" />
-            <div className="space-y-2">
-              <span className="text-[11px] font-black text-emerald-500 uppercase tracking-widest leading-none">Strength Signal</span>
-              <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
-                Since {topDriver.label} is our highest performing vector at {topDriver.value}%, we should double down on these claims in high-reach A+ content to maintain competitive distance.
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
-            <div className="w-1.5 bg-orange-500 rounded-full" />
-            <div className="space-y-2">
-              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest leading-none">Critical Gap</span>
-              <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
-                Since {bottomDriver.label} is currently low at {bottomDriver.value}%, prioritize a tactical recalibration of our listings to align consumer expectations with actual delivery.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) - 30% */}
-      <div className="w-full lg:w-[30%] p-12 bg-slate-50/50 overflow-y-auto">
-        <div className="space-y-16">
+      {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) */}
+      <div className="w-full lg:w-[35%] p-12 bg-slate-50/50 overflow-y-auto">
+        <div className="space-y-12">
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Strategic Priorities</span>
           
-          <div className="space-y-12">
+          {/* Dynamic Portfolio Insights Section */}
+          <div className="p-6 bg-white border border-slate-200 rounded-[1.5rem] space-y-4">
+            <div className="flex items-center gap-2 text-[#003da5]">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Portfolio Pulse</span>
+            </div>
+            <p className="text-sm font-bold text-slate-900 leading-snug">
+              {getPulseInsight(stats.posPct)}
+            </p>
+            <div className="pt-2 flex flex-col gap-3">
+              <div className="flex gap-3">
+                <div className="w-1 bg-emerald-500 rounded-full" />
+                <p className="text-[11px] font-bold text-slate-500 leading-tight">
+                  <span className="text-emerald-600 uppercase">Core Strength:</span> Amplify {topDriver.label} in A+ Content.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-1 bg-orange-500 rounded-full" />
+                <p className="text-[11px] font-bold text-slate-500 leading-tight">
+                  <span className="text-orange-600 uppercase">Primary Gap:</span> Calibrate expectations for {bottomDriver.label}.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-10">
             {/* Priority 01 */}
-            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500">
+            <div className="space-y-4 animate-in slide-in-from-bottom-2 duration-500">
               <div className="flex items-center gap-4">
                 <span className="text-lg font-black text-slate-300 tabular-nums">01</span>
                 <Badge className="bg-orange-100 text-orange-600 border-none font-black text-[10px] uppercase tracking-widest">Near-Term</Badge>
               </div>
-              <div className="space-y-4">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-5xl font-black text-slate-900 tabular-nums leading-none">
-                    {Math.round(stats.total * 0.02).toLocaleString()}
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">scent over-promise<br/>reviews</span>
-                </div>
-                <h4 className="text-lg font-black text-slate-900 leading-tight">Product Claim Recalibration</h4>
-                <p className={cn(
-                  "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
-                  expandedPriorities["01"] ? "block" : "line-clamp-1"
-                )}>
-                  {Math.round(stats.total * 0.02).toLocaleString()} reviews flag scent intensity below listing expectations — yet {Math.round(stats.total * 0.04).toLocaleString()} reviews strongly praise fragrance when experienced directly. The gap signals over-promise in copy. Recommend a claim audit across all active Lazada A+ content and product descriptions.
+              <div className="space-y-2">
+                <h4 className="text-base font-black text-slate-900 leading-tight">Product Claim Recalibration</h4>
+                <p className={cn(PriorityTextStyles, expandedPriorities["01"] ? "block" : "line-clamp-1")}>
+                  {Math.round(stats.total * 0.02).toLocaleString()} reviews flag scent intensity gaps. Audit active Lazada A+ content to align expectations.
                 </p>
-                <button 
-                  onClick={() => togglePriority("01")}
-                  className="text-[10px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity"
-                >
-                  {expandedPriorities["01"] ? (
-                    <>COLLAPSE ANALYSIS <ChevronUp className="h-3 w-3" /></>
-                  ) : (
-                    <>VIEW FULL ANALYSIS <ChevronDown className="h-3 w-3" /></>
-                  )}
+                <button onClick={() => togglePriority("01")} className={ToggleButtonStyles}>
+                  {expandedPriorities["01"] ? "COLLAPSE" : "VIEW FULL ANALYSIS"}
                 </button>
               </div>
             </div>
 
             {/* Priority 02 */}
-            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500 delay-100">
+            <div className="space-y-4 animate-in slide-in-from-bottom-2 duration-500 delay-100">
               <div className="flex items-center gap-4">
                 <span className="text-lg font-black text-slate-300 tabular-nums">02</span>
                 <Badge className="bg-blue-100 text-[#003da5] border-none font-black text-[10px] uppercase tracking-widest">Sustain</Badge>
               </div>
-              <div className="space-y-4">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-5xl font-black text-slate-900 tabular-nums text-[#003da5] leading-none">
-                    {Math.round(stats.total * 0.3).toLocaleString()}
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">fragrance mentions</span>
-                </div>
-                <h4 className="text-lg font-black text-slate-900 leading-tight">Amplify Fragrance Superiority</h4>
-                <p className={cn(
-                  "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
-                  expandedPriorities["02"] ? "block" : "line-clamp-1"
-                )}>
-                  {Math.round(stats.total * 0.3).toLocaleString()} reviews cite scent as the lead purchase trigger and {Math.round(stats.total * 0.05).toLocaleString()} express explicit reorder intent — the highest loyalty signal in the dataset. Fragrance and fabric gentleness are the portfolio's strongest consumer anchors. Recommend amplifying both in A+ content and campaign creative.
+              <div className="space-y-2">
+                <h4 className="text-base font-black text-slate-900 leading-tight">Amplify Fragrance Superiority</h4>
+                <p className={cn(PriorityTextStyles, expandedPriorities["02"] ? "block" : "line-clamp-1")}>
+                  {Math.round(stats.total * 0.3).toLocaleString()} mentions cite scent as lead trigger. Highest loyalty signal; maintain creative focus here.
                 </p>
-                <button 
-                  onClick={() => togglePriority("02")}
-                  className="text-[10px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity"
-                >
-                  {expandedPriorities["02"] ? (
-                    <>COLLAPSE ANALYSIS <ChevronUp className="h-3 w-3" /></>
-                  ) : (
-                    <>VIEW FULL ANALYSIS <ChevronDown className="h-3 w-3" /></>
-                  )}
+                <button onClick={() => togglePriority("02")} className={ToggleButtonStyles}>
+                  {expandedPriorities["02"] ? "COLLAPSE" : "VIEW FULL ANALYSIS"}
                 </button>
               </div>
             </div>
 
             {/* Priority 03 */}
-            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500 delay-200">
+            <div className="space-y-4 animate-in slide-in-from-bottom-2 duration-500 delay-200">
               <div className="flex items-center gap-4">
                 <span className="text-lg font-black text-slate-300 tabular-nums">03</span>
                 <Badge className="bg-slate-200 text-slate-600 border-none font-black text-[10px] uppercase tracking-widest">High Priority</Badge>
               </div>
-              <div className="space-y-4">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-5xl font-black text-slate-900 tabular-nums text-red-900 leading-none">
-                    {Math.round(stats.total * 0.004).toLocaleString()}
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">price-vs-offline<br/>complaints</span>
-                </div>
-                <h4 className="text-lg font-black text-slate-900 leading-tight">Value Perception Intervention</h4>
-                <p className={cn(
-                  "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
-                  expandedPriorities["03"] ? "block" : "line-clamp-1"
-                )}>
-                  {Math.round(stats.total * 0.004).toLocaleString()} reviews explicitly compare Lazada prices as higher than supermarket alternatives, with {Math.round(stats.total * 0.008).toLocaleString()} linking price to unmet quality expectations. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative, timed to Lazada coins events.
+              <div className="space-y-2">
+                <h4 className="text-base font-black text-slate-900 leading-tight">Value Perception Intervention</h4>
+                <p className={cn(PriorityTextStyles, expandedPriorities["03"] ? "block" : "line-clamp-1")}>
+                  Offline price comparisons are increasing. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative.
                 </p>
-                <button 
-                  onClick={() => togglePriority("03")}
-                  className="text-[10px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity"
-                >
-                  {expandedPriorities["03"] ? (
-                    <>COLLAPSE ANALYSIS <ChevronUp className="h-3 w-3" /></>
-                  ) : (
-                    <>VIEW FULL ANALYSIS <ChevronDown className="h-3 w-3" /></>
-                  )}
+                <button onClick={() => togglePriority("03")} className={ToggleButtonStyles}>
+                  {expandedPriorities["03"] ? "COLLAPSE" : "VIEW FULL ANALYSIS"}
                 </button>
               </div>
             </div>
@@ -265,3 +224,7 @@ export default function OverviewPage() {
     </div>
   );
 }
+
+const ActivePeriodButtonStyles = "text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-md transition-all";
+const PriorityTextStyles = "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300";
+const ToggleButtonStyles = "text-[9px] font-black text-[#003da5] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity mt-1";
