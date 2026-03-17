@@ -37,8 +37,8 @@ export default function BrandHealthPage() {
           <h1 className="text-6xl font-extrabold text-slate-900 tracking-normal leading-tight">Hero SKU Podium</h1>
           <div className="flex items-center justify-center gap-3">
             <div className="h-px w-12 bg-slate-200" />
-            <span className="text-[10px] font-black text-[#003da5] uppercase tracking-[0.3em]">
-              Metric: Net Positive Sentiment Ratio
+            <span className="text-xs font-semibold text-slate-500 tracking-normal italic">
+              Ranked by the percentage of reviews with positive consumer sentiment
             </span>
             <div className="h-px w-12 bg-slate-200" />
           </div>
