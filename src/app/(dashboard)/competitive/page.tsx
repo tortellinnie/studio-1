@@ -44,18 +44,18 @@ export default function CompetitiveAnalysisPage() {
   return (
     <div className="h-full flex flex-col space-y-4 animate-in fade-in duration-500 p-6 overflow-hidden">
       
-      {/* HORIZONTAL FILTERS BAR - COMPACT */}
-      <div className="w-full bg-white border border-slate-200 rounded-xl p-4 flex flex-row items-center gap-8 shadow-sm shrink-0">
-        <div className="flex flex-col gap-0.5 min-w-fit">
-          <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
-          <span className="text-[9px] text-slate-400 font-bold tracking-tight">Synchronized cross-platform analysis</span>
+      {/* HORIZONTAL FILTERS BAR - ENLARGED FOR READABILITY */}
+      <div className="w-full bg-white border border-slate-200 rounded-xl p-5 flex flex-row items-center gap-10 shadow-sm shrink-0">
+        <div className="flex flex-col gap-1 min-w-fit">
+          <span className="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
+          <span className="text-[10px] text-slate-400 font-bold tracking-tight">Synchronized cross-platform analysis</span>
         </div>
         
-        <div className="flex flex-1 items-center gap-6">
-          <div className="flex flex-col gap-1">
-            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tight">Primary Brand</span>
+        <div className="flex flex-1 items-center gap-8">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Primary Brand</span>
             <Select defaultValue="pg">
-              <SelectTrigger className="w-[160px] h-8 bg-slate-50 border-slate-200 text-[11px] font-bold rounded-md">
+              <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 text-xs font-bold rounded-md">
                 <SelectValue placeholder="Select Brand" />
               </SelectTrigger>
               <SelectContent>
@@ -65,10 +65,10 @@ export default function CompetitiveAnalysisPage() {
             </Select>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tight">Category Segment</span>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Category Segment</span>
             <Select defaultValue="fabric">
-              <SelectTrigger className="w-[160px] h-8 bg-slate-50 border-slate-200 text-[11px] font-bold rounded-md">
+              <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 text-xs font-bold rounded-md">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
@@ -78,14 +78,14 @@ export default function CompetitiveAnalysisPage() {
             </Select>
           </div>
 
-          <div className="flex-1 flex flex-col gap-1">
-            <span className="text-[8px] font-black text-slate-400 uppercase tracking-tight">Comparative Baseline</span>
-            <div className="flex items-center gap-2 h-8 bg-slate-50 border border-slate-200 px-3 rounded-md w-full">
-              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[9px] py-0.5 px-2 rounded font-bold">
+          <div className="flex-1 flex flex-col gap-1.5">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Comparative Baseline</span>
+            <div className="flex items-center gap-3 h-9 bg-slate-50 border border-slate-200 px-4 rounded-md w-full">
+              <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[10px] py-1 px-3 rounded font-bold uppercase tracking-tight">
                 Downy Sunrise Fresh
               </Badge>
-              <span className="text-slate-300 font-black text-[9px]">vs</span>
-              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[9px] py-0.5 px-2 rounded font-bold">
+              <span className="text-slate-300 font-black text-[10px]">VS</span>
+              <Badge className="bg-[#ef4444] hover:bg-[#ef4444] text-white text-[10px] py-1 px-3 rounded font-bold uppercase tracking-tight">
                 Surf Cherry Blossom
               </Badge>
             </div>
@@ -157,13 +157,13 @@ export default function CompetitiveAnalysisPage() {
                 </div>
               </div>
 
-              {/* RIGHT: ENLARGED COMPETITIVE INTELLIGENCE */}
+              {/* RIGHT: ENLARGED COMPETITIVE INTELLIGENCE - ALIGNED TOP */}
               <div className="lg:col-span-5 flex flex-col min-h-0">
-                <div className="flex flex-col h-full space-y-4">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competitive Intelligence</span>
-                  
+                <div className="flex flex-col h-full">
                   <div className="flex-1 border border-slate-200 rounded-[2.5rem] bg-white p-10 flex flex-col space-y-10 overflow-y-auto scrollbar-hide shadow-sm">
-                    <div className="space-y-2">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-[-24px]">Competitive Intelligence</span>
+                    
+                    <div className="space-y-2 pt-4">
                       <span className="text-[11px] font-black uppercase tracking-[0.15em] text-[#003da5]">Executive Status</span>
                       <p className="text-4xl font-black text-slate-900 leading-[1.1] tracking-tight">
                         Competitor leads detected in {edgedOutVectors.length} strategic vectors.
