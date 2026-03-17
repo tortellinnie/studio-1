@@ -19,7 +19,8 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, AlertCircle, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const radarData = [
   { subject: 'Product', A: 91, B: 80, fullMark: 100 },
@@ -37,6 +38,9 @@ export default function CompetitiveAnalysisPage() {
   }, []);
 
   if (!isClient) return null;
+
+  const edgedOutVectors = radarData.filter(d => d.B > d.A);
+  const pgLeads = radarData.filter(d => d.A > d.B);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-20 p-8">
@@ -77,19 +81,9 @@ export default function CompetitiveAnalysisPage() {
             </Select>
           </div>
 
-          <div className="space-y-1.5">
-            <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Subcategory</span>
-            <Select disabled>
-              <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 text-xs font-bold rounded-lg opacity-50">
-                <SelectValue placeholder="Select category first" />
-              </SelectTrigger>
-              <SelectContent />
-            </Select>
-          </div>
-
           <div className="flex-1 space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Products — <span className="lowercase font-medium">max 4</span></span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase ml-1">Products — <span className="lowercase font-medium">max 2</span></span>
             </div>
             <div className="flex items-center gap-2 h-10 bg-white border border-slate-200 px-3 rounded-lg w-full">
               <Badge className="bg-[#003da5] hover:bg-[#003da5] text-white text-[10px] py-1 px-3 rounded-md font-bold tracking-normal">
@@ -106,79 +100,130 @@ export default function CompetitiveAnalysisPage() {
         </div>
 
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 hover:bg-slate-50">5 Vectors of Superiority</button>
-          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 hover:bg-slate-50">Analysis Timeline</button>
+          <button className="px-6 py-2 bg-[#003da5] text-white border border-[#003da5] rounded-lg text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-900/10">Superiority Radar</button>
         </div>
       </div>
 
       <div className="w-full">
-        {/* MAIN ANALYSIS CARD */}
         <Card className="border-slate-200 shadow-none rounded-[2rem] overflow-hidden">
           <CardHeader className="p-10 pb-0">
-            <CardTitle className="text-3xl font-black text-slate-900 tracking-normal">5 Vectors of superiority analysis</CardTitle>
-            <CardDescription className="text-base font-medium text-slate-400 tracking-normal">Comparative product analysis across the 5 superiority vectors</CardDescription>
+            <CardTitle className="text-3xl font-black text-slate-900 tracking-normal">5 Vectors of Superiority Analysis</CardTitle>
+            <CardDescription className="text-base font-medium text-slate-400 tracking-normal">Comparative analysis: Downy vs Surf baseline</CardDescription>
           </CardHeader>
-          <CardContent className="p-10 space-y-12">
-            <div className="h-[500px] w-full relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                  <PolarGrid stroke="#e2e8f0" />
-                  <PolarAngleAxis 
-                    dataKey="subject" 
-                    tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                  <Radar
-                    name="Downy Sunrise Fresh"
-                    dataKey="A"
-                    stroke="#003da5"
-                    strokeWidth={3}
-                    fill="#003da5"
-                    fillOpacity={0.1}
-                  />
-                  <Radar
-                    name="Surf Cherry Blossom"
-                    dataKey="B"
-                    stroke="#ef4444"
-                    strokeWidth={3}
-                    fill="#ef4444"
-                    fillOpacity={0.1}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
+          <CardContent className="p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+              
+              {/* LEFT: SPIDER GRAPH */}
+              <div className="lg:col-span-7 space-y-12">
+                <div className="h-[500px] w-full relative">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                      <PolarGrid stroke="#e2e8f0" />
+                      <PolarAngleAxis 
+                        dataKey="subject" 
+                        tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }}
+                      />
+                      <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                      <Radar
+                        name="Downy Sunrise Fresh"
+                        dataKey="A"
+                        stroke="#003da5"
+                        strokeWidth={3}
+                        fill="#003da5"
+                        fillOpacity={0.1}
+                      />
+                      <Radar
+                        name="Surf Cherry Blossom"
+                        dataKey="B"
+                        stroke="#ef4444"
+                        strokeWidth={3}
+                        fill="#ef4444"
+                        fillOpacity={0.1}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
 
-            {/* CHART LEGEND */}
-            <div className="flex items-center justify-center gap-10">
-              <div className="flex items-center gap-3">
-                <div className="h-3 w-3 rounded-full bg-[#003da5]" />
-                <span className="text-sm font-black text-[#003da5] tracking-normal">Downy Sunrise Fresh Garden Bloom</span>
+                <div className="flex items-center justify-center gap-10 border-t border-slate-100 pt-8">
+                  <div className="flex items-center gap-3">
+                    <div className="h-3 w-3 rounded-full bg-[#003da5]" />
+                    <span className="text-sm font-black text-[#003da5] tracking-normal">Downy Sunrise Fresh</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="h-3 w-3 rounded-full bg-[#ef4444]" />
+                    <span className="text-sm font-black text-[#ef4444] tracking-normal">Surf Cherry Blossom</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="h-3 w-3 rounded-full bg-[#ef4444]" />
-                <span className="text-sm font-black text-[#ef4444] tracking-normal">Surf Cherry Blossom Liquid</span>
-              </div>
-            </div>
 
-            <div className="h-px bg-slate-100 w-full" />
-
-            {/* VECTOR DATA GRID */}
-            <div className="grid grid-cols-5 gap-4">
-              {radarData.map((item) => (
-                <div key={item.subject} className="space-y-4">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-[#003da5]" />
-                      <span className="text-2xl font-black text-[#003da5] tabular-nums">{item.A}%</span>
+              {/* RIGHT: AI INSIGHTS SIDEBAR */}
+              <div className="lg:col-span-5 space-y-10 border-l border-slate-100 pl-10">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competitive Insights</span>
+                  <div className="p-8 border border-slate-200 rounded-[2rem] shadow-sm space-y-8">
+                    <div className="space-y-3">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#003da5]">Status Analysis</span>
+                      <p className="text-2xl font-black text-slate-900 leading-tight">
+                        Surf is currently outperforming Downy in {edgedOutVectors.length} key vectors.
+                      </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-[#ef4444]" />
-                      <span className="text-2xl font-black text-[#ef4444] tabular-nums">{item.B}%</span>
+
+                    <div className="space-y-8">
+                      {edgedOutVectors.map((vector) => (
+                        <div key={vector.subject} className="flex items-start gap-4">
+                          <div className="w-1.5 h-12 bg-orange-500 rounded-full shrink-0" />
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[10px] font-black text-orange-600 uppercase tracking-[0.15em] leading-none">Primary Laggard: {vector.subject}</span>
+                            <span className="text-sm font-bold text-slate-500 tracking-normal leading-tight">
+                              Competitor lead: <span className="text-orange-600">+{vector.B - vector.A}pp</span>. 
+                              Audit {vector.subject.toLowerCase()} claims and price index immediately to reclaim portfolio lead.
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+
+                      {pgLeads.length > 0 && (
+                        <div className="flex items-start gap-4 pt-4 border-t border-slate-100">
+                          <div className="w-1.5 h-12 bg-emerald-500 rounded-full shrink-0" />
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.15em] leading-none">Core Strength: {pgLeads[0].subject}</span>
+                            <span className="text-sm font-bold text-slate-500 tracking-normal leading-tight">
+                              Downy maintains a massive <span className="text-emerald-600">+{pgLeads[0].A - pgLeads[0].B}pp</span> gap in {pgLeads[0].subject}. Amplify this in all Q2 digital marketing.
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-              ))}
+
+                <div className="space-y-6 pt-4">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Vector Breakdown</span>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+                    {radarData.map((item) => (
+                      <div key={item.subject} className="space-y-2">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
+                        <div className="flex items-center gap-4">
+                          <div className="flex flex-col">
+                            <span className={cn(
+                              "text-lg font-black tabular-nums",
+                              item.A > item.B ? "text-[#003da5]" : "text-slate-300"
+                            )}>{item.A}%</span>
+                          </div>
+                          <div className="h-4 w-px bg-slate-100" />
+                          <div className="flex flex-col">
+                            <span className={cn(
+                              "text-lg font-black tabular-nums",
+                              item.B > item.A ? "text-[#ef4444]" : "text-slate-300"
+                            )}>{item.B}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
             </div>
           </CardContent>
         </Card>
