@@ -19,7 +19,6 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const radarData = [
@@ -103,9 +102,9 @@ export default function CompetitiveAnalysisPage() {
           <CardContent className="p-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
               
-              {/* LEFT: SPIDER GRAPH & VECTOR BREAKDOWN */}
+              {/* LEFT: SPIDER GRAPH & GRID BREAKDOWN */}
               <div className="lg:col-span-7 space-y-20">
-                <div className="h-[550px] w-full relative">
+                <div className="h-[500px] w-full relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                       <PolarGrid stroke="#e2e8f0" />
@@ -134,21 +133,21 @@ export default function CompetitiveAnalysisPage() {
                   </ResponsiveContainer>
                 </div>
 
-                {/* HORIZONTAL VECTOR BREAKDOWN */}
+                {/* HORIZONTAL GRID BREAKDOWN */}
                 <div className="space-y-10 pt-10 border-t border-slate-100">
-                  <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Comparative Vector Breakdown</span>
-                  <div className="grid grid-cols-3 gap-x-12 gap-y-12">
+                  <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Vector Breakdown</span>
+                  <div className="grid grid-cols-2 gap-x-20 gap-y-12">
                     {radarData.map((item) => (
                       <div key={item.subject} className="space-y-3">
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-6">
                           <span className={cn(
-                            "text-4xl font-black tabular-nums tracking-tighter",
+                            "text-5xl font-black tabular-nums tracking-tighter",
                             item.A > item.B ? "text-[#003da5]" : "text-slate-200"
                           )}>{item.A}%</span>
-                          <div className="h-8 w-px bg-slate-100" />
+                          <div className="h-10 w-px bg-slate-100" />
                           <span className={cn(
-                            "text-4xl font-black tabular-nums tracking-tighter",
+                            "text-5xl font-black tabular-nums tracking-tighter",
                             item.B > item.A ? "text-[#ef4444]" : "text-slate-200"
                           )}>{item.B}%</span>
                         </div>
@@ -166,7 +165,7 @@ export default function CompetitiveAnalysisPage() {
                   <div className="p-10 border border-slate-200 rounded-[3rem] bg-white space-y-12">
                     <div className="space-y-4">
                       <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#003da5]">Executive Status</span>
-                      <p className="text-4xl font-black text-slate-900 leading-[1.1] tracking-normal">
+                      <p className="text-5xl font-black text-slate-900 leading-[1.1] tracking-normal">
                         Competitor leads detected in {edgedOutVectors.length} strategic vectors.
                       </p>
                     </div>
@@ -174,10 +173,10 @@ export default function CompetitiveAnalysisPage() {
                     <div className="space-y-12">
                       {edgedOutVectors.map((vector) => (
                         <div key={vector.subject} className="flex items-start gap-6 group">
-                          <div className="w-2 h-16 bg-[#ef4444] rounded-full shrink-0 mt-1" />
+                          <div className="w-2 h-20 bg-[#ef4444] rounded-full shrink-0 mt-1" />
                           <div className="flex flex-col gap-2">
                             <span className="text-xs font-black text-[#ef4444] uppercase tracking-[0.2em] leading-none">Primary Laggard: {vector.subject}</span>
-                            <span className="text-xl font-bold text-slate-600 tracking-normal leading-tight">
+                            <span className="text-2xl font-bold text-slate-600 tracking-normal leading-tight">
                               Surf holds a <span className="text-[#ef4444] font-black">+{vector.B - vector.A}pp</span> lead. 
                               Audit pricing index and {vector.subject.toLowerCase()} claims immediately.
                             </span>
@@ -187,10 +186,10 @@ export default function CompetitiveAnalysisPage() {
 
                       {pgLeads.length > 0 && (
                         <div className="flex items-start gap-6 pt-8 border-t border-slate-100">
-                          <div className="w-2 h-16 bg-emerald-500 rounded-full shrink-0 mt-1" />
+                          <div className="w-2 h-20 bg-emerald-500 rounded-full shrink-0 mt-1" />
                           <div className="flex flex-col gap-2">
                             <span className="text-xs font-black text-emerald-600 uppercase tracking-[0.2em] leading-none">Portfolio Strength: {pgLeads[0].subject}</span>
-                            <span className="text-xl font-bold text-slate-600 tracking-normal leading-tight">
+                            <span className="text-2xl font-bold text-slate-600 tracking-normal leading-tight">
                               Downy maintains a <span className="text-emerald-600 font-black">+{pgLeads[0].A - pgLeads[0].B}pp</span> dominant gap. Amplify this in Q2 messaging.
                             </span>
                           </div>
@@ -198,14 +197,6 @@ export default function CompetitiveAnalysisPage() {
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="p-8 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inference Signal</span>
-                  <p className="text-sm font-bold text-slate-500 leading-relaxed">
-                    Comparison based on 50,230 verified consumer reviews. PII redacted. 
-                    Sentiment variance is significant at p &lt; 0.05.
-                  </p>
                 </div>
               </div>
 
