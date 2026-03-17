@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export default function PlaygroundPage() {
+  const [isClient, setIsClient] = useState(false);
   const [systemPrompt, setSystemPrompt] = useState("You are a professional assistant designed to help with creative and technical tasks. Keep responses concise and factual.");
   const [userPrompt, setUserPrompt] = useState("");
   const [output, setOutput] = useState("");
@@ -57,6 +58,10 @@ export default function PlaygroundPage() {
   const [showSystemPrompt, setShowSystemPrompt] = useState(true);
   
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleCopy = () => {
     if (output) {
@@ -128,8 +133,10 @@ export default function PlaygroundPage() {
     setGeneratedImageUrl(null);
   };
 
+  if (!isClient) return null;
+
   return (
-    <div className="h-full flex flex-col space-y-6 animate-in fade-in duration-500">
+    <div className="h-full flex flex-col space-y-6 animate-in fade-in duration-500 p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">

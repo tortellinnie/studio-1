@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   BarChart, 
@@ -39,8 +40,16 @@ const categoryDistribution = [
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', '#10b981', '#f59e0b'];
 
 export default function AnalyticsPage() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold font-headline">Usage Analytics</h1>
@@ -98,7 +107,7 @@ export default function AnalyticsPage() {
             <CardDescription>Workload distribution.</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px] flex flex-col items-center justify-center">
-            <ResponsiveContainer width="100%" height="200">
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={categoryDistribution}

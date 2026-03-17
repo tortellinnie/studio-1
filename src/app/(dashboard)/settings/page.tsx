@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,8 +12,16 @@ import { Separator } from "@/components/ui/separator";
 import { User, Bell, Shield, Key, CreditCard, Globe, Moon, Sun } from "lucide-react";
 
 export default function SettingsPage() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 p-8">
       <div>
         <h1 className="text-3xl font-bold font-headline">Account Settings</h1>
         <p className="text-muted-foreground">Manage your profile, billing, and API preferences.</p>

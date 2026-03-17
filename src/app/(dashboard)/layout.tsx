@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
 import { Sidebar, SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { NavMain } from "@/components/nav-main";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,12 @@ export default function DashboardLayout({
 }: {
   children: React.Node;
 }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <FilterProvider>
       <SidebarProvider defaultOpen={true}>
@@ -45,40 +52,44 @@ export default function DashboardLayout({
                 </div>
               </div>
               
-              <div className="flex items-center gap-6">
-                {/* Privacy-Safe Audit Trail Header */}
-                <SecurityHealthHeader />
+              <div className="flex items-center gap-6 min-w-[200px] justify-end">
+                {mounted && (
+                  <>
+                    {/* Privacy-Safe Audit Trail Header */}
+                    <SecurityHealthHeader />
 
-                <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-slate-900 rounded-lg">
-                    <Bell className="h-5 w-5" />
-                  </Button>
-                  
-                  <div className="h-6 w-px bg-slate-200 mx-2" />
-                  
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                        <Avatar className="h-10 w-10 border border-slate-200">
-                          <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" />
-                          <AvatarFallback>PG</AvatarFallback>
-                        </Avatar>
+                    <div className="flex items-center gap-4">
+                      <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-slate-900 rounded-lg">
+                        <Bell className="h-5 w-5" />
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-64" align="end">
-                      <DropdownMenuLabel className="font-bold text-sm text-slate-500">
-                        P&G Administrator
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-base py-3 px-4">Profile</DropdownMenuItem>
-                      <DropdownMenuItem className="text-base py-3 px-4">System logs</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-destructive text-base py-3 px-4 font-bold">
-                        Log out
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+                      
+                      <div className="h-6 w-px bg-slate-200 mx-2" />
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                            <Avatar className="h-10 w-10 border border-slate-200">
+                              <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" />
+                              <AvatarFallback>PG</AvatarFallback>
+                            </Avatar>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64" align="end">
+                          <DropdownMenuLabel className="font-bold text-sm text-slate-500">
+                            P&G Administrator
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-base py-3 px-4">Profile</DropdownMenuItem>
+                          <DropdownMenuItem className="text-base py-3 px-4">System logs</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive text-base py-3 px-4 font-bold">
+                            Log out
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </>
+                )}
               </div>
             </header>
 

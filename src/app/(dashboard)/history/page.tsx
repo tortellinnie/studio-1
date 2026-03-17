@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Search, 
   Filter, 
@@ -39,7 +39,12 @@ const mockHistory = [
 
 export default function HistoryPage() {
   const [search, setSearch] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleCopy = (id: number) => {
     toast({
@@ -53,8 +58,10 @@ export default function HistoryPage() {
     item.prompt.toLowerCase().includes(search.toLowerCase())
   );
 
+  if (!isClient) return null;
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold font-headline">Content History</h1>

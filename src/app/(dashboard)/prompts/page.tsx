@@ -1,13 +1,14 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, Star, Folder, Bookmark, Command, Copy, Edit3, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const templates = [
   { id: 1, name: "SEO Blog Post", description: "Standard structure for tech-focused blog articles with SEO keywords.", category: "Writing", tags: ["Marketing", "SEO"], usage: 42, favorite: true },
@@ -19,7 +20,12 @@ const templates = [
 
 export default function PromptsPage() {
   const [search, setSearch] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleUse = (name: string) => {
     toast({
@@ -30,8 +36,10 @@ export default function PromptsPage() {
 
   const filtered = templates.filter(t => t.name.toLowerCase().includes(search.toLowerCase()) || t.category.toLowerCase().includes(search.toLowerCase()));
 
+  if (!isClient) return null;
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold font-headline">Prompt Library</h1>
@@ -139,8 +147,4 @@ export default function PromptsPage() {
       </div>
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
 }
