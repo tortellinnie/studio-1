@@ -41,10 +41,56 @@ export default function CompetitiveAnalysisPage() {
   const edgedOutVectors = radarData.filter(d => d.B > d.A);
   const pgLeads = radarData.filter(d => d.A > d.B);
 
+  /**
+   * Generates a unique tactical recommendation based on the competitive gap.
+   */
+  const getTacticalInsight = (subject: string, diff: number) => {
+    const brand = "Surf"; // Competitor
+    const lead = <span className="text-[#ef4444] font-black">+{diff}pp</span>;
+    
+    switch(subject.toLowerCase()) {
+      case 'value':
+        return <>{brand} holds a {lead} lead. Audit pricing index, weight-to-price ratios, and promotional frequency vs regional baselines.</>;
+      case 'communication':
+        return <>{brand} maintains a {lead} gap. Review digital A+ content clarity and social proof conversion signals on key SKU pages.</>;
+      case 'product':
+        return <>{brand} leads by {lead}. Recalibrate performance benchmarks and investigate batch-level consistency for active ingredients.</>;
+      case 'packaging':
+        return <>{brand} shows a {lead} visual lead. Evaluate shelf-standout metrics and primary display panel hierarchy for Q3 refreshes.</>;
+      case 'retail execution':
+        return <>{brand} holds a {lead} advantage. Monitor out-of-stock rates and secondary display compliance in high-volume channels.</>;
+      default:
+        return <>{brand} holds a {lead} lead. Audit tactical claims and competitive baseline metrics.</>;
+    }
+  };
+
+  /**
+   * Generates a unique strength reinforcement strategy for P&G leads.
+   */
+  const getStrengthInsight = (subject: string, diff: number) => {
+    const brand = "Downy"; // P&G
+    const lead = <span className="text-emerald-600 font-black">+{diff}pp</span>;
+    
+    switch(subject.toLowerCase()) {
+      case 'product':
+        return <>{brand} maintains a {lead} dominant gap in core performance. Leverage superior scent-longevity claims in upcoming campaigns.</>;
+      case 'packaging':
+        return <>{brand} sustains a {lead} lead in premium ergonomics. Highlight the easy-pour structural advantages in digital content.</>;
+      case 'retail execution':
+        return <>{brand} leads by {lead}. Ensure shelf share reflects this consumer pull; maintain aggressive planogram compliance.</>;
+      case 'value':
+        return <>{brand} holds a {lead} lead in perceived worth. Pivot focus from discounting to bulk-SKU efficiency education.</>;
+      case 'communication':
+        return <>{brand} maintains a {lead} clarity gap. Solidify messaging hierarchy across all primary touchpoints.</>;
+      default:
+        return <>{brand} maintains a {lead} dominant gap. Amplify tactical superiority in next quarter's creative.</>;
+    }
+  };
+
   return (
     <div className="h-full flex flex-col space-y-4 animate-in fade-in duration-500 p-6 overflow-hidden">
       
-      {/* HORIZONTAL FILTERS BAR - ENLARGED FOR READABILITY */}
+      {/* HORIZONTAL FILTERS BAR */}
       <div className="w-full bg-white border border-slate-200 rounded-xl p-5 flex flex-row items-center gap-10 shadow-sm shrink-0">
         <div className="flex flex-col gap-1 min-w-fit">
           <span className="text-base font-black text-slate-900 uppercase tracking-widest leading-none">Intelligence Filters</span>
@@ -97,7 +143,7 @@ export default function CompetitiveAnalysisPage() {
         <Card className="h-full border-slate-200 shadow-none rounded-[2rem] overflow-hidden flex flex-col">
           <CardHeader className="p-8 pb-0 shrink-0">
             <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">5 Vectors of Superiority Analysis</CardTitle>
-            <CardDescription className="text-sm font-medium text-slate-400 tracking-tight mt-1">P&G Portfolio vs Unilever Market Baseline</CardDescription>
+            <CardTitle className="text-sm font-medium text-slate-400 tracking-tight mt-1">P&G Portfolio vs Unilever Market Baseline</CardTitle>
           </CardHeader>
           <CardContent className="p-8 pt-4 flex-1 min-h-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
@@ -177,8 +223,7 @@ export default function CompetitiveAnalysisPage() {
                           <div className="flex flex-col gap-1">
                             <span className="text-[11px] font-black text-[#ef4444] uppercase tracking-wider leading-none">Primary Laggard: {vector.subject}</span>
                             <span className="text-xl font-bold text-slate-600 tracking-tight leading-snug">
-                              Surf holds a <span className="text-[#ef4444] font-black">+{vector.B - vector.A}pp</span> lead. 
-                              Audit pricing index and {vector.subject.toLowerCase()} claims.
+                              {getTacticalInsight(vector.subject, vector.B - vector.A)}
                             </span>
                           </div>
                         </div>
@@ -190,7 +235,7 @@ export default function CompetitiveAnalysisPage() {
                           <div className="flex flex-col gap-1">
                             <span className="text-[11px] font-black text-emerald-600 uppercase tracking-wider leading-none">Portfolio Strength: {pgLeads[0].subject}</span>
                             <span className="text-xl font-bold text-slate-600 tracking-tight leading-snug">
-                              Downy maintains a <span className="text-emerald-600 font-black">+{pgLeads[0].A - pgLeads[0].B}pp</span> dominant gap. Amplify in Q2.
+                              {getStrengthInsight(pgLeads[0].subject, pgLeads[0].A - pgLeads[0].B)}
                             </span>
                           </div>
                         </div>
