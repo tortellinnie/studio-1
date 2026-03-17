@@ -143,13 +143,13 @@ export default function OverviewPage() {
       </div>
 
       {/* 3. STRATEGIC PRIORITIES (RIGHT COLUMN) */}
-      <div className="w-full lg:w-[35%] p-16 bg-white overflow-y-auto">
-        <div className="space-y-16">
+      <div className="w-full lg:w-[35%] p-10 bg-white overflow-y-auto">
+        <div className="space-y-10">
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Actionable Intelligence</span>
           
           {/* REFINED STATUS INSIGHTS CARD */}
-          <div className="p-12 border border-slate-200 rounded-[2.5rem] shadow-sm space-y-10">
-            <div className="space-y-4">
+          <div className="p-8 border border-slate-200 rounded-[2.5rem] shadow-sm space-y-6">
+            <div className="space-y-3">
               <div className="text-[#003da5]">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">Status Insights</span>
               </div>
@@ -158,7 +158,7 @@ export default function OverviewPage() {
               </p>
             </div>
 
-            <div className="space-y-8 pt-4">
+            <div className="space-y-6 pt-2">
               <div className="flex items-start gap-4">
                 <div className="w-1.5 h-10 bg-emerald-500 rounded-full shrink-0" />
                 <div className="flex flex-col gap-1">
@@ -177,14 +177,14 @@ export default function OverviewPage() {
           </div>
 
           {/* PRIORITY LIST */}
-          <div className="space-y-12 pt-8">
+          <div className="space-y-8 pt-4">
             {/* Priority 01 */}
-            <div className="space-y-6">
+            <div className="space-y-3">
               <div className="flex items-center gap-6">
                 <span className="text-3xl font-black text-slate-200 tabular-nums tracking-normal">01</span>
                 <Badge className="bg-orange-50 text-orange-700 border-none font-black text-[9px] uppercase tracking-[0.2em] px-3 py-1">High Priority</Badge>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h4 className="text-2xl font-black text-slate-900 tracking-normal">Product Claim Recalibration</h4>
                 <p className={cn("text-base font-bold text-slate-400 tracking-normal leading-relaxed", expandedPriorities["01"] ? "block" : "line-clamp-1")}>
                   Over {Math.round(stats.total * 0.02).toLocaleString()} reviews explicitly flag scent intensity gaps in recent batches. Audit active Lazada A+ imagery to better align consumer expectations.
@@ -199,12 +199,12 @@ export default function OverviewPage() {
             </div>
 
             {/* Priority 02 */}
-            <div className="space-y-6">
+            <div className="space-y-3">
               <div className="flex items-center gap-6">
                 <span className="text-3xl font-black text-slate-200 tabular-nums tracking-normal">02</span>
                 <Badge className="bg-blue-50 text-[#003da5] border-none font-black text-[9px] uppercase tracking-[0.2em] px-3 py-1">Sustain Lead</Badge>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h4 className="text-2xl font-black text-slate-900 tracking-normal">Amplify Fragrance Superiority</h4>
                 <p className={cn("text-base font-bold text-slate-400 tracking-normal leading-relaxed", expandedPriorities["02"] ? "block" : "line-clamp-1")}>
                   Market data confirms {Math.round(stats.total * 0.3).toLocaleString()} mentions cite scent as the primary lead loyalty trigger. This is our highest retention signal; maintain creative focus here.
