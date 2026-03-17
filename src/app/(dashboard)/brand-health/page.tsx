@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 
 /**
  * @fileOverview Brand Health page featuring the Industry Leaders Podium and Competitive Superiority Matrix.
- * Rankings are synchronized across both visual modules based on Average Superiority Delta.
+ * Matrix is styled to match the high-fidelity enterprise reporting standard.
  */
 export default function BrandHealthPage() {
   const [isClient, setIsClient] = useState(false);
