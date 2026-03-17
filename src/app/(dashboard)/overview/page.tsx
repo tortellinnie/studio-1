@@ -9,7 +9,7 @@ import { getStatsForPeriod, getDynamicVectorScores } from "@/data/mockData";
 /**
  * @fileOverview Strategic Overview page. 
  * Implements a high-utility, large-text enterprise reporting format.
- * Matches the reference image for 'Portfolio Pulse' and 'Actionable Intelligence'.
+ * Matches the reference image for 'Status Insights' and 'Actionable Intelligence'.
  */
 export default function OverviewPage() {
   const [isClient, setIsClient] = useState(false);
@@ -147,33 +147,29 @@ export default function OverviewPage() {
         <div className="space-y-16">
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Actionable Intelligence</span>
           
-          {/* REFERENCE-MATCHING PORTFOLIO PULSE CARD */}
+          {/* REFINED STATUS INSIGHTS CARD */}
           <div className="p-12 border border-slate-200 rounded-[2.5rem] shadow-sm space-y-10">
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-[#003da5]">
-                {/* Precise Geometric 4-Point Star SVG */}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
-                  <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
-                </svg>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Portfolio Pulse</span>
+              <div className="text-[#003da5]">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Status Insights</span>
               </div>
               <p className="text-3xl font-black text-slate-900 leading-[1.15] tracking-normal">
                 {getPulseInsight(stats.posPct)}
               </p>
             </div>
 
-            <div className="space-y-6 pt-4">
+            <div className="space-y-8 pt-4">
               <div className="flex items-start gap-4">
-                <div className="w-1.5 h-7 bg-emerald-500 rounded-full shrink-0 mt-0.5" />
-                <div className="flex flex-col md:flex-row md:items-center gap-x-3 gap-y-1">
-                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.15em] leading-none whitespace-nowrap">Core Strength:</span>
+                <div className="w-1.5 h-10 bg-emerald-500 rounded-full shrink-0" />
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.15em] leading-none">Core Strength:</span>
                   <span className="text-sm font-bold text-slate-500 tracking-normal leading-tight">Amplify {topDriver.label} in A+ Content.</span>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-1.5 h-7 bg-orange-500 rounded-full shrink-0 mt-0.5" />
-                <div className="flex flex-col md:flex-row md:items-center gap-x-3 gap-y-1">
-                  <span className="text-[10px] font-black text-orange-600 uppercase tracking-[0.15em] leading-none whitespace-nowrap">Primary Gap:</span>
+                <div className="w-1.5 h-10 bg-orange-500 rounded-full shrink-0" />
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-black text-orange-600 uppercase tracking-[0.15em] leading-none">Primary Gap:</span>
                   <span className="text-sm font-bold text-slate-500 tracking-normal leading-tight">Calibrate expectations for {bottomDriver.label}.</span>
                 </div>
               </div>
