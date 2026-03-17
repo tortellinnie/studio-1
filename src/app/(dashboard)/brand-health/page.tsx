@@ -11,6 +11,10 @@ import {
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 
+/**
+ * @fileOverview Brand Health page featuring the Hero SKU Podium.
+ * Ranks P&G products by Positive Sentiment Ratio (Positive Reviews / Total Reviews).
+ */
 export default function BrandHealthPage() {
   const [isClient, setIsClient] = useState(false);
   const heroSkus = getRankedHeroSkus();
@@ -27,24 +31,33 @@ export default function BrandHealthPage() {
 
   return (
     <div className="space-y-16 animate-in fade-in duration-500 pb-20">
-      {/* Centered Header */}
+      {/* Centered Header with Metric Definition */}
       <div className="text-center space-y-6 max-w-4xl mx-auto">
-        <h1 className="text-6xl font-extrabold text-slate-900 tracking-normal leading-tight">Hero SKU Podium</h1>
+        <div className="space-y-3">
+          <h1 className="text-6xl font-extrabold text-slate-900 tracking-normal leading-tight">Hero SKU Podium</h1>
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-px w-12 bg-slate-200" />
+            <span className="text-[10px] font-black text-[#003da5] uppercase tracking-[0.3em]">
+              Metric: Net Positive Sentiment Ratio
+            </span>
+            <div className="h-px w-12 bg-slate-200" />
+          </div>
+        </div>
         <p className="text-xl text-slate-500 font-medium leading-relaxed tracking-normal max-w-3xl mx-auto">
           Downy Antibac is our top P&G product based on sentiments in this platform, you can prioritize creating promo for it!
         </p>
       </div>
 
       <div className="max-w-6xl mx-auto w-full space-y-24">
-        {/* Visual Podium Section - No outer card */}
+        {/* Visual Podium Section */}
         <div className="flex items-end justify-center px-4 pt-40 h-[500px] relative max-w-5xl mx-auto">
           {podium.map((sku, index) => (
             <div key={sku.name} className={cn(
               "flex flex-col items-center flex-1 relative group transition-all duration-500",
               index === 1 ? "z-10" : "z-0"
             )}>
-              {/* Labeling above the column - Clinical Spacing */}
-              <div className="absolute -top-32 flex flex-col items-center gap-1 w-full">
+              {/* Labeling above the column */}
+              <div className="absolute -top-24 flex flex-col items-center gap-1 w-full">
                 <span className={cn(
                   "font-black tabular-nums tracking-normal transition-all leading-none",
                   index === 1 ? "text-7xl text-[#003da5]" : "text-4xl text-slate-400"
@@ -77,7 +90,7 @@ export default function BrandHealthPage() {
           ))}
         </div>
 
-        {/* Expanded Secondary Leaderboard Grid - Matching Photo Standard */}
+        {/* Secondary Leaderboard Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {secondaryLeaders.map((sku, i) => (
             <div key={sku.name} className="flex items-center justify-between p-8 bg-slate-100/50 hover:bg-white hover:shadow-xl hover:border-slate-200 rounded-[2.5rem] transition-all border border-transparent group">
