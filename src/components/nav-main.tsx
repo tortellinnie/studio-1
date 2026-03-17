@@ -30,14 +30,14 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "Competitive Analysis",
-    url: "/competitive",
-    icon: Target,
-  },
-  {
     title: "Brand Health",
     url: "/brand-health",
     icon: Activity,
+  },
+  {
+    title: "Competitive Analysis",
+    url: "/competitive",
+    icon: Target,
   },
 ];
 

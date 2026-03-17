@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -17,8 +16,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const menuItems = [
     { name: 'Overview', icon: LayoutDashboard, href: '/overview' },
-    { name: 'Competitive Analysis', icon: Target, href: '/competitive' },
     { name: 'Brand Health', icon: Activity, href: '/brand-health' },
+    { name: 'Competitive Analysis', icon: Target, href: '/competitive' },
   ];
 
   return (
