@@ -68,14 +68,14 @@ export function NavMain() {
                     className={cn(
                       "transition-all duration-200 h-14 px-6 group rounded-2xl border border-transparent",
                       pathname === item.url 
-                        ? "bg-white text-slate-900 font-black shadow-xl" 
+                        ? "bg-white/10 text-white font-black shadow-lg" 
                         : "text-white/60 hover:bg-white/5 hover:text-white"
                     )}
                   >
                     <Link href={item.url}>
-                      <item.icon className={cn("h-6 w-6 mr-5", pathname === item.url ? "text-slate-900" : "text-white/30 group-hover:text-white")} />
+                      <item.icon className={cn("h-6 w-6 mr-5", pathname === item.url ? "text-white" : "text-white/30 group-hover:text-white")} />
                       <span className="text-lg">{item.title}</span>
-                      {pathname === item.url && <ChevronRight className="ml-auto h-5 w-5 text-slate-900/30" />}
+                      {pathname === item.url && <ChevronRight className="ml-auto h-5 w-5 text-white/30" />}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
