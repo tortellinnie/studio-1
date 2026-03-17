@@ -55,7 +55,7 @@ export default function OverviewPage() {
           </div>
 
           <div className="space-y-6 pt-12">
-            <h2 className="text-[12rem] font-black leading-[0.8] tracking-tighter tabular-nums">87%</h2>
+            <h2 className="text-[9rem] font-black leading-[0.8] tracking-tighter tabular-nums">87%</h2>
             <div className="space-y-3">
               <p className="text-3xl font-black uppercase tracking-widest text-cyan-400">Strong</p>
               <p className="text-base font-bold opacity-60">— 0.0pp vs prior period</p>
