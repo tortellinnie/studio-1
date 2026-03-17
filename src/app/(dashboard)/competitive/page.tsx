@@ -133,21 +133,21 @@ export default function CompetitiveAnalysisPage() {
                   </ResponsiveContainer>
                 </div>
 
-                {/* HORIZONTAL GRID BREAKDOWN - COMPACT */}
+                {/* HORIZONTAL GRID BREAKDOWN - EXPANDED */}
                 <div className="mt-4 pt-4 border-t border-slate-100 shrink-0">
-                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">Vector Breakdown</span>
-                  <div className="grid grid-cols-2 gap-x-12 gap-y-6">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mb-6 block">Vector Breakdown</span>
+                  <div className="grid grid-cols-2 gap-x-24 gap-y-10">
                     {radarData.map((item) => (
-                      <div key={item.subject} className="space-y-1">
-                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
-                        <div className="flex items-center gap-4">
+                      <div key={item.subject} className="space-y-2">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">{item.subject}</span>
+                        <div className="flex items-center gap-6">
                           <span className={cn(
-                            "text-3xl font-black tabular-nums tracking-tighter",
+                            "text-5xl font-black tabular-nums tracking-tighter transition-colors",
                             item.A > item.B ? "text-[#003da5]" : "text-slate-200"
                           )}>{item.A}%</span>
-                          <div className="h-6 w-px bg-slate-100" />
+                          <div className="h-8 w-px bg-slate-100" />
                           <span className={cn(
-                            "text-3xl font-black tabular-nums tracking-tighter",
+                            "text-5xl font-black tabular-nums tracking-tighter transition-colors",
                             item.B > item.A ? "text-[#ef4444]" : "text-slate-200"
                           )}>{item.B}%</span>
                         </div>
