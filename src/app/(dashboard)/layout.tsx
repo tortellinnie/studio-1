@@ -21,7 +21,7 @@ import { SecurityHealthHeader } from "@/components/security-health-header";
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.Node;
 }) {
   return (
     <FilterProvider>
@@ -82,8 +82,8 @@ export default function DashboardLayout({
               </div>
             </header>
 
-            <main className="flex-1 overflow-y-auto p-8 md:p-12">
-              <div className="max-w-7xl mx-auto w-full">
+            <main className="flex-1 overflow-y-auto">
+              <div className="w-full h-full">
                 {children}
               </div>
             </main>
