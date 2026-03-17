@@ -10,17 +10,36 @@ type CacheItem = {
 const rawEntries = Object.values(inferenceCache) as CacheItem[];
 export const totalCacheCount = rawEntries.length;
 
-// Simulate 90-day time distribution deterministically based on entry index
+// Vector labels used for all 5-vector analysis
+const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
+
+// 1. Tag entries as P&G or Market deterministically for stable simulation
 export const cacheEntries = rawEntries.map((item, index) => {
   const date = new Date('2024-03-15T00:00:00Z');
   const stableDenominator = rawEntries.length > 0 ? rawEntries.length / 90 : 1;
   date.setDate(date.getDate() - Math.floor(index / stableDenominator));
+  
   // Deterministically assign to P&G or Market (60/40 split)
   const isPNG = index % 10 < 6; 
   return { ...item, timestamp: new Date(date), isPNG };
 });
 
-// PERIOD-BASED CALCULATIONS
+// 2. Define the Industry SKU set
+export const industrySkus = [
+  { name: 'Tide Original', brand: 'P&G', isPNG: true },
+  { name: 'Tide Pods', brand: 'P&G', isPNG: true },
+  { name: 'Ariel Sunrise Fresh', brand: 'P&G', isPNG: true },
+  { name: 'Ariel Power Gel', brand: 'P&G', isPNG: true },
+  { name: 'Downy Garden Bloom', brand: 'P&G', isPNG: true },
+  { name: 'Downy Mystique', brand: 'P&G', isPNG: true },
+  { name: 'Downy Antibac', brand: 'P&G', isPNG: true },
+  { name: 'Surf Cherry Blossom', brand: 'Unilever', isPNG: false },
+  { name: 'Breeze Power Clean', brand: 'Unilever', isPNG: false },
+  { name: 'Champion High Foam', brand: 'Local', isPNG: false },
+  { name: 'Pride Powder', brand: 'Local', isPNG: false }
+];
+
+// PERIOD-BASED KPI CALCULATIONS
 export function getStatsForPeriod(days: number) {
   const cutoff = new Date('2024-03-15T00:00:00Z');
   cutoff.setDate(cutoff.getDate() - days);
@@ -36,7 +55,7 @@ export function getStatsForPeriod(days: number) {
   const weightedSum = positive.reduce((acc, curr) => acc + curr.score, 0);
   const correctedRating = (1 + (weightedSum / total) * 4).toFixed(2);
 
-  // Timeline grouping by day for Daily Sentiment Pulse
+  // Timeline grouping for Bar Charts
   const timelineMap = new Map();
   filtered.forEach(e => {
     const dStr = e.timestamp.toISOString().split('T')[0];
@@ -74,21 +93,10 @@ export function getStatsForPeriod(days: number) {
     };
   });
 
-  return {
-    total,
-    posPct,
-    negPct,
-    totalUsers: new Set(filtered.map(e => e.internalReviewId)).size,
-    correctedRating: parseFloat(correctedRating),
-    timeline,
-    ratingInflation: 14.8
-  };
+  return { total, posPct, negPct, correctedRating: parseFloat(correctedRating), timeline, ratingInflation: 14.8 };
 }
 
-export const globalStats = getStatsForPeriod(90);
-
-// VECTOR ANALYSIS (Spider Map Comparison Logic)
-const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail Execution"];
+// VECTOR ANALYSIS (Spider Map Logic)
 export const dynamicVectorScores = vectorLabels.map(label => {
   const pgEntries = cacheEntries.filter(e => e.isPNG && e.vectors.includes(label));
   const mktEntries = cacheEntries.filter(e => !e.isPNG && e.vectors.includes(label));
@@ -99,36 +107,20 @@ export const dynamicVectorScores = vectorLabels.map(label => {
     return Math.round((pos / entries.length) * 100);
   };
 
-  const pgHealth = calculateHealth(pgEntries);
-  const mktHealth = calculateHealth(mktEntries);
-
   return { 
     vector: label, 
-    pgScore: pgHealth, 
-    mktScore: mktHealth,
+    pgScore: calculateHealth(pgEntries), 
+    mktScore: calculateHealth(mktEntries),
     pgCount: pgEntries.length,
     mktCount: mktEntries.length
   };
 });
 
-// COMPETITIVE INDEX DELTA LOGIC
-export const industrySkus = [
-  { name: 'Tide Original', brand: 'P&G', isPNG: true },
-  { name: 'Tide Pods', brand: 'P&G', isPNG: true },
-  { name: 'Ariel Sunrise Fresh', brand: 'P&G', isPNG: true },
-  { name: 'Ariel Power Gel', brand: 'P&G', isPNG: true },
-  { name: 'Downy Garden Bloom', brand: 'P&G', isPNG: true },
-  { name: 'Downy Mystique', brand: 'P&G', isPNG: true },
-  { name: 'Downy Antibac', brand: 'P&G', isPNG: true },
-  { name: 'Surf Cherry Blossom', brand: 'Unilever', isPNG: false },
-  { name: 'Breeze Power Clean', brand: 'Unilever', isPNG: false },
-  { name: 'Champion High Foam', brand: 'Local', isPNG: false },
-  { name: 'Pride Powder', brand: 'Local', isPNG: false }
-];
-
+// COMPETITIVE SUPERIORITY MATRIX LOGIC
 export function getSuperiorityMatrix() {
   const competitorEntries = cacheEntries.filter(e => !e.isPNG);
   
+  // 1. Calculate Market Baseline Score for each vector (Avg Competitor Score)
   const getAvgScore = (entries: typeof cacheEntries, vector: string) => {
     const vectorEntries = entries.filter(e => e.vectors.includes(vector));
     if (vectorEntries.length === 0) return 0;
@@ -141,13 +133,16 @@ export function getSuperiorityMatrix() {
     return acc;
   }, {} as any);
 
+  // 2. Map each industry SKU to a slice of the cache and calculate Delta vs Market Baseline
   return industrySkus.map((sku, idx) => {
+    // Deterministic data slicing for the simulation
     const pool = cacheEntries.filter(e => e.isPNG === sku.isPNG);
-    const skuEntries = pool.filter((e, i) => i % (sku.isPNG ? 7 : 4) === (idx % (sku.isPNG ? 7 : 4)));
+    const skuEntries = pool.filter((_, i) => i % (sku.isPNG ? 7 : 4) === (idx % (sku.isPNG ? 7 : 4)));
     
     const deltas = vectorLabels.map(vector => {
       const skuScore = getAvgScore(skuEntries, vector);
       const marketScore = marketAverages[vector];
+      // Delta = (Brand Score - Market Baseline)
       return {
         vector,
         delta: Math.round((skuScore - marketScore) * 100)
@@ -162,8 +157,7 @@ export function getSuperiorityMatrix() {
 export function getRankedHeroSkus() {
   const pgPortfolio = industrySkus.filter(s => s.isPNG);
   
-  const ranked = pgPortfolio.map((sku, idx) => {
-    // Map existing cache entries to P&G SKUs deterministically for the simulation
+  return pgPortfolio.map((sku, idx) => {
     const skuEntries = cacheEntries.filter(e => e.isPNG).filter((_, i) => i % pgPortfolio.length === idx);
     const totalCount = skuEntries.length || 1;
     const positiveCount = skuEntries.filter(e => e.sentimentLabel === 'positive').length;
@@ -177,21 +171,9 @@ export function getRankedHeroSkus() {
       points: Math.round(ratio * 10000)
     };
   }).sort((a, b) => b.ratio - a.ratio);
-
-  return ranked;
 }
 
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.pgScore - b.pgScore)[0] || { vector: 'None', pgScore: 100 };
-export const bestVector = [...dynamicVectorScores].sort((a, b) => b.pgScore - a.pgScore)[0] || { vector: 'None', pgScore: 0 };
-
-export const allIndustryProducts = [
-  { id: 'pg-1', name: 'Downy Garden Bloom', brand: 'P&G', originalRating: 4.8, correctedRating: 4.2, sentimentScore: 82, isPNG: true },
-  { id: 'pg-2', name: 'Ariel Sunrise Fresh', brand: 'P&G', originalRating: 4.9, correctedRating: 4.1, sentimentScore: 78, isPNG: true },
-  { id: 'uni-1', name: 'Surf Cherry Blossom', brand: 'Unilever', originalRating: 4.7, correctedRating: 3.5, sentimentScore: 62, isPNG: false },
-  { id: 'uni-2', name: 'Breeze Power Clean', brand: 'Unilever', originalRating: 4.6, correctedRating: 3.4, sentimentScore: 58, isPNG: false },
-  { id: 'loc-1', name: 'Champion High Foam', brand: 'Local', originalRating: 4.6, correctedRating: 3.2, sentimentScore: 55, isPNG: false },
-];
-
 export const competitiveBenchmark = [
   { brand: 'P&G', sentiment: 82, marketShare: 45, growth: 12 },
   { brand: 'Unilever', sentiment: 62, marketShare: 30, growth: -5 },
