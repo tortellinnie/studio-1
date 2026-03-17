@@ -33,15 +33,15 @@ export default function DashboardLayout({
   return (
     <FilterProvider>
       <SidebarProvider defaultOpen={true}>
-        <div className="flex h-screen w-full overflow-hidden bg-slate-50">
+        <div className="flex h-screen w-full overflow-hidden bg-white">
           {/* Primary Blue Navigation Sidebar */}
           <Sidebar variant="sidebar" className="border-r border-slate-200 bg-[#003da5]">
             <NavMain />
           </Sidebar>
 
-          <SidebarInset className="flex-1 flex flex-col overflow-hidden">
+          <SidebarInset className="flex-1 flex flex-col overflow-hidden bg-grid">
             {/* Global Top Bar */}
-            <header className="flex h-16 shrink-0 items-center justify-between px-8 border-b border-slate-200 bg-white z-20">
+            <header className="flex h-16 shrink-0 items-center justify-between px-8 border-b border-slate-200 bg-white/80 backdrop-blur-md z-20">
               <div className="flex items-center gap-6 flex-1">
                 <div className="relative w-full max-w-md group hidden md:block">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
