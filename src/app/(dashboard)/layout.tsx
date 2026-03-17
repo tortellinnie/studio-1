@@ -1,8 +1,8 @@
+
 "use client";
 
 import { Sidebar, SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { NavMain } from "@/components/nav-main";
-import { FilterSidebar } from "@/components/filter-sidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Bell } from "lucide-react";
@@ -31,9 +31,6 @@ export default function DashboardLayout({
           <Sidebar variant="sidebar" className="border-r border-slate-200 bg-[#003da5]">
             <NavMain />
           </Sidebar>
-
-          {/* New Secondary Filter Sidebar */}
-          <FilterSidebar />
 
           <SidebarInset className="flex-1 flex flex-col overflow-hidden">
             {/* Global Top Bar */}
