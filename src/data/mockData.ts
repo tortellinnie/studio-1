@@ -153,24 +153,31 @@ export function getSuperiorityMatrix() {
   });
 }
 
-// HERO SKU PODIUM LOGIC
-export function getRankedHeroSkus() {
-  const pgPortfolio = industrySkus.filter(s => s.isPNG);
+// RANKED INDUSTRY SKUS (Unified Ranking for Podium and List)
+export function getRankedIndustrySkus() {
+  const matrix = getSuperiorityMatrix();
   
-  return pgPortfolio.map((sku, idx) => {
-    const skuEntries = cacheEntries.filter(e => e.isPNG).filter((_, i) => i % pgPortfolio.length === idx);
+  return matrix.map((item, idx) => {
+    // Link back to original cache pool for sentiment ratio
+    const pool = cacheEntries.filter(e => e.isPNG === item.isPNG);
+    const skuEntries = pool.filter((_, i) => i % (item.isPNG ? 7 : 4) === (idx % (item.isPNG ? 7 : 4)));
     const totalCount = skuEntries.length || 1;
     const positiveCount = skuEntries.filter(e => e.sentimentLabel === 'positive').length;
     const ratio = positiveCount / totalCount;
     
+    // Market Strength = Average Delta
+    const avgDelta = item.deltas.reduce((acc, d) => acc + d.delta, 0) / item.deltas.length;
+
     return {
-      ...sku,
+      name: item.brand,
+      producer: item.producer,
+      isPNG: item.isPNG,
       ratio,
+      avgDelta,
       positiveCount,
-      totalCount,
-      points: Math.round(ratio * 10000)
+      totalCount
     };
-  }).sort((a, b) => b.ratio - a.ratio);
+  }).sort((a, b) => b.avgDelta - a.avgDelta); // Primary sort by Superiority
 }
 
 export const criticalVector = [...dynamicVectorScores].sort((a, b) => a.pgScore - b.pgScore)[0] || { vector: 'None', pgScore: 100 };

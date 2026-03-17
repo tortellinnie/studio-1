@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,18 +6,18 @@ import {
   ChevronDown
 } from "lucide-react";
 import { 
-  getRankedHeroSkus,
+  getRankedIndustrySkus,
   getSuperiorityMatrix
 } from '@/data/mockData';
 import { cn } from "@/lib/utils";
 
 /**
- * @fileOverview Brand Health page featuring the Hero SKU Podium and Competitive Superiority Matrix.
- * Ranks P&G products and competitors by sentiment metrics and superiority margins.
+ * @fileOverview Brand Health page featuring the Industry Leaders Podium and Competitive Superiority Matrix.
+ * Rankings are synchronized across both visual modules based on Average Superiority Delta.
  */
 export default function BrandHealthPage() {
   const [isClient, setIsClient] = useState(false);
-  const heroSkusRaw = getRankedHeroSkus();
+  const rankedSkus = getRankedIndustrySkus();
   const matrixData = getSuperiorityMatrix();
 
   useEffect(() => {
@@ -27,25 +26,14 @@ export default function BrandHealthPage() {
 
   if (!isClient) return null;
 
-  // REARRANGE LOGIC: Rank P&G SKUs by Superiority (Average Delta) instead of just raw Ratio
-  const pgMatrixItems = matrixData
-    .filter(m => m.isPNG)
-    .map(m => ({
-      name: m.brand, // This is the SKU name in Matrix data
-      avgDelta: m.deltas.reduce((acc, d) => acc + d.delta, 0) / m.deltas.length
-    }))
-    .sort((a, b) => b.avgDelta - a.avgDelta);
+  // Podium data: Rank 2, Rank 1, Rank 3 from the global ranking
+  const podium = [rankedSkus[1], rankedSkus[0], rankedSkus[2]];
+  const secondaryLeaders = rankedSkus.slice(3, 7);
 
-  // Map back to heroSkus to get the 'ratio' and other display data for the UI
-  const sortedHeroSkus = pgMatrixItems.map(mItem => 
-    heroSkusRaw.find(h => h.name === mItem.name)
-  ).filter(Boolean) as any[];
+  // Identify top P&G product for the recommendation subtitle
+  const topPgProduct = rankedSkus.find(s => s.isPNG);
 
-  // Podium data: Rank 2, Rank 1, Rank 3
-  const podium = [sortedHeroSkus[1], sortedHeroSkus[0], sortedHeroSkus[2]];
-  const secondaryLeaders = sortedHeroSkus.slice(3, 7);
-
-  // Rank Matrix for the table by Market Strength (Average Delta)
+  // Ensure Matrix table ranking matches the Podium (Average Delta)
   const rankedMatrix = [...matrixData].sort((a, b) => {
     const avgA = a.deltas.reduce((acc, d) => acc + d.delta, 0) / a.deltas.length;
     const avgB = b.deltas.reduce((acc, d) => acc + d.delta, 0) / b.deltas.length;
@@ -67,7 +55,7 @@ export default function BrandHealthPage() {
           </div>
         </div>
         <p className="text-xl text-slate-500 font-medium leading-relaxed tracking-normal max-w-3xl mx-auto">
-          Downy Antibac is our top P&G product based on sentiments in this platform, you can prioritize creating promo for it!
+          {topPgProduct?.name} is our top P&G product based on sentiments in this platform, you can prioritize creating promo for it!
         </p>
       </div>
 
@@ -79,11 +67,13 @@ export default function BrandHealthPage() {
               "flex flex-col items-center flex-1 relative group transition-all duration-500",
               index === 1 ? "z-10" : "z-0"
             )}>
-              {/* Labeling above the column - Offset adjusted to avoid overlap with large digits */}
+              {/* Labeling above the column */}
               <div className="absolute -top-32 flex flex-col items-center gap-1 w-full">
                 <span className={cn(
                   "font-black tabular-nums tracking-normal transition-all leading-none",
-                  index === 1 ? "text-7xl text-[#003da5]" : "text-4xl text-slate-400"
+                  index === 1 
+                    ? sku.isPNG ? "text-7xl text-[#003da5]" : "text-7xl text-slate-600"
+                    : "text-4xl text-slate-400"
                 )}>
                   {Math.round(sku.ratio * 100)}%
                 </span>
@@ -99,8 +89,11 @@ export default function BrandHealthPage() {
               <div className={cn(
                 "w-full rounded-t-[3rem] flex flex-col items-center justify-start pt-12 pb-8 transition-all duration-700",
                 index === 0 ? "h-48 bg-slate-200" : // Rank 2
-                index === 1 ? "h-80 bg-[#003da5] shadow-2xl shadow-blue-900/20" : // Rank 1
-                "h-36 bg-slate-100" // Rank 3
+                index === 1 
+                  ? sku.isPNG 
+                    ? "h-80 bg-[#003da5] shadow-2xl shadow-blue-900/20" 
+                    : "h-80 bg-slate-400 shadow-2xl shadow-slate-900/20" // Rank 1
+                  : "h-36 bg-slate-100" // Rank 3
               )}>
                 <span className={cn(
                   "text-7xl font-black tabular-nums tracking-normal",
@@ -120,8 +113,16 @@ export default function BrandHealthPage() {
               <div className="flex items-center gap-8">
                 <span className="text-4xl font-black text-slate-200 tabular-nums w-12 tracking-normal">0{i + 4}</span>
                 <div className="flex flex-col gap-1">
-                  <span className="text-xl font-bold text-slate-900 tracking-normal group-hover:text-[#003da5] transition-colors">{sku.name}</span>
-                  <span className="text-lg font-black text-[#003da5] tabular-nums tracking-normal">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl font-bold text-slate-900 tracking-normal group-hover:text-[#003da5] transition-colors">{sku.name}</span>
+                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest text-slate-400 border-slate-200 py-0 h-4">
+                      {sku.producer}
+                    </Badge>
+                  </div>
+                  <span className={cn(
+                    "text-lg font-black tabular-nums tracking-normal",
+                    sku.isPNG ? "text-[#003da5]" : "text-slate-500"
+                  )}>
                     {Math.round(sku.ratio * 100)}%
                   </span>
                 </div>
@@ -137,7 +138,7 @@ export default function BrandHealthPage() {
         <div className="space-y-10">
           <div className="space-y-2">
             <h2 className="text-3xl font-black text-slate-900 tracking-normal">Competitive Superiority Matrix</h2>
-            <p className="text-slate-400 font-bold text-sm">Performance margins versus category baseline average</p>
+            <p className="text-slate-400 font-bold text-sm">Performance margins versus category baseline average (Ranked by Market Strength)</p>
           </div>
 
           <div className="w-full overflow-hidden">
@@ -157,7 +158,10 @@ export default function BrandHealthPage() {
                   <tr key={item.brand} className="group">
                     <td className="py-2">
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-bold text-slate-900 tracking-normal leading-tight group-hover:text-[#003da5] transition-colors">{item.brand}</span>
+                        <span className={cn(
+                          "text-sm font-bold tracking-normal leading-tight transition-colors",
+                          item.isPNG ? "text-slate-900 group-hover:text-[#003da5]" : "text-slate-600"
+                        )}>{item.brand}</span>
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-normal">{item.producer}</span>
                       </div>
                     </td>
