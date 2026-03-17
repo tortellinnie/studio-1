@@ -16,6 +16,7 @@ const vectorLabels = ["Product", "Packaging", "Value", "Communication", "Retail 
 // 1. Tag entries as P&G or Market deterministically for stable simulation
 export const cacheEntries = rawEntries.map((item, index) => {
   const date = new Date('2024-03-15T00:00:00Z');
+  // Use a stable distribution over 90 days
   const stableDenominator = rawEntries.length > 0 ? rawEntries.length / 90 : 1;
   date.setDate(date.getDate() - Math.floor(index / stableDenominator));
   
@@ -97,24 +98,33 @@ export function getStatsForPeriod(days: number) {
 }
 
 // VECTOR ANALYSIS (Spider Map Logic)
-export const dynamicVectorScores = vectorLabels.map(label => {
-  const pgEntries = cacheEntries.filter(e => e.isPNG && e.vectors.includes(label));
-  const mktEntries = cacheEntries.filter(e => !e.isPNG && e.vectors.includes(label));
+export function getDynamicVectorScores(days: number) {
+  const cutoff = new Date('2024-03-15T00:00:00Z');
+  cutoff.setDate(cutoff.getDate() - days);
+  const periodEntries = cacheEntries.filter(e => e.timestamp >= cutoff);
 
-  const calculateHealth = (entries: typeof cacheEntries) => {
-    if (entries.length === 0) return 0;
-    const pos = entries.filter(e => e.sentimentLabel === 'positive').length;
-    return Math.round((pos / entries.length) * 100);
-  };
+  return vectorLabels.map(label => {
+    const pgEntries = periodEntries.filter(e => e.isPNG && e.vectors.includes(label));
+    const mktEntries = periodEntries.filter(e => !e.isPNG && e.vectors.includes(label));
 
-  return { 
-    vector: label, 
-    pgScore: calculateHealth(pgEntries), 
-    mktScore: calculateHealth(mktEntries),
-    pgCount: pgEntries.length,
-    mktCount: mktEntries.length
-  };
-});
+    const calculateHealth = (entries: typeof cacheEntries) => {
+      if (entries.length === 0) return 0;
+      const pos = entries.filter(e => e.sentimentLabel === 'positive').length;
+      return Math.round((pos / entries.length) * 100);
+    };
+
+    return { 
+      vector: label, 
+      pgScore: calculateHealth(pgEntries), 
+      mktScore: calculateHealth(mktEntries),
+      pgCount: pgEntries.length,
+      mktCount: mktEntries.length
+    };
+  });
+}
+
+// Default constant for pages that don't need period-aware calculation yet
+export const dynamicVectorScores = getDynamicVectorScores(90);
 
 // COMPETITIVE SUPERIORITY MATRIX LOGIC
 export function getSuperiorityMatrix() {

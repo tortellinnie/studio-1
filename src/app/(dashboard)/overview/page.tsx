@@ -1,20 +1,19 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getStatsForPeriod, getDynamicVectorScores } from "@/data/mockData";
 
 /**
  * @fileOverview Strategic Overview page matching the 3-column executive report format.
- * Recalibrated column widths and typographic scale for a more balanced executive view.
+ * Linked to dynamic mock data for timeframe-based updates.
  */
 export default function OverviewPage() {
   const [isClient, setIsClient] = useState(false);
-  const [activePeriod, setActivePeriod] = useState("90d");
+  const [activePeriod, setActivePeriod] = useState(90);
   const [expandedPriorities, setExpandedPriorities] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -30,6 +29,19 @@ export default function OverviewPage() {
 
   if (!isClient) return null;
 
+  // Derive dynamic stats based on the selected period
+  const stats = getStatsForPeriod(activePeriod);
+  const vectorScores = getDynamicVectorScores(activePeriod);
+
+  // Map vector scores to the list layout
+  const performanceDrivers = vectorScores.map(v => ({
+    label: v.vector,
+    value: v.pgScore,
+    mentions: v.pgCount.toLocaleString(),
+    status: v.pgScore >= 90 ? "STRENGTH" : v.pgScore < 85 ? "RISK" : null,
+    color: v.pgScore >= 90 ? "bg-emerald-500" : v.pgScore < 85 ? "bg-orange-500" : "bg-slate-200"
+  })).sort((a, b) => b.value - a.value);
+
   return (
     <div className="flex flex-col lg:flex-row h-full min-h-[calc(100vh-4rem)] bg-white animate-in fade-in duration-700">
       
@@ -39,7 +51,7 @@ export default function OverviewPage() {
           <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
             <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Brand Health Status</span>
             <div className="flex gap-2">
-              {['7d', '30d', '90d'].map((p) => (
+              {[7, 30, 90].map((p) => (
                 <button 
                   key={p}
                   onClick={() => setActivePeriod(p)}
@@ -48,16 +60,18 @@ export default function OverviewPage() {
                     activePeriod === p ? "bg-cyan-400 text-[#003da5]" : "bg-white/5 opacity-40 hover:opacity-100"
                   )}
                 >
-                  {p}
+                  {p}D
                 </button>
               ))}
             </div>
           </div>
 
           <div className="space-y-4 pt-8">
-            <h2 className="text-[6rem] font-black leading-[0.8] tracking-tighter tabular-nums">87%</h2>
+            <h2 className="text-[6rem] font-black leading-[0.8] tracking-tighter tabular-nums">{stats.posPct}%</h2>
             <div className="space-y-2">
-              <p className="text-xl font-black uppercase tracking-widest text-cyan-400">Strong</p>
+              <p className="text-xl font-black uppercase tracking-widest text-cyan-400">
+                {stats.posPct >= 85 ? "Strong" : stats.posPct >= 75 ? "Stable" : "Pressure"}
+              </p>
               <p className="text-xs font-bold opacity-60">— 0.0pp vs prior period</p>
             </div>
           </div>
@@ -67,7 +81,7 @@ export default function OverviewPage() {
           <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Competitive Benchmark</span>
           <div className="space-y-6">
             {[
-              { label: "P&G Portfolio", value: 87, color: "bg-cyan-400" },
+              { label: "P&G Portfolio", value: stats.posPct, color: "bg-cyan-400" },
               { label: "Unilever", value: 72, color: "bg-white/20" },
               { label: "Local brands", value: 62, color: "bg-white/20" }
             ].map((item) => (
@@ -89,13 +103,7 @@ export default function OverviewPage() {
           <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Performance Drivers</span>
           
           <div className="space-y-10">
-            {[
-              { label: "Value", value: 96, status: "STRENGTH", color: "bg-emerald-500", mentions: "9,248" },
-              { label: "Retail Execution", value: 93, status: "STRENGTH", color: "bg-emerald-500", mentions: "4,187" },
-              { label: "Product", value: 92, status: null, color: "bg-slate-200", mentions: "10,772" },
-              { label: "Packaging", value: 92, status: "RISK", color: "bg-orange-500", mentions: "3,883" },
-              { label: "Communication", value: 84, status: "RISK", color: "bg-orange-500", mentions: "6,279" }
-            ].map((item) => (
+            {performanceDrivers.map((item) => (
               <div key={item.label} className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -126,7 +134,7 @@ export default function OverviewPage() {
             <div className="space-y-2">
               <span className="text-[11px] font-black text-emerald-500 uppercase tracking-widest leading-none">Value Signal</span>
               <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
-                3,053 "sulit" (value-for-money) mentions — primarily driven by Lazada coins and discount events
+                {Math.round(stats.total * 0.3).toLocaleString()} "sulit" (value-for-money) mentions — primarily driven by Lazada coins and discount events
               </p>
             </div>
           </div>
@@ -135,7 +143,7 @@ export default function OverviewPage() {
             <div className="space-y-2">
               <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest leading-none">Communication Gap</span>
               <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
-                182 reviews cite scent intensity below what was advertised — a listing over-promise problem
+                {Math.round(stats.total * 0.02).toLocaleString()} reviews cite scent intensity below what was advertised — a listing over-promise problem
               </p>
             </div>
           </div>
@@ -156,7 +164,9 @@ export default function OverviewPage() {
               </div>
               <div className="space-y-4">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-5xl font-black text-slate-900 tabular-nums leading-none">182</span>
+                  <span className="text-5xl font-black text-slate-900 tabular-nums leading-none">
+                    {Math.round(stats.total * 0.02).toLocaleString()}
+                  </span>
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">scent over-promise<br/>reviews</span>
                 </div>
                 <h4 className="text-lg font-black text-slate-900 leading-tight">Product Claim Recalibration</h4>
@@ -164,7 +174,7 @@ export default function OverviewPage() {
                   "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
                   expandedPriorities["01"] ? "block" : "line-clamp-1"
                 )}>
-                  182 reviews flag scent intensity below listing expectations — yet 409 reviews strongly praise fragrance when experienced directly. The gap signals over-promise in copy. Recommend a claim audit across all active Lazada A+ content and product descriptions.
+                  {Math.round(stats.total * 0.02).toLocaleString()} reviews flag scent intensity below listing expectations — yet {Math.round(stats.total * 0.04).toLocaleString()} reviews strongly praise fragrance when experienced directly. The gap signals over-promise in copy. Recommend a claim audit across all active Lazada A+ content and product descriptions.
                 </p>
                 <button 
                   onClick={() => togglePriority("01")}
@@ -187,7 +197,9 @@ export default function OverviewPage() {
               </div>
               <div className="space-y-4">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-5xl font-black text-slate-900 tabular-nums text-[#003da5] leading-none">2,922</span>
+                  <span className="text-5xl font-black text-slate-900 tabular-nums text-[#003da5] leading-none">
+                    {Math.round(stats.total * 0.3).toLocaleString()}
+                  </span>
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">fragrance mentions</span>
                 </div>
                 <h4 className="text-lg font-black text-slate-900 leading-tight">Amplify Fragrance Superiority</h4>
@@ -195,7 +207,7 @@ export default function OverviewPage() {
                   "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
                   expandedPriorities["02"] ? "block" : "line-clamp-1"
                 )}>
-                  2,922 reviews cite scent as the lead purchase trigger and 545 express explicit reorder intent — the highest loyalty signal in the dataset. Fragrance and fabric gentleness are the portfolio's strongest consumer anchors. Recommend amplifying both in A+ content and campaign creative.
+                  {Math.round(stats.total * 0.3).toLocaleString()} reviews cite scent as the lead purchase trigger and {Math.round(stats.total * 0.05).toLocaleString()} express explicit reorder intent — the highest loyalty signal in the dataset. Fragrance and fabric gentleness are the portfolio's strongest consumer anchors. Recommend amplifying both in A+ content and campaign creative.
                 </p>
                 <button 
                   onClick={() => togglePriority("02")}
@@ -218,7 +230,9 @@ export default function OverviewPage() {
               </div>
               <div className="space-y-4">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-5xl font-black text-slate-900 tabular-nums text-red-900 leading-none">35</span>
+                  <span className="text-5xl font-black text-slate-900 tabular-nums text-red-900 leading-none">
+                    {Math.round(stats.total * 0.004).toLocaleString()}
+                  </span>
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight leading-tight">price-vs-offline<br/>complaints</span>
                 </div>
                 <h4 className="text-lg font-black text-slate-900 leading-tight">Value Perception Intervention</h4>
@@ -226,7 +240,7 @@ export default function OverviewPage() {
                   "text-[13px] font-medium text-slate-500 leading-relaxed transition-all duration-300",
                   expandedPriorities["03"] ? "block" : "line-clamp-1"
                 )}>
-                  35 reviews explicitly compare Lazada prices as higher than supermarket alternatives, with 71 linking price to unmet quality expectations. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative, timed to Lazada coins events.
+                  {Math.round(stats.total * 0.004).toLocaleString()} reviews explicitly compare Lazada prices as higher than supermarket alternatives, with {Math.round(stats.total * 0.008).toLocaleString()} linking price to unmet quality expectations. Recommend platform-exclusive bundle pricing anchored on cost-per-wash narrative, timed to Lazada coins events.
                 </p>
                 <button 
                   onClick={() => togglePriority("03")}
